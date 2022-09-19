@@ -9527,36 +9527,80 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 const core = __importStar(__nccwpck_require__(2186));
 const github = __importStar(__nccwpck_require__(5438));
-const child_process_1 = __nccwpck_require__(2081);
+const shell_1 = __nccwpck_require__(7309);
+const fs = __importStar(__nccwpck_require__(7147));
+const cmd_build = 'dotnet build gitflow.partidos/Gitflow.Partidos.csproj -c Beta -p:Version=7.${GITHUB_RUN_NUMBER}.0-beta';
 function run() {
     return __awaiter(this, void 0, void 0, function* () {
         try {
             const version = core.getInput('version', { required: true });
             const build = core.getInput('build', { required: true });
             const csproj = core.getInput('csproj', { required: true });
+            const nupkg = core.getInput('nupkg', { required: true });
+            const username = core.getInput('username', { required: true });
+            const token = core.getInput('token', { required: true });
             console.log('build - Assembly');
             console.log('Version: ' + version);
             console.log('Build: ' + build);
-            console.log('csproj: ' + csproj);
             console.log('GITHUB_RUN_NUMBER: ' + github.context.runNumber);
-            (0, child_process_1.exec)('ls ./', (err, stdout, stderr) => {
-                if (err) {
-                    console.log(err);
-                }
-                else {
-                    console.log({ stdout, stderr });
-                }
-            });
-            console.log('Iniciando build');
+            if (!fs.existsSync(csproj)) {
+                throw new Error(`Arquivo [${csproj}] não existe`);
+            }
+            console.log(`Build do projeto ${csproj} em versão ${build}`);
+            console.log(yield (0, shell_1.shell)(`dotnet build ${csproj} -c ${build} -p:Version=${version}.${github.context.runNumber}.0-${build.toLowerCase()}`));
+            console.log(`Gerando pacote ${csproj} em versão ${build}`);
+            console.log(yield (0, shell_1.shell)(`dotnet pack ${csproj} -c ${build}  -p:PackageVersion=${version}.${github.context.runNumber}.0-${build.toLowerCase()} --no-build`));
+            console.log('Adicionando nuget source');
+            console.log(yield (0, shell_1.shell)(`dotnet nuget add source -u ${username} -p ${token} --store-password-in-clear-text -n "github" "https://nuget.pkg.github.com/novacia/index.json"`));
+            console.log(`Publicando pacote ${csproj} em versão ${build}`);
+            console.log(yield (0, shell_1.shell)(`dotnet nuget push ${nupkg}.${version}.${github.context.runNumber}.0-${build.toLowerCase()}.nupkg  -k ${token} --source "github" --skip-duplicate`));
             console.log('Finalizando build');
         }
         catch (error) {
-            if (error instanceof Error)
+            if (error instanceof Error) {
+                console.log(error.message);
                 core.setFailed(error.message);
+            }
         }
     });
 }
 run();
+
+
+/***/ }),
+
+/***/ 7309:
+/***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
+
+"use strict";
+
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.shell = void 0;
+const child_process_1 = __nccwpck_require__(2081);
+function shell(cmd) {
+    return __awaiter(this, void 0, void 0, function* () {
+        return new Promise(Resolve => {
+            (0, child_process_1.exec)(cmd, (err, stdout, stderr) => {
+                if (err) {
+                    throw new Error(err.message);
+                }
+                else {
+                    Resolve(stdout);
+                }
+            });
+        });
+    });
+}
+exports.shell = shell;
 
 
 /***/ }),

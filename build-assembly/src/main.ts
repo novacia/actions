@@ -1,33 +1,48 @@
 import * as core from '@actions/core'
 import * as github from '@actions/github'
-import { exec } from 'child_process';
+import { shell } from '../../lib/shell'
+import * as fs from 'fs'
+
+const cmd_build = 'dotnet build gitflow.partidos/Gitflow.Partidos.csproj -c Beta -p:Version=7.${GITHUB_RUN_NUMBER}.0-beta'
 
 async function run(): Promise<void> {
     try {
         const version = core.getInput('version', { required: true })
         const build = core.getInput('build', { required: true })
         const csproj = core.getInput('csproj', { required: true })
+        const nupkg = core.getInput('nupkg', { required: true })
+        const username = core.getInput('username', { required: true })
+        const token = core.getInput('token', { required: true })
         
         console.log('build - Assembly')
 
         console.log('Version: ' + version)
         console.log('Build: ' + build)
-        console.log('csproj: ' + csproj)
         console.log('GITHUB_RUN_NUMBER: ' + github.context.runNumber)
 
-        exec('ls ./', (err, stdout, stderr) => {
-            if (err) {
-                console.log(err)
-            } else {
-                console.log({ stdout, stderr })
-            }
-        })
+        if (!fs.existsSync(csproj)) {
+            throw new Error(`Arquivo [${csproj}] não existe`)
+        }
 
-        console.log('Iniciando build')
+        console.log(`Build do projeto ${csproj} em versão ${build}`)
+        console.log(await shell(`dotnet build ${csproj} -c ${build} -p:Version=${version}.${github.context.runNumber}.0-${build.toLowerCase()}`))
+
+        console.log(`Gerando pacote ${csproj} em versão ${build}`)
+        console.log(await shell(`dotnet pack ${csproj} -c ${build}  -p:PackageVersion=${version}.${github.context.runNumber}.0-${build.toLowerCase()} --no-build`))
+
+        console.log('Adicionando nuget source')
+        console.log(await shell(`dotnet nuget add source -u ${username} -p ${token} --store-password-in-clear-text -n "github" "https://nuget.pkg.github.com/novacia/index.json"`))
+
+        console.log(`Publicando pacote ${csproj} em versão ${build}`)
+        console.log(await shell(`dotnet nuget push ${nupkg}.${version}.${github.context.runNumber}.0-${build.toLowerCase()}.nupkg  -k ${token} --source "github" --skip-duplicate`))
+
         console.log('Finalizando build')
 
     } catch (error) {
-        if (error instanceof Error) core.setFailed(error.message)
+        if (error instanceof Error) {
+            console.log(error.message)
+            core.setFailed(error.message)
+        }
     }
 }
 

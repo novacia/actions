@@ -3,6 +3,10 @@ description: Action de Build de Assembly
 author: Silask1
 
 inputs:
+  version:
+    required: true
+    type: string
+    description: Número da Versão
   build:
     required: true
     type: string
@@ -11,10 +15,18 @@ inputs:
     required: true
     type: string
     description: Arquivo de Build Microsoft
-  version:
+  nupkg:
     required: true
     type: string
-    description: Número da Versão
+    description: Path pacote nuget
+  username:
+    required: true
+    type: string
+    description: Username Nuget
+  token:
+    required: true
+    type: string
+    description: Token Nuget
   
 runs:
   using: 'node12'

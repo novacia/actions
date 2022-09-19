@@ -1,0 +1,11 @@
+{
+  "name": "build-api",
+  "version": "1.0.0",
+  "description": "build API",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Silask1",
+  "license": "ISC"
+}

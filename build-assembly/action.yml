@@ -7,6 +7,10 @@ inputs:
     required: true
     type: string
     description: Tipo do Build (beta, rc, release)
+  csproj:
+    required: true
+    type: string
+    description: Arquivo de Build Microsoft
   
 runs:
   using: 'node12'

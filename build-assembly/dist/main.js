@@ -34,7 +34,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 const core = __importStar(require("@actions/core"));
 const version = 7;
-function buildAssembly() {
+function run() {
     return __awaiter(this, void 0, void 0, function* () {
         try {
             const build = core.getInput('build', { required: true });
@@ -48,5 +48,5 @@ function buildAssembly() {
         }
     });
 }
-buildAssembly();
+run();
 //# sourceMappingURL=main.js.map

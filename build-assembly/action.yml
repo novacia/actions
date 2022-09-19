@@ -11,6 +11,10 @@ inputs:
     required: true
     type: string
     description: Arquivo de Build Microsoft
+  version:
+    required: true
+    type: string
+    description: Número da Versão
   
 runs:
   using: 'node12'

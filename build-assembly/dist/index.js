@@ -9527,16 +9527,26 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 const core = __importStar(__nccwpck_require__(2186));
 const github = __importStar(__nccwpck_require__(5438));
-const version = 7;
+const child_process_1 = __nccwpck_require__(2081);
 function run() {
     return __awaiter(this, void 0, void 0, function* () {
         try {
+            const version = core.getInput('version', { required: true });
             const build = core.getInput('build', { required: true });
             const csproj = core.getInput('csproj', { required: true });
             console.log('build - Assembly');
+            console.log('Version: ' + version);
             console.log('Build: ' + build);
             console.log('csproj: ' + csproj);
             console.log('GITHUB_RUN_NUMBER: ' + github.context.runNumber);
+            (0, child_process_1.exec)('ls ./', (err, stdout, stderr) => {
+                if (err) {
+                    console.log(err);
+                }
+                else {
+                    console.log({ stdout, stderr });
+                }
+            });
             console.log('Iniciando build');
             console.log('Finalizando build');
         }
@@ -9564,6 +9574,14 @@ module.exports = eval("require")("encoding");
 
 "use strict";
 module.exports = require("assert");
+
+/***/ }),
+
+/***/ 2081:
+/***/ ((module) => {
+
+"use strict";
+module.exports = require("child_process");
 
 /***/ }),
 

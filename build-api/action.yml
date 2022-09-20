@@ -1,0 +1,30 @@
+name: Build API
+description: Action de Build API
+author: Silask1
+
+inputs:
+  docker_username:
+    required: false
+    type: string
+  docker_token:
+    required: false
+    type: string
+  config:
+    required: false
+    type: string
+  versao:
+    required: false
+    type: string
+  tag:
+    required: false
+    type: string
+  dominio:
+    required: false
+    type: string
+  api:
+    required: false
+    type: string
+
+runs:
+  using: 'node12'
+  main: 'dist/index.js'

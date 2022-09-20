@@ -1,0 +1,25 @@
+name: Deploy API
+description: Action para Subir deploy no Docker
+author: Silask1
+
+inputs:
+  host:
+    required: false
+    type: string
+    description: Host Server
+  username:
+    required: false
+    type: string
+    description: Username SSH
+  password:
+    required: false
+    type: string
+    description: Password SSH
+  name_docker:
+    required: false
+    type: string
+    description: Nome do Docker Compose
+
+runs:
+  using: 'node12'
+  main: 'dist/index.js'

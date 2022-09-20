@@ -6,6 +6,7 @@ import * as ssh from '../../lib/ssh'
 async function run(): Promise<void> {
     
     try {
+        const dominio = core.getInput('dominio')
         const api = core.getInput('api')
         const stack = core.getInput('stack')
         const config = core.getInput('config')
@@ -19,7 +20,7 @@ async function run(): Promise<void> {
 
         core.info('Build API - ' + api)
 
-        await docker.build(config, versao, github.context.runNumber, api)
+        await docker.build(dominio, config, versao, github.context.runNumber, api)
             .catch((err) => {
                 throw new Error(err);
             });

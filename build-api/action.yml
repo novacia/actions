@@ -3,6 +3,9 @@ description: Action de Build API
 author: Silask1
 
 inputs:
+  dominio:
+    required: false
+    type: string
   api:
     required: false
     type: string

@@ -35851,6 +35851,7 @@ const ssh = __importStar(__nccwpck_require__(1208));
 function run() {
     return __awaiter(this, void 0, void 0, function* () {
         try {
+            const dominio = core.getInput('dominio');
             const api = core.getInput('api');
             const stack = core.getInput('stack');
             const config = core.getInput('config');
@@ -35862,7 +35863,7 @@ function run() {
             const docker_username = core.getInput('docker_username');
             const docker_token = core.getInput('docker_token');
             core.info('Build API - ' + api);
-            yield docker.build(config, versao, github.context.runNumber, api)
+            yield docker.build(dominio, config, versao, github.context.runNumber, api)
                 .catch((err) => {
                 throw new Error(err);
             });
@@ -35970,7 +35971,7 @@ function login(username, password) {
     });
 }
 exports.login = login;
-function build(config, versao, numberRun, api) {
+function build(dominio, config, versao, numberRun, api) {
     return __awaiter(this, void 0, void 0, function* () {
         core.info('Build da imagem ' + api);
         if (!config || !versao || !numberRun || !api) {
@@ -35978,7 +35979,7 @@ function build(config, versao, numberRun, api) {
         }
         const buildArray = new Array('--no-cache', '--build-arg', 'CONFIG=' + config);
         buildArray.push('--build-arg', `VERSAO=${versao}.${numberRun}.0-${config.toLowerCase()}`);
-        buildArray.push('-t', `"tqssolucoes"/${api}:${versao}.${numberRun}.0-${config.toLowerCase()}`);
+        buildArray.push('-t', `${dominio}/${api}:${versao}.${numberRun}.0-${config.toLowerCase()}`);
         buildArray.push('-f', `./${api}/Dockerfile ./${api}`);
         console.log(buildArray);
         yield exec

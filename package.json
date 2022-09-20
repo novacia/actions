@@ -1,5 +1,10 @@
 {
   "devDependencies": {
     "@types/node": "^18.7.18"
+  },
+  "dependencies": {
+    "@actions/core": "^1.9.1",
+    "@actions/exec": "^1.1.1",
+    "@types/ssh2": "^1.11.5"
   }
 }

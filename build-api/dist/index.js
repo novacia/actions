@@ -6935,6 +6935,7 @@ class ssh {
                 if (error instanceof Error)
                     throw new Error(error.message);
             }
+            return new Promise(retorno => { retorno('comando não foi executado'); });
         });
     }
 }

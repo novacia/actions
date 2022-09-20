@@ -20,7 +20,9 @@ async function run(): Promise<void> {
 
         core.info('Build API - ' + api)
 
-        await docker.build(config, versao, tag, api)
+        core.info(dominio)
+        core.info(tag)
+        await docker.build(config, versao, tag, dominio, api)
             .catch((err) => {
                 core.setFailed(err);
             });
@@ -35,18 +37,15 @@ async function run(): Promise<void> {
                 core.setFailed(err);
             });
 
-        core.info('Subindo imagem compilad')
         await docker.push(dominio, api, versao)
             .catch((err) => {
                 core.setFailed(err);
             });
             
-        core.info('Subindo imagem latest')
         await docker.push(dominio, api, 'latest')
             .catch((err) => {
                 core.setFailed(err);
             });
-
         
         const _ssh = new ssh.ssh({
             host: ssh_host,

@@ -25,7 +25,7 @@ export async function login(username: string, password: string): Promise<void> {
         })
 }
 
-export async function build(config: string, versao: string, tag: string, api: string): Promise<void> {
+export async function build(config: string, versao: string, tag: string, dominio: string, api: string): Promise<void> {
     core.info('Build da imagem ' + api)
 
     if (!config || !versao || !tag || !api) {
@@ -35,7 +35,7 @@ export async function build(config: string, versao: string, tag: string, api: st
     const builArray: Array<string> = new Array('--no-cache', '--build-arg')
     builArray.push('CONFIG=' + config)
     builArray.push('--build-arg', 'VERSAO=' + versao)
-    builArray.push('-t', tag)
+    builArray.push('-t', `${dominio}/${api}:${versao}`)
     builArray.push('-f', `./${api}/Dockerfile ./${api}`)
 
     await exec
@@ -75,7 +75,7 @@ export async function tag(tag: string, dominio: string, api: string): Promise<vo
 }
 
 export async function push(dominio: string, api: string, versao: string): Promise<void> {
-    core.info('Subindo imagem compilada')
+    core.info('Subindo imagem compilada - ' + versao)
 
     if (!tag) {
         throw new Error('Parâmetro [tag] é obrigatório')

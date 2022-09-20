@@ -29049,7 +29049,9 @@ function run() {
             const api = core.getInput('api', { required: true });
             const stack = core.getInput('stack', { required: true });
             core.info('Build API - ' + api);
-            yield docker.build(config, versao, tag, api)
+            core.info(dominio);
+            core.info(tag);
+            yield docker.build(config, versao, tag, dominio, api)
                 .catch((err) => {
                 core.setFailed(err);
             });
@@ -29061,12 +29063,10 @@ function run() {
                 .catch((err) => {
                 core.setFailed(err);
             });
-            core.info('Subindo imagem compilad');
             yield docker.push(dominio, api, versao)
                 .catch((err) => {
                 core.setFailed(err);
             });
-            core.info('Subindo imagem latest');
             yield docker.push(dominio, api, 'latest')
                 .catch((err) => {
                 core.setFailed(err);
@@ -29159,7 +29159,7 @@ function login(username, password) {
     });
 }
 exports.login = login;
-function build(config, versao, tag, api) {
+function build(config, versao, tag, dominio, api) {
     return __awaiter(this, void 0, void 0, function* () {
         core.info('Build da imagem ' + api);
         if (!config || !versao || !tag || !api) {
@@ -29168,7 +29168,7 @@ function build(config, versao, tag, api) {
         const builArray = new Array('--no-cache', '--build-arg');
         builArray.push('CONFIG=' + config);
         builArray.push('--build-arg', 'VERSAO=' + versao);
-        builArray.push('-t', tag);
+        builArray.push('-t', `${dominio}/${api}:${versao}`);
         builArray.push('-f', `./${api}/Dockerfile ./${api}`);
         yield exec
             .getExecOutput('docker build', builArray, {
@@ -29208,7 +29208,7 @@ function tag(tag, dominio, api) {
 exports.tag = tag;
 function push(dominio, api, versao) {
     return __awaiter(this, void 0, void 0, function* () {
-        core.info('Subindo imagem compilada');
+        core.info('Subindo imagem compilada - ' + versao);
         if (!tag) {
             throw new Error('Parâmetro [tag] é obrigatório');
         }

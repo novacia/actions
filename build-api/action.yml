@@ -3,7 +3,7 @@ description: Action de Build API
 author: Silask1
 
 inputs:
-  dominio:
+  hub:
     required: false
     type: string
   api:

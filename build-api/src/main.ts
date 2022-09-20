@@ -6,7 +6,7 @@ import * as ssh from '../../lib/ssh'
 async function run(): Promise<void> {
     
     try {
-        const dominio = core.getInput('dominio')
+        const dominio = core.getInput('hub')
         const api = core.getInput('api')
         const stack = core.getInput('stack')
         const config = core.getInput('config')

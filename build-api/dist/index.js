@@ -35851,7 +35851,7 @@ const ssh = __importStar(__nccwpck_require__(1208));
 function run() {
     return __awaiter(this, void 0, void 0, function* () {
         try {
-            const dominio = core.getInput('dominio');
+            const dominio = core.getInput('hub');
             const api = core.getInput('api');
             const stack = core.getInput('stack');
             const config = core.getInput('config');

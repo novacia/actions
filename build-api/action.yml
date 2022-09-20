@@ -6,6 +6,9 @@ inputs:
   ssh_host:
     required: false
     type: string
+  ssh_port:
+    required: false
+    default: 22
   ssh_username:
     required: false
     type: string

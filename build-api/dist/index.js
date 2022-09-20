@@ -6657,6 +6657,7 @@ function run() {
     return __awaiter(this, void 0, void 0, function* () {
         try {
             const ssh_host = core.getInput('ssh_host', { required: true });
+            const ssh_port = Number(core.getInput('ssh_port', { required: true }));
             const ssh_username = core.getInput('ssh_username', { required: true });
             const ssh_password = core.getInput('ssh_password', { required: true });
             const docker_username = core.getInput('docker_username', { required: true });
@@ -6692,7 +6693,7 @@ function run() {
             });
             const _ssh = new ssh.ssh({
                 host: ssh_host,
-                port: 22,
+                port: ssh_port,
                 username: ssh_username,
                 password: ssh_password
             });

@@ -28,18 +28,19 @@ export async function login(username: string, password: string): Promise<void> {
 export async function build(config: string, versao: string, numberRun: number, api: string): Promise<void> {
     core.info('Build da imagem ' + api)
 
-    if (!config || !versao || !tag || !api) {
-        throw new Error('Parâmentros [config, version, tag, api] são obrigatórios')
+    if (!config || !versao || !numberRun || !api) {
+        throw new Error('Parâmentros [config, version, numberRun, api] são obrigatórios')
     }
 
-    const builArray: Array<string> = new Array('--no-cache', '--build-arg')
-    builArray.push('CONFIG=' + config)
-    builArray.push('--build-arg', `VERSAO=${versao}.${numberRun}.0-${config.toLowerCase()}`)
-    builArray.push('-t', `tqssolucoes/${api}:${versao}.${numberRun}.0-${config.toLowerCase()}`)
-    builArray.push('-f', `./${api}/Dockerfile ./${api}`)
+    const buildArray: Array<string> = new Array('--no-cache', '--build-arg', 'CONFIG=' + config)
+    buildArray.push('--build-arg', `VERSAO=${versao}.${numberRun}.0-${config.toLowerCase()}`)
+    buildArray.push('-t', `tqssolucoes/${api}:${versao}.${numberRun}.0-${config.toLowerCase()}`)
+    buildArray.push('-f', `./${api}/Dockerfile ./${api}`)
+
+    console.log(buildArray);
 
     await exec
-        .getExecOutput('docker build', builArray, {
+        .getExecOutput('docker build', buildArray, {
             ignoreReturnCode: true,
             silent: true
         })

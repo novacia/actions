@@ -35973,16 +35973,16 @@ exports.login = login;
 function build(config, versao, numberRun, api) {
     return __awaiter(this, void 0, void 0, function* () {
         core.info('Build da imagem ' + api);
-        if (!config || !versao || !tag || !api) {
-            throw new Error('Parâmentros [config, version, tag, api] são obrigatórios');
+        if (!config || !versao || !numberRun || !api) {
+            throw new Error('Parâmentros [config, version, numberRun, api] são obrigatórios');
         }
-        const builArray = new Array('--no-cache', '--build-arg');
-        builArray.push('CONFIG=' + config);
-        builArray.push('--build-arg', `VERSAO=${versao}.${numberRun}.0-${config.toLowerCase()}`);
-        builArray.push('-t', `tqssolucoes/${api}:${versao}.${numberRun}.0-${config.toLowerCase()}`);
-        builArray.push('-f', `./${api}/Dockerfile ./${api}`);
+        const buildArray = new Array('--no-cache', '--build-arg', 'CONFIG=' + config);
+        buildArray.push('--build-arg', `VERSAO=${versao}.${numberRun}.0-${config.toLowerCase()}`);
+        buildArray.push('-t', `tqssolucoes/${api}:${versao}.${numberRun}.0-${config.toLowerCase()}`);
+        buildArray.push('-f', `./${api}/Dockerfile ./${api}`);
+        console.log(buildArray);
         yield exec
-            .getExecOutput('docker build', builArray, {
+            .getExecOutput('docker build', buildArray, {
             ignoreReturnCode: true,
             silent: true
         })

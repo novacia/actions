@@ -3,7 +3,13 @@ description: Action de Build API
 author: Silask1
 
 inputs:
-  docker_host:
+  ssh_host:
+    required: false
+    type: string
+  ssh_username:
+    required: false
+    type: string
+  ssh_password:
     required: false
     type: string
   docker_username:

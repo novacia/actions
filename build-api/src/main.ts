@@ -5,7 +5,9 @@ import * as ssh from '../../lib/ssh'
 async function run(): Promise<void> {
     
     try {
-        const docker_host = core.getInput('docker_host', { required: true })
+        const ssh_host = core.getInput('ssh_host', { required: true })
+        const ssh_username = core.getInput('ssh_username', { required: true })
+        const ssh_password = core.getInput('ssh_password', { required: true })
         const docker_username = core.getInput('docker_username', { required: true })
         const docker_token = core.getInput('docker_token', { required: true })
         const config = core.getInput('config', { required: true })
@@ -46,10 +48,10 @@ async function run(): Promise<void> {
 
         
         const _ssh = new ssh.ssh({
-            host: docker_host,
+            host: ssh_host,
             port: 22,
-            username: docker_username,
-            password: docker_token
+            username: ssh_username,
+            password: ssh_password
         })
 
         core.info('Removendo stack ' + stack)

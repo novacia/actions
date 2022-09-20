@@ -3,7 +3,7 @@ description: Action de Build API
 author: Silask1
 
 inputs:
-  dominio:
+  api_dominio:
     required: false
     type: string
   api:
@@ -18,7 +18,7 @@ inputs:
   versao:
     required: false
     type: string
-  tag:
+  versao_number:
     required: false
     type: string
   ssh_host:

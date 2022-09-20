@@ -29036,26 +29036,25 @@ const ssh = __importStar(__nccwpck_require__(1208));
 function run() {
     return __awaiter(this, void 0, void 0, function* () {
         try {
-            const dominio = core.getInput('dominio', { required: true });
-            const api = core.getInput('api', { required: true });
-            const stack = core.getInput('stack', { required: true });
-            const config = core.getInput('config', { required: true });
-            const versao = core.getInput('versao', { required: true });
-            const tag = core.getInput('tag', { required: true });
-            const ssh_host = core.getInput('ssh_host', { required: true });
-            const ssh_port = Number(core.getInput('ssh_port', { required: true }));
-            const ssh_username = core.getInput('ssh_username', { required: true });
-            const ssh_password = core.getInput('ssh_password', { required: true });
-            const docker_username = core.getInput('docker_username', { required: true });
-            const docker_token = core.getInput('docker_token', { required: true });
+            const dominio = core.getInput('api_dominio');
+            const api = core.getInput('api');
+            const stack = core.getInput('stack');
+            const config = core.getInput('config');
+            const versao = core.getInput('versao');
+            const versao_number = core.getInput('versao_number');
+            const ssh_host = core.getInput('ssh_host');
+            const ssh_port = Number(core.getInput('ssh_port'));
+            const ssh_username = core.getInput('ssh_username');
+            const ssh_password = core.getInput('ssh_password');
+            const docker_username = core.getInput('docker_username');
+            const docker_token = core.getInput('docker_token');
             core.info('Build API - ' + api);
             core.info(dominio);
-            core.info(tag);
-            yield docker.build(config, versao, tag, dominio, api)
+            yield docker.build(config, versao, versao_number, dominio, api)
                 .catch((err) => {
                 throw new Error(err);
             });
-            yield docker.tag(tag, dominio, api)
+            yield docker.tag(versao_number, dominio, api)
                 .catch((err) => {
                 throw new Error(err);
             });

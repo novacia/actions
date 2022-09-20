@@ -5,18 +5,18 @@ import * as ssh from '../../lib/ssh'
 async function run(): Promise<void> {
     
     try {
+        const dominio = core.getInput('dominio', { required: true })
+        const api = core.getInput('api', { required: true })
+        const stack = core.getInput('stack', { required: true })
+        const config = core.getInput('config', { required: true })
+        const versao = core.getInput('versao', { required: true })
+        const tag = core.getInput('tag', { required: true })
         const ssh_host = core.getInput('ssh_host', { required: true })
         const ssh_port = Number(core.getInput('ssh_port', { required: true }))
         const ssh_username = core.getInput('ssh_username', { required: true })
         const ssh_password = core.getInput('ssh_password', { required: true })
         const docker_username = core.getInput('docker_username', { required: true })
         const docker_token = core.getInput('docker_token', { required: true })
-        const config = core.getInput('config', { required: true })
-        const versao = core.getInput('versao', { required: true })
-        const tag = core.getInput('tag', { required: true })
-        const dominio = core.getInput('dominio', { required: true })
-        const api = core.getInput('api', { required: true })
-        const stack = core.getInput('stack', { required: true })
 
         core.info('Build API - ' + api)
 
@@ -24,27 +24,27 @@ async function run(): Promise<void> {
         core.info(tag)
         await docker.build(config, versao, tag, dominio, api)
             .catch((err) => {
-                core.setFailed(err);
+                throw new Error(err);
             });
 
         await docker.tag(tag, dominio, api)
             .catch((err) => {
-                core.setFailed(err);
+                throw new Error(err);
             });
 
         await docker.login(docker_username, docker_token)
             .catch((err) => {
-                core.setFailed(err);
+                throw new Error(err);
             });
 
         await docker.push(dominio, api, versao)
             .catch((err) => {
-                core.setFailed(err);
+                throw new Error(err);
             });
             
         await docker.push(dominio, api, 'latest')
             .catch((err) => {
-                core.setFailed(err);
+                throw new Error(err);
             });
         
         const _ssh = new ssh.ssh({

@@ -1,16 +1,15 @@
 import * as core from '@actions/core'
+import * as github from '@actions/github'
 import * as docker from '../../lib/docker'
 import * as ssh from '../../lib/ssh'
 
 async function run(): Promise<void> {
     
     try {
-        const dominio = core.getInput('api_dominio')
         const api = core.getInput('api')
         const stack = core.getInput('stack')
         const config = core.getInput('config')
         const versao = core.getInput('versao')
-        const versao_number = core.getInput('versao_number')
         const ssh_host = core.getInput('ssh_host')
         const ssh_port = Number(core.getInput('ssh_port'))
         const ssh_username = core.getInput('ssh_username')
@@ -20,13 +19,12 @@ async function run(): Promise<void> {
 
         core.info('Build API - ' + api)
 
-        core.info(dominio)
-        await docker.build(config, versao, versao_number, dominio, api)
+        await docker.build(config, versao, github.context.runNumber, api)
             .catch((err) => {
                 throw new Error(err);
             });
 
-        await docker.tag(versao_number, dominio, api)
+        await docker.tag(versao, github.context.runNumber, api, config)
             .catch((err) => {
                 throw new Error(err);
             });
@@ -36,12 +34,12 @@ async function run(): Promise<void> {
                 throw new Error(err);
             });
 
-        await docker.push(dominio, api, versao)
+        await docker.push(api, `${versao}.${github.context.runNumber}.0-${config}`)
             .catch((err) => {
                 throw new Error(err);
             });
             
-        await docker.push(dominio, api, 'latest')
+        await docker.push(api, 'latest')
             .catch((err) => {
                 throw new Error(err);
             });

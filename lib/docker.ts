@@ -34,7 +34,7 @@ export async function build(config: string, versao: string, numberRun: number, a
 
     const buildArray: Array<string> = new Array('--no-cache', '--build-arg', 'CONFIG=' + config)
     buildArray.push('--build-arg', `VERSAO=${versao}.${numberRun}.0-${config.toLowerCase()}`)
-    buildArray.push('-t', `tqssolucoes/${api}:${versao}.${numberRun}.0-${config.toLowerCase()}`)
+    buildArray.push('-t', `"tqssolucoes"/${api}:${versao}.${numberRun}.0-${config.toLowerCase()}`)
     buildArray.push('-f', `./${api}/Dockerfile ./${api}`)
 
     console.log(buildArray);

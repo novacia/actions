@@ -4,27 +4,27 @@ author: Silask1
 
 inputs:
   version:
-    required: true
+    required: false
     type: string
     description: Número da Versão
   build:
-    required: true
+    required: false
     type: string
     description: Tipo do Build (beta, rc, release)
   csproj:
-    required: true
+    required: false
     type: string
     description: Arquivo de Build Microsoft
   nupkg:
-    required: true
+    required: false
     type: string
     description: Path pacote nuget
   username:
-    required: true
+    required: false
     type: string
     description: Username Nuget
   token:
-    required: true
+    required: false
     type: string
     description: Token Nuget
   

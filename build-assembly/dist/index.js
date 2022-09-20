@@ -13478,24 +13478,26 @@ function run() {
             const username = core.getInput('username', { required: true });
             const token = core.getInput('token', { required: true });
             core.info('build - Assembly');
-            core.info('Version: ' + version);
-            core.info('Build: ' + build);
-            core.info('GITHUB_RUN_NUMBER: ' + github.context.runNumber);
+            if (!version || !build) {
+                throw new Error('Parâmetros [version, build] inválidos ou não informados');
+            }
+            if (!csproj || !csproj.endsWith('.csproj')) {
+                throw new Error('Parâmetro [csproj] inválido ou não informado');
+            }
             if (!fs.existsSync(csproj)) {
                 throw new Error(`Arquivo [${csproj}] não existe`);
             }
+            core.info('Version: ' + version);
+            core.info('Build: ' + build);
+            core.info('GITHUB_RUN_NUMBER: ' + github.context.runNumber);
             core.info(`Build do projeto ${csproj} em versão ${build}`);
             yield dotnet.build(csproj, build, version, github.context.runNumber);
-            //await shell(`dotnet build ${csproj} -c ${build} -p:Version=${version}.${github.context.runNumber}.0-${build.toLowerCase()}`)
             core.info(`Gerando pacote ${csproj} em versão ${build}`);
             yield dotnet.pack(csproj, build, version, github.context.runNumber);
-            //await shell(`dotnet pack ${csproj} -c ${build}  -p:PackageVersion=${version}.${github.context.runNumber}.0-${build.toLowerCase()} --no-build`)
             core.info('Adicionando nuget source');
             yield dotnet.nuget_add_source(username, token);
-            //await shell(`dotnet nuget add source -u ${username} -p ${token} --store-password-in-clear-text -n "github" "https://nuget.pkg.github.com/novacia/index.json"`)
             core.info(`Publicando pacote ${csproj} em versão ${build}`);
             yield dotnet.nuget_push(nupkg, version, github.context.runNumber, build, token);
-            //await shell(`dotnet nuget push ${nupkg}.${version}.${github.context.runNumber}.0-${build.toLowerCase()}.nupkg  -k ${token} --source "github" --skip-duplicate`)
             core.info('Build Finalizado');
         }
         catch (error) {
@@ -13620,8 +13622,8 @@ exports.nuget_add_source = nuget_add_source;
 function nuget_push(nupkg, version, runNumber, build, token) {
     return __awaiter(this, void 0, void 0, function* () {
         core.info('comando donet nuget push');
-        if (!token) {
-            throw new Error('token é obrigatório');
+        if (!nupkg || !token) {
+            throw new Error('Parâmetros [nupkg, token] são obrigatórios');
         }
         const nuget_push_array = new Array('nuget', 'push');
         nuget_push_array.push(`${nupkg}.${version}.${runNumber}.0-${build.toLowerCase()}.nupkg`);

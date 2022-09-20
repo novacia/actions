@@ -71,8 +71,8 @@ export async function nuget_add_source(username:string, token:string): Promise<v
 export async function nuget_push(nupkg:string, version:string, runNumber: number, build:string, token:string): Promise<void> {
     core.info('comando donet nuget push')
 
-    if (!token) {
-        throw new Error('token é obrigatório')
+    if (!nupkg || !token) {
+        throw new Error('Parâmetros [nupkg, token] são obrigatórios')
     }
 
     const nuget_push_array: Array<string> = new Array('nuget', 'push')

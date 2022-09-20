@@ -9529,7 +9529,6 @@ const core = __importStar(__nccwpck_require__(2186));
 const github = __importStar(__nccwpck_require__(5438));
 const shell_1 = __nccwpck_require__(7309);
 const fs = __importStar(__nccwpck_require__(7147));
-const cmd_build = 'dotnet build gitflow.partidos/Gitflow.Partidos.csproj -c Beta -p:Version=7.${GITHUB_RUN_NUMBER}.0-beta';
 function run() {
     return __awaiter(this, void 0, void 0, function* () {
         try {

@@ -3,8 +3,6 @@ import * as github from '@actions/github'
 import { shell } from '../../lib/shell'
 import * as fs from 'fs'
 
-const cmd_build = 'dotnet build gitflow.partidos/Gitflow.Partidos.csproj -c Beta -p:Version=7.${GITHUB_RUN_NUMBER}.0-beta'
-
 async function run(): Promise<void> {
     try {
         const version = core.getInput('version', { required: true })

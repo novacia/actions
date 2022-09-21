@@ -1,5 +1,6 @@
-import { Client } from 'ssh2'
+import { Client, utils } from 'ssh2'
 import * as core from '@actions/core'
+import { consumers, Stream } from 'stream'
 
 export interface sshSettings {
     host: string
@@ -8,51 +9,35 @@ export interface sshSettings {
     password: string
 }
 
-export class ssh {
+export async function sshComando(settings:sshSettings, cmd: string): Promise<void> {
+    
+    try {
+        const ssh = new Client()
 
-    private _status: boolean
-    private _conn: Client
-
-    constructor(settings: sshSettings) {
-        this._conn = new Client()
-        try {
-            this._conn.on('ready', () => {
-                console.log('Client :: ready');
-            }).on('error', (err) => {
-                console.log('Client :: error: ' + err.message);
-            }).connect({
-                host: settings.host,
-                port: settings.port,
-                username: settings.username,
-                password: settings.password
-            })
-        } catch (error) {
-            if (error instanceof Error) console.log(error.message)
-        }
-    }
-
-    async comando(cmd: string): Promise<string> {
-        try {
-            if (!this._status) {
-                throw new Error('Não possui executar o comando, pois a conexão SSH falhou')
-            }
-
-            return new Promise(retorno => {
-                this._conn.exec(cmd, (err, stream) => {
-                    if (err) throw new Error(err.message)
-                    stream.on('data', (data) => {
-                        retorno('STDOUT: ' + data)
-                    }).stderr.on('data', (data) => {
-                        retorno('STDERR: ' + data)
-                    }).on('exit', (code, signal) => {
-                        core.info('Code: ' + code + ', Signal: ' + signal)
-                    })
+        ssh.on('ready', () => {
+            core.info('Client SSH :: conectado com sucesso');
+            ssh.exec(cmd, (err, stream) => {
+                if (err) throw new Error(err.message);
+                stream.on('data', (data) => {
+                    core.info('exec STDOUT: ' + data);
+                    ssh.end();
+                }).stderr.on('data', (data) => {
+                    throw new Error('exec STDOUT: ' + data)
+                }).on('exit', (code, signal) => {
+                    core.info('Code: ' + code + ', Signal: ' + signal)
                 })
-            })
-            
-        } catch (error) {
-            if (error instanceof Error) throw new Error(error.message)
-        }
-        return new Promise(retorno => { retorno('comando não foi executado') })
+            });
+        }).on('error', (err) => {
+            core.info('Client SSH :: error: ' + err.message);
+        }).connect({
+            host: settings.host,
+            port: settings.port,
+            username: settings.username,
+            password: settings.password
+        }).on('end', () => {
+            core.info('Client SSH :: desconectado');
+        });
+    } catch (error) {
+        throw new Error('sshComando :: error: ' + error.message);
     }
 }

@@ -27765,33 +27765,31 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 const core = __importStar(__nccwpck_require__(2186));
 const contexto_1 = __nccwpck_require__(5517);
-const ssh_1 = __nccwpck_require__(1208);
+const ssh = __importStar(__nccwpck_require__(1208));
 function run() {
     return __awaiter(this, void 0, void 0, function* () {
         try {
             const inputs = (0, contexto_1.getInputsDeploy)();
             core.info('Deploy - ' + inputs.stack);
-            const _conn = new ssh_1.ssh({
+            core.info('Removendo stack ' + inputs.stack);
+            yield ssh.sshComando({
                 host: inputs.host,
                 port: inputs.port,
                 username: inputs.username,
                 password: inputs.password
-            });
-            core.info('Removendo stack ' + inputs.stack);
-            _conn.comando(`sudo docker stack rm ${inputs.stack}`)
-                .then((value) => {
-                core.info(value);
-            })
+            }, `sudo docker stack rm ${inputs.stack}`)
                 .catch((err) => {
-                core.setFailed(err);
+                throw new Error(err);
             });
             core.info('Subindo stack ' + inputs.stack);
-            _conn.comando(`sudo docker stack deploy -c ./${inputs.stack}/docker-compose.yml ${inputs.stack}`)
-                .then((value) => {
-                core.info(value);
-            })
+            yield ssh.sshComando({
+                host: inputs.host,
+                port: inputs.port,
+                username: inputs.username,
+                password: inputs.password
+            }, `sudo docker stack deploy -c ./${inputs.stack}/docker-compose.yml ${inputs.stack}`)
                 .catch((err) => {
-                core.setFailed(err);
+                throw new Error(err);
             });
             core.info('Finalizando Deploy');
         }
@@ -27913,58 +27911,44 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.ssh = void 0;
+exports.sshComando = void 0;
 const ssh2_1 = __nccwpck_require__(3353);
 const core = __importStar(__nccwpck_require__(3820));
-class ssh {
-    constructor(settings) {
-        this._conn = new ssh2_1.Client();
+function sshComando(settings, cmd) {
+    return __awaiter(this, void 0, void 0, function* () {
         try {
-            this._conn.on('ready', () => {
-                console.log('Client :: ready');
+            const ssh = new ssh2_1.Client();
+            ssh.on('ready', () => {
+                core.info('Client SSH :: conectado com sucesso');
+                ssh.exec(cmd, (err, stream) => {
+                    if (err)
+                        throw new Error(err.message);
+                    stream.on('data', (data) => {
+                        core.info('exec STDOUT: ' + data);
+                        ssh.end();
+                    }).stderr.on('data', (data) => {
+                        throw new Error('exec STDOUT: ' + data);
+                    }).on('exit', (code, signal) => {
+                        core.info('Code: ' + code + ', Signal: ' + signal);
+                    });
+                });
             }).on('error', (err) => {
-                console.log('Client :: error: ' + err.message);
+                core.info('Client SSH :: error: ' + err.message);
             }).connect({
                 host: settings.host,
                 port: settings.port,
                 username: settings.username,
                 password: settings.password
+            }).on('end', () => {
+                core.info('Client SSH :: desconectado');
             });
         }
         catch (error) {
-            if (error instanceof Error)
-                console.log(error.message);
+            throw new Error('sshComando :: error: ' + error.message);
         }
-    }
-    comando(cmd) {
-        return __awaiter(this, void 0, void 0, function* () {
-            try {
-                if (!this._status) {
-                    throw new Error('Não possui executar o comando, pois a conexão SSH falhou');
-                }
-                return new Promise(retorno => {
-                    this._conn.exec(cmd, (err, stream) => {
-                        if (err)
-                            throw new Error(err.message);
-                        stream.on('data', (data) => {
-                            retorno('STDOUT: ' + data);
-                        }).stderr.on('data', (data) => {
-                            retorno('STDERR: ' + data);
-                        }).on('exit', (code, signal) => {
-                            core.info('Code: ' + code + ', Signal: ' + signal);
-                        });
-                    });
-                });
-            }
-            catch (error) {
-                if (error instanceof Error)
-                    throw new Error(error.message);
-            }
-            return new Promise(retorno => { retorno('comando não foi executado'); });
-        });
-    }
+    });
 }
-exports.ssh = ssh;
+exports.sshComando = sshComando;
 
 
 /***/ }),

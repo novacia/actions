@@ -1,17 +1,35 @@
-import { Client, utils } from 'ssh2'
+import { Client, ConnectConfig, utils } from 'ssh2'
 import * as core from '@actions/core'
-import { consumers, Stream } from 'stream'
+import { consumers, PassThrough, Stream } from 'stream'
 
 export interface sshSettings {
     host: string
     port: number
     username: string
-    password: string
+    password: string,
+    key: string
 }
 
 export async function sshComando(settings:sshSettings, cmd: string): Promise<void> {
     
     try {
+        var config: ConnectConfig;
+        if (!settings.password) {
+            config = {
+                host: settings.host,
+                port: settings.port,
+                username: settings.username,
+                privateKey: settings.key
+            }
+        } else if (!settings.key) {
+            config = {
+                host: settings.host,
+                port: settings.port,
+                username: settings.username,
+                password: settings.password
+            }
+        }
+
         const ssh = new Client()
 
         ssh.on('ready', () => {
@@ -29,12 +47,7 @@ export async function sshComando(settings:sshSettings, cmd: string): Promise<voi
             });
         }).on('error', (err) => {
             core.info('Client SSH :: error: ' + err.message);
-        }).connect({
-            host: settings.host,
-            port: settings.port,
-            username: settings.username,
-            password: settings.password
-        }).on('end', () => {
+        }).connect(config).on('end', () => {
             core.info('Client SSH :: desconectado');
         });
     } catch (error) {

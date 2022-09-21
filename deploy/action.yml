@@ -19,6 +19,10 @@ inputs:
     required: false
     type: string
     description: Password SSH
+  key:
+    required: false
+    type: string
+    description: Private Key SSH
   stack:
     required: false
     type: string

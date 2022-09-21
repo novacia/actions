@@ -47,6 +47,7 @@ export interface InputsDeploy {
     port: number
     username: string
     password: string
+    key: string
     stack: string
 }
 
@@ -56,6 +57,7 @@ export function getInputsDeploy(): InputsDeploy {
         port: Number(core.getInput('port')),
         username: core.getInput('username'),
         password: core.getInput('password'),
+        key: core.getInput('key'),
         stack: core.getInput('stack')
     }
 }

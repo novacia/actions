@@ -13,7 +13,8 @@ async function run(): Promise<void> {
             host: inputs.host,
             port: inputs.port,
             username: inputs.username,
-            password: inputs.password
+            password: inputs.password,
+            key: inputs.key
         }, `sudo docker stack rm ${inputs.stack}`)
             .catch((err) => {
                 throw new Error(err);
@@ -24,7 +25,8 @@ async function run(): Promise<void> {
             host: inputs.host,
             port: inputs.port,
             username: inputs.username,
-            password: inputs.password
+            password: inputs.password,
+            key: inputs.key
         }, `sudo docker stack deploy -c ./${inputs.stack}/docker-compose.yml ${inputs.stack}`)
             .catch((err) => {
                 throw new Error(err);

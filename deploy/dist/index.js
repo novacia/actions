@@ -27776,7 +27776,8 @@ function run() {
                 host: inputs.host,
                 port: inputs.port,
                 username: inputs.username,
-                password: inputs.password
+                password: inputs.password,
+                key: inputs.key
             }, `sudo docker stack rm ${inputs.stack}`)
                 .catch((err) => {
                 throw new Error(err);
@@ -27786,7 +27787,8 @@ function run() {
                 host: inputs.host,
                 port: inputs.port,
                 username: inputs.username,
-                password: inputs.password
+                password: inputs.password,
+                key: inputs.key
             }, `sudo docker stack deploy -c ./${inputs.stack}/docker-compose.yml ${inputs.stack}`)
                 .catch((err) => {
                 throw new Error(err);
@@ -27865,6 +27867,7 @@ function getInputsDeploy() {
         port: Number(core.getInput('port')),
         username: core.getInput('username'),
         password: core.getInput('password'),
+        key: core.getInput('key'),
         stack: core.getInput('stack')
     };
 }
@@ -27917,6 +27920,23 @@ const core = __importStar(__nccwpck_require__(3820));
 function sshComando(settings, cmd) {
     return __awaiter(this, void 0, void 0, function* () {
         try {
+            var config;
+            if (!settings.password) {
+                config = {
+                    host: settings.host,
+                    port: settings.port,
+                    username: settings.username,
+                    privateKey: settings.key
+                };
+            }
+            else if (!settings.key) {
+                config = {
+                    host: settings.host,
+                    port: settings.port,
+                    username: settings.username,
+                    password: settings.password
+                };
+            }
             const ssh = new ssh2_1.Client();
             ssh.on('ready', () => {
                 core.info('Client SSH :: conectado com sucesso');
@@ -27934,12 +27954,7 @@ function sshComando(settings, cmd) {
                 });
             }).on('error', (err) => {
                 core.info('Client SSH :: error: ' + err.message);
-            }).connect({
-                host: settings.host,
-                port: settings.port,
-                username: settings.username,
-                password: settings.password
-            }).on('end', () => {
+            }).connect(config).on('end', () => {
                 core.info('Client SSH :: desconectado');
             });
         }

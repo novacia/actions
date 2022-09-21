@@ -9,7 +9,7 @@ async function run(): Promise<void> {
         core.info('Deploy - ' + inputs.stack);
 
         core.info('Removendo stack ' + inputs.stack);
-        await ssh.sshComando({
+        ssh.sshComando({
             host: inputs.host,
             port: inputs.port,
             username: inputs.username,
@@ -18,7 +18,7 @@ async function run(): Promise<void> {
         }, `sudo docker stack rm ${inputs.stack}`);
 
         core.info('Subindo stack ' + inputs.stack);
-        await ssh.sshComando({
+        ssh.sshComando({
             host: inputs.host,
             port: inputs.port,
             username: inputs.username,

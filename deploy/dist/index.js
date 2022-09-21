@@ -27772,7 +27772,7 @@ function run() {
             const inputs = (0, contexto_1.getInputsDeploy)();
             core.info('Deploy - ' + inputs.stack);
             core.info('Removendo stack ' + inputs.stack);
-            yield ssh.sshComando({
+            ssh.sshComando({
                 host: inputs.host,
                 port: inputs.port,
                 username: inputs.username,
@@ -27780,7 +27780,7 @@ function run() {
                 key: inputs.key
             }, `sudo docker stack rm ${inputs.stack}`);
             core.info('Subindo stack ' + inputs.stack);
-            yield ssh.sshComando({
+            ssh.sshComando({
                 host: inputs.host,
                 port: inputs.port,
                 username: inputs.username,

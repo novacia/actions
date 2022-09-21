@@ -1,41 +1,41 @@
-import * as core from '@actions/core'
-import { ssh, sshSettings } from '../../lib/ssh'
+import * as core from '@actions/core';
+import { InputsDeploy, getInputsDeploy } from '../../lib/contexto';
+import { ssh } from '../../lib/ssh';
 
 async function run(): Promise<void> {
     try {
-        const settings: sshSettings = {
-            host: core.getInput('host', { required: true }),
-            port: 22,
-            username: core.getInput('username', { required: true }),
-            password: core.getInput('password', { required: true })
-        }
-        const name_docker = core.getInput('name_docker', { required: true })
+        const inputs: InputsDeploy = getInputsDeploy();
 
-        core.info('Deploy - ' + name_docker)
+        core.info('Deploy - ' + inputs.name_docker);
 
-        const _conn = new ssh(settings)
-        core.info('Removendo stack ' + name_docker)
-        _conn.comando(`sudo docker stack rm ${name_docker}`)
+        const _conn = new ssh({
+            host: inputs.host,
+            port: inputs.port,
+            username: inputs.username,
+            password: inputs.password
+        })
+        core.info('Removendo stack ' + inputs.name_docker);
+        _conn.comando(`sudo docker stack rm ${inputs.name_docker}`)
             .then((value) => {
-                core.info(value)
+                core.info(value);
             })
             .catch((err) => {
-                core.setFailed(err)
-            })
-        core.info('Subindo stack ' + name_docker)
-        _conn.comando(`sudo docker stack deploy -c ./${name_docker}/docker-compose.yml ${name_docker}`)
+                core.setFailed(err);
+            });
+        core.info('Subindo stack ' + inputs.name_docker);
+        _conn.comando(`sudo docker stack deploy -c ./${inputs.name_docker}/docker-compose.yml ${inputs.name_docker}`)
             .then((value) => {
-                core.info(value)
+                core.info(value);
             })
             .catch((err) => {
-                core.setFailed(err)
-            })
+                core.setFailed(err);
+            });
         
-        core.info('Finalizando Deploy')
+        core.info('Finalizando Deploy');
 
     } catch (error) {
         if (error instanceof Error) {
-            core.setFailed(error.message)
+            core.setFailed(error.message);
         }
     }
 }

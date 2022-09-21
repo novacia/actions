@@ -27772,21 +27772,23 @@ function run() {
             const inputs = (0, contexto_1.getInputsDeploy)();
             core.info('Deploy - ' + inputs.stack);
             core.info('Removendo stack ' + inputs.stack);
-            ssh.sshComando({
+            yield ssh.sshComando({
                 host: inputs.host,
                 port: inputs.port,
                 username: inputs.username,
                 password: inputs.password,
                 key: inputs.key
-            }, `sudo docker stack rm ${inputs.stack}`);
+            }, `sudo docker stack rm ${inputs.stack}`)
+                .then(() => { });
             core.info('Subindo stack ' + inputs.stack);
-            ssh.sshComando({
+            yield ssh.sshComando({
                 host: inputs.host,
                 port: inputs.port,
                 username: inputs.username,
                 password: inputs.password,
                 key: inputs.key
-            }, `sudo docker stack deploy -c ./${inputs.stack}/docker-compose.yml ${inputs.stack}`);
+            }, `sudo docker stack deploy -c ./${inputs.stack}/docker-compose.yml ${inputs.stack}`)
+                .then(() => { });
             core.info('Finalizando Deploy');
         }
         catch (error) {

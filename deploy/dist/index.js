@@ -27945,11 +27945,11 @@ function sshComando(settings, cmd) {
                         throw new Error(err.message);
                     stream.on('data', (data) => {
                         core.info('exec STDOUT: ' + data);
-                        ssh.end();
                     }).stderr.on('data', (data) => {
                         throw new Error('exec STDOUT: ' + data);
-                    }).on('exit', (code, signal) => {
+                    }).on('close', (code, signal) => {
                         core.info('Code: ' + code + ', Signal: ' + signal);
+                        ssh.end();
                     });
                 });
             }).on('error', (err) => {

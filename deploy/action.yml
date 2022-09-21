@@ -15,10 +15,10 @@ inputs:
     required: false
     type: string
     description: Password SSH
-  name_docker:
+  stack :
     required: false
     type: string
-    description: Nome do Docker Compose
+    description: Nome da Stack
 
 runs:
   using: 'node12'

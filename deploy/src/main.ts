@@ -6,7 +6,7 @@ async function run(): Promise<void> {
     try {
         const inputs: InputsDeploy = getInputsDeploy();
 
-        core.info('Deploy - ' + inputs.name_docker);
+        core.info('Deploy - ' + inputs.stack);
 
         const _conn = new ssh({
             host: inputs.host,
@@ -14,16 +14,16 @@ async function run(): Promise<void> {
             username: inputs.username,
             password: inputs.password
         })
-        core.info('Removendo stack ' + inputs.name_docker);
-        _conn.comando(`sudo docker stack rm ${inputs.name_docker}`)
+        core.info('Removendo stack ' + inputs.stack);
+        _conn.comando(`sudo docker stack rm ${inputs.stack}`)
             .then((value) => {
                 core.info(value);
             })
             .catch((err) => {
                 core.setFailed(err);
             });
-        core.info('Subindo stack ' + inputs.name_docker);
-        _conn.comando(`sudo docker stack deploy -c ./${inputs.name_docker}/docker-compose.yml ${inputs.name_docker}`)
+        core.info('Subindo stack ' + inputs.stack);
+        _conn.comando(`sudo docker stack deploy -c ./${inputs.stack}/docker-compose.yml ${inputs.stack}`)
             .then((value) => {
                 core.info(value);
             })

@@ -47,7 +47,7 @@ export interface InputsDeploy {
     port: number
     username: string
     password: string
-    name_docker: string
+    stack: string
 }
 
 export function getInputsDeploy(): InputsDeploy {
@@ -56,6 +56,6 @@ export function getInputsDeploy(): InputsDeploy {
         port: Number(core.getInput('port')),
         username: core.getInput('username'),
         password: core.getInput('password'),
-        name_docker: core.getInput('name_docker')
+        stack: core.getInput('name_docker')
     }
 }

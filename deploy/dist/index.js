@@ -27770,23 +27770,23 @@ function run() {
     return __awaiter(this, void 0, void 0, function* () {
         try {
             const inputs = (0, contexto_1.getInputsDeploy)();
-            core.info('Deploy - ' + inputs.name_docker);
+            core.info('Deploy - ' + inputs.stack);
             const _conn = new ssh_1.ssh({
                 host: inputs.host,
                 port: inputs.port,
                 username: inputs.username,
                 password: inputs.password
             });
-            core.info('Removendo stack ' + inputs.name_docker);
-            _conn.comando(`sudo docker stack rm ${inputs.name_docker}`)
+            core.info('Removendo stack ' + inputs.stack);
+            _conn.comando(`sudo docker stack rm ${inputs.stack}`)
                 .then((value) => {
                 core.info(value);
             })
                 .catch((err) => {
                 core.setFailed(err);
             });
-            core.info('Subindo stack ' + inputs.name_docker);
-            _conn.comando(`sudo docker stack deploy -c ./${inputs.name_docker}/docker-compose.yml ${inputs.name_docker}`)
+            core.info('Subindo stack ' + inputs.stack);
+            _conn.comando(`sudo docker stack deploy -c ./${inputs.stack}/docker-compose.yml ${inputs.stack}`)
                 .then((value) => {
                 core.info(value);
             })
@@ -27856,10 +27856,6 @@ function getInputsBuildApi() {
         stack: core.getInput('stack'),
         config: core.getInput('config'),
         versao: core.getInput('versao'),
-        ssh_host: core.getInput('ssh_host'),
-        ssh_port: Number(core.getInput('ssh_port')),
-        ssh_username: core.getInput('ssh_username'),
-        ssh_password: core.getInput('ssh_password'),
         docker_username: core.getInput('docker_username'),
         docker_token: core.getInput('docker_token')
     };
@@ -27871,7 +27867,7 @@ function getInputsDeploy() {
         port: Number(core.getInput('port')),
         username: core.getInput('username'),
         password: core.getInput('password'),
-        name_docker: core.getInput('name_docker')
+        stack: core.getInput('name_docker')
     };
 }
 exports.getInputsDeploy = getInputsDeploy;

@@ -56,6 +56,6 @@ export function getInputsDeploy(): InputsDeploy {
         port: Number(core.getInput('port')),
         username: core.getInput('username'),
         password: core.getInput('password'),
-        stack: core.getInput('name_docker')
+        stack: core.getInput('stack')
     }
 }

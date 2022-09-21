@@ -7,6 +7,10 @@ inputs:
     required: false
     type: string
     description: Host Server
+  port:
+    required: false
+    type: string
+    description: Port SSH
   username:
     required: false
     type: string

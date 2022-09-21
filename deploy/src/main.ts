@@ -9,24 +9,22 @@ async function run(): Promise<void> {
         core.info('Deploy - ' + inputs.stack);
 
         core.info('Removendo stack ' + inputs.stack);
-        await ssh.sshComando({
+        ssh.sshComando({
             host: inputs.host,
             port: inputs.port,
             username: inputs.username,
             password: inputs.password,
             key: inputs.key
         }, `sudo docker stack rm ${inputs.stack}`)
-        .then(() => {});
 
         core.info('Subindo stack ' + inputs.stack);
-        await ssh.sshComando({
+        ssh.sshComando({
             host: inputs.host,
             port: inputs.port,
             username: inputs.username,
             password: inputs.password,
             key: inputs.key
         }, `sudo docker stack deploy -c ./${inputs.stack}/docker-compose.yml ${inputs.stack}`)
-        .then(() => {});
         
         core.info('Finalizando Deploy');
 

@@ -27778,10 +27778,7 @@ function run() {
                 username: inputs.username,
                 password: inputs.password,
                 key: inputs.key
-            }, `sudo docker stack rm ${inputs.stack}`)
-                .catch((err) => {
-                throw new Error(err);
-            });
+            }, `sudo docker stack rm ${inputs.stack}`);
             core.info('Subindo stack ' + inputs.stack);
             yield ssh.sshComando({
                 host: inputs.host,
@@ -27789,10 +27786,7 @@ function run() {
                 username: inputs.username,
                 password: inputs.password,
                 key: inputs.key
-            }, `sudo docker stack deploy -c ./${inputs.stack}/docker-compose.yml ${inputs.stack}`)
-                .catch((err) => {
-                throw new Error(err);
-            });
+            }, `sudo docker stack deploy -c ./${inputs.stack}/docker-compose.yml ${inputs.stack}`);
             core.info('Finalizando Deploy');
         }
         catch (error) {

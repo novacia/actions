@@ -13467,38 +13467,31 @@ Object.defineProperty(exports, "__esModule", ({ value: true }));
 const core = __importStar(__nccwpck_require__(2186));
 const github = __importStar(__nccwpck_require__(5438));
 const dotnet = __importStar(__nccwpck_require__(2));
+const contexto_1 = __nccwpck_require__(5517);
 const fs = __importStar(__nccwpck_require__(7147));
 function run() {
     return __awaiter(this, void 0, void 0, function* () {
         try {
-            const version = core.getInput('version', { required: true });
-            const build = core.getInput('build', { required: true });
-            const csproj = core.getInput('csproj', { required: true });
-            const nupkg = core.getInput('nupkg', { required: true });
-            const username = core.getInput('username', { required: true });
-            const token = core.getInput('token', { required: true });
+            const inputs = (0, contexto_1.getInputsBuildAssembly)();
             core.info('build - Assembly');
-            if (!version || !build) {
+            if (!inputs.version || !inputs.build) {
                 throw new Error('Parâmetros [version, build] inválidos ou não informados');
             }
-            if (!csproj || !csproj.endsWith('.csproj')) {
+            if (!inputs.csproj || !inputs.csproj.endsWith('.csproj')) {
                 throw new Error('Parâmetro [csproj] inválido ou não informado');
             }
-            if (!fs.existsSync(csproj)) {
-                throw new Error(`Arquivo [${csproj}] não existe`);
+            ;
+            if (!fs.existsSync(inputs.csproj)) {
+                throw new Error(`Arquivo [${inputs.csproj}] não existe`);
             }
-            core.info('Version: ' + version);
-            core.info('Build: ' + build);
+            core.info('Version: ' + inputs.version);
+            core.info('Build: ' + inputs.build);
             core.info('GITHUB_RUN_NUMBER: ' + github.context.runNumber);
-            core.info(`Build do projeto ${csproj} em versão ${build}`);
-            yield dotnet.build(csproj, build, version, github.context.runNumber);
-            core.info(`Gerando pacote ${csproj} em versão ${build}`);
-            yield dotnet.pack(csproj, build, version, github.context.runNumber);
-            core.info('Adicionando nuget source');
-            yield dotnet.nuget_add_source(username, token);
-            core.info(`Publicando pacote ${csproj} em versão ${build}`);
-            yield dotnet.nuget_push(nupkg, version, github.context.runNumber, build, token);
-            core.info('Build Finalizado');
+            yield dotnet.build(inputs.csproj, inputs.build, inputs.version, github.context.runNumber);
+            yield dotnet.pack(inputs.csproj, inputs.build, inputs.version, github.context.runNumber);
+            yield dotnet.nuget_add_source(inputs.username, inputs.token);
+            yield dotnet.nuget_push(inputs.nupkg, inputs.version, github.context.runNumber, inputs.build, inputs.token);
+            core.info('build - Assembly [Finalizado]');
         }
         catch (error) {
             if (error instanceof Error) {
@@ -13508,6 +13501,78 @@ function run() {
     });
 }
 run();
+
+
+/***/ }),
+
+/***/ 5517:
+/***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
+
+"use strict";
+
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    var desc = Object.getOwnPropertyDescriptor(m, k);
+    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
+      desc = { enumerable: true, get: function() { return m[k]; } };
+    }
+    Object.defineProperty(o, k2, desc);
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
+    Object.defineProperty(o, "default", { enumerable: true, value: v });
+}) : function(o, v) {
+    o["default"] = v;
+});
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+    __setModuleDefault(result, mod);
+    return result;
+};
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.getInputsDeploy = exports.getInputsBuildApi = exports.getInputsBuildAssembly = void 0;
+const core = __importStar(__nccwpck_require__(3820));
+function getInputsBuildAssembly() {
+    return {
+        version: core.getInput('version'),
+        build: core.getInput('build'),
+        csproj: core.getInput('csproj'),
+        nupkg: core.getInput('nupkg'),
+        username: core.getInput('username'),
+        token: core.getInput('token')
+    };
+}
+exports.getInputsBuildAssembly = getInputsBuildAssembly;
+function getInputsBuildApi() {
+    return {
+        hub: core.getInput('hub'),
+        api: core.getInput('api'),
+        stack: core.getInput('stack'),
+        config: core.getInput('config'),
+        versao: core.getInput('versao'),
+        ssh_host: core.getInput('ssh_host'),
+        ssh_port: Number(core.getInput('ssh_port')),
+        ssh_username: core.getInput('ssh_username'),
+        ssh_password: core.getInput('ssh_password'),
+        docker_username: core.getInput('docker_username'),
+        docker_token: core.getInput('docker_token')
+    };
+}
+exports.getInputsBuildApi = getInputsBuildApi;
+function getInputsDeploy() {
+    return {
+        host: core.getInput('host'),
+        port: Number(core.getInput('port')),
+        username: core.getInput('username'),
+        password: core.getInput('password'),
+        name_docker: core.getInput('name_docker')
+    };
+}
+exports.getInputsDeploy = getInputsDeploy;
 
 
 /***/ }),
@@ -13555,7 +13620,7 @@ const exec = __importStar(__nccwpck_require__(9343));
 const core = __importStar(__nccwpck_require__(3820));
 function build(csproj, build, version, runNumber) {
     return __awaiter(this, void 0, void 0, function* () {
-        core.info('comando donet build');
+        core.info(`Build do projeto ${csproj} em versão ${build}`);
         const buildArray = new Array('build', csproj);
         buildArray.push('-c', build);
         buildArray.push(`-p:Version=${version}.${runNumber}.0-${build.toLowerCase()}`);
@@ -13575,7 +13640,7 @@ function build(csproj, build, version, runNumber) {
 exports.build = build;
 function pack(csproj, build, version, runNumber) {
     return __awaiter(this, void 0, void 0, function* () {
-        core.info('comando donet pack');
+        core.info(`Gerando pacote ${csproj} em versão ${build}`);
         const packArray = new Array('pack', csproj);
         packArray.push('-c', build);
         packArray.push(`-p:PackageVersion=${version}.${runNumber}.0-${build.toLowerCase()}`);
@@ -13596,7 +13661,7 @@ function pack(csproj, build, version, runNumber) {
 exports.pack = pack;
 function nuget_add_source(username, token) {
     return __awaiter(this, void 0, void 0, function* () {
-        core.info('comando donet nuget add');
+        core.info('Adicionando nuget source');
         if (!username || !token) {
             throw new Error('username e token são obrigatórios');
         }
@@ -13621,7 +13686,7 @@ function nuget_add_source(username, token) {
 exports.nuget_add_source = nuget_add_source;
 function nuget_push(nupkg, version, runNumber, build, token) {
     return __awaiter(this, void 0, void 0, function* () {
-        core.info('comando donet nuget push');
+        core.info(`Publicando pacote ${nupkg} em versão ${build}`);
         if (!nupkg || !token) {
             throw new Error('Parâmetros [nupkg, token] são obrigatórios');
         }

@@ -2,7 +2,7 @@ import * as exec from '@actions/exec'
 import * as core from '@actions/core'
 
 export async function build(csproj:string, build:string, version:string, runNumber: number): Promise<void> {
-    core.info('comando donet build')
+    core.info(`Build do projeto ${csproj} em versão ${build}`);
 
     const buildArray: Array<string> = new Array('build', csproj);
     buildArray.push('-c', build)
@@ -22,7 +22,7 @@ export async function build(csproj:string, build:string, version:string, runNumb
 }
 
 export async function pack(csproj:string, build:string, version:string, runNumber: number): Promise<void> {
-    core.info('comando donet pack')
+    core.info(`Gerando pacote ${csproj} em versão ${build}`);
 
     const packArray: Array<string> = new Array('pack', csproj)
     packArray.push('-c', build)
@@ -43,7 +43,7 @@ export async function pack(csproj:string, build:string, version:string, runNumbe
 }
 
 export async function nuget_add_source(username:string, token:string): Promise<void> {
-    core.info('comando donet nuget add')
+    core.info('Adicionando nuget source');
 
     if (!username || !token) {
         throw new Error('username e token são obrigatórios')
@@ -69,7 +69,7 @@ export async function nuget_add_source(username:string, token:string): Promise<v
 }
 
 export async function nuget_push(nupkg:string, version:string, runNumber: number, build:string, token:string): Promise<void> {
-    core.info('comando donet nuget push')
+    core.info(`Publicando pacote ${nupkg} em versão ${build}`);
 
     if (!nupkg || !token) {
         throw new Error('Parâmetros [nupkg, token] são obrigatórios')

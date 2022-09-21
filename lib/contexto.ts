@@ -26,10 +26,6 @@ export interface InputsBuildApi {
     stack: string
     config: string
     versao: string
-    ssh_host: string
-    ssh_port: number
-    ssh_username: string
-    ssh_password: string
     docker_username: string
     docker_token: string
 }
@@ -41,10 +37,6 @@ export function getInputsBuildApi(): InputsBuildApi {
         stack: core.getInput('stack'),
         config: core.getInput('config'),
         versao: core.getInput('versao'),
-        ssh_host: core.getInput('ssh_host'),
-        ssh_port: Number(core.getInput('ssh_port')),
-        ssh_username: core.getInput('ssh_username'),
-        ssh_password: core.getInput('ssh_password'),
         docker_username: core.getInput('docker_username'),
         docker_token: core.getInput('docker_token')
     }

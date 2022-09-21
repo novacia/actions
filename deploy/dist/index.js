@@ -27771,22 +27771,31 @@ function run() {
         try {
             const inputs = (0, contexto_1.getInputsDeploy)();
             core.info('Deploy - ' + inputs.stack);
+            var _ssh = new ssh.sshGithub({
+                host: inputs.host,
+                port: inputs.port,
+                username: inputs.username,
+                password: inputs.password,
+                key: inputs.key
+            });
             core.info('Removendo stack ' + inputs.stack);
-            ssh.sshComando({
-                host: inputs.host,
-                port: inputs.port,
-                username: inputs.username,
-                password: inputs.password,
-                key: inputs.key
-            }, `sudo docker stack rm ${inputs.stack}`);
+            _ssh.comado(`sudo docker stack rm ${inputs.stack}`);
+            // ssh.sshComando({
+            //     host: inputs.host,
+            //     port: inputs.port,
+            //     username: inputs.username,
+            //     password: inputs.password,
+            //     key: inputs.key
+            // }, `sudo docker stack rm ${inputs.stack}`)
             core.info('Subindo stack ' + inputs.stack);
-            ssh.sshComando({
-                host: inputs.host,
-                port: inputs.port,
-                username: inputs.username,
-                password: inputs.password,
-                key: inputs.key
-            }, `sudo docker stack deploy -c ./${inputs.stack}/docker-compose.yml ${inputs.stack}`);
+            _ssh.comado(`sudo docker stack deploy -c ./${inputs.stack}/docker-compose.yml ${inputs.stack}`);
+            // ssh.sshComando({
+            //     host: inputs.host,
+            //     port: inputs.port,
+            //     username: inputs.username,
+            //     password: inputs.password,
+            //     key: inputs.key
+            // }, `sudo docker stack deploy -c ./${inputs.stack}/docker-compose.yml ${inputs.stack}`)
             core.info('Finalizando Deploy');
         }
         catch (error) {
@@ -27908,9 +27917,49 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.sshComando = void 0;
+exports.sshComando = exports.sshGithub = void 0;
 const ssh2_1 = __nccwpck_require__(3353);
 const core = __importStar(__nccwpck_require__(3820));
+class sshGithub {
+    constructor(settings) {
+        if (!settings.password) {
+            this._config = {
+                host: settings.host,
+                port: settings.port,
+                username: settings.username,
+                privateKey: settings.key
+            };
+        }
+        else if (!settings.key) {
+            this._config = {
+                host: settings.host,
+                port: settings.port,
+                username: settings.username,
+                password: settings.password
+            };
+        }
+        this._ssh = new ssh2_1.Client();
+    }
+    comado(cmd) {
+        this._ssh.on('ready', () => {
+            this._ssh.exec(cmd, (err, stream) => {
+                if (err)
+                    throw new Error(err.message);
+                stream.on('data', (data) => {
+                    core.info('exec STDOUT: ' + data);
+                }).stderr.on('data', (data) => {
+                    throw new Error('exec STDOUT: ' + data);
+                }).on('close', (code, signal) => {
+                    core.info('Code: ' + code + ', Signal: ' + signal);
+                    this._ssh.end();
+                });
+            });
+        }).on('error', (err) => {
+            core.info('Client SSH :: error: ' + err.message);
+        });
+    }
+}
+exports.sshGithub = sshGithub;
 function sshComando(settings, cmd) {
     return __awaiter(this, void 0, void 0, function* () {
         try {

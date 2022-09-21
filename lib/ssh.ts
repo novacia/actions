@@ -49,7 +49,7 @@ export class sshGithub {
             });
         }).on('error', (err) => {
             core.info('Client SSH :: error: ' + err.message);
-        });
+        }).connect(this._config);
     }
 }
 

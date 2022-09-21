@@ -19,7 +19,7 @@ inputs:
     required: false
     type: string
     description: Password SSH
-  stack :
+  stack:
     required: false
     type: string
     description: Nome da Stack

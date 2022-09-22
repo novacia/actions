@@ -35,11 +35,17 @@ export async function sshComando(settings:sshSettings, cmd: string): Promise<voi
         ssh.connect()
             .then(() => {
                 core.info('Conectado com sucesso')
+            })
+            .catch((err) => {
+                throw new Error(err)
             });
 
         ssh.exec(cmd)
             .then((data) => {
                 core.info(data)
+            })
+            .catch((err) => {
+                throw new Error(err)
             });
     } catch (error) {
         throw new Error('sshComando :: error: ' + error.message);

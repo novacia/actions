@@ -37,6 +37,8 @@ export async function build(hub: string, config: string, versao: string, numberR
     buildArray.push('-t', `${hub}:${versao}.${numberRun}.0-${config.toLowerCase()}`)
     buildArray.push('-f', `./${api}/Dockerfile ./${api}`)
 
+    core.info(buildArray.toString());
+
     await exec
         .getExecOutput('docker build', buildArray, {
             ignoreReturnCode: true,

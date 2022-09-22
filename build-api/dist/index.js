@@ -13649,6 +13649,7 @@ function build(hub, config, versao, numberRun, api) {
         buildArray.push('--build-arg', `VERSAO=${versao}.${numberRun}.0-${config.toLowerCase()}`);
         buildArray.push('-t', `${hub}:${versao}.${numberRun}.0-${config.toLowerCase()}`);
         buildArray.push('-f', `./${api}/Dockerfile ./${api}`);
+        core.info(buildArray.toString());
         yield exec
             .getExecOutput('docker build', buildArray, {
             ignoreReturnCode: true,

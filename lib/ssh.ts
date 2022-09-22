@@ -1,5 +1,5 @@
 import * as core from '@actions/core';
-import { NodeSSH, Config } from 'node-ssh';
+import { ConnectConfig, Client } from 'ssh2';
 
 export interface sshSettings {
     host: string
@@ -29,18 +29,28 @@ export async function sshComando(settings:sshSettings, cmd: string): Promise<voi
             }
         }
 
-        const ssh = new NodeSSH();
+        const ssh = new Client();
 
-        ssh.connect(config)
-            .then(() => {
+        await new Promise((result) => {
+            ssh.connect(config).on('ready', () => {
                 core.info('Conectado com sucesso')
+                return result(true);
             });
+        });
 
-        ssh.execCommand(cmd)
-            .then((result) => {
-                if (result.stderr.length) throw new Error(result.stderr)
-                core.info('STDOUT: ' + result.stdout)
+        await new Promise((result) => {
+            ssh.exec(cmd, (err, stream) => {
+                if (err) throw new Error(err.message)
+                stream.on('close', (code, sginal) => {
+                    ssh.end();
+                    return result(true);
+                }).on('data', (data) => {
+                    core.info('STDOUT: ' + data);
+                }).stderr.on('data', (data) => {
+                    core.info('STDERR: ' + data);
+                })
             });
+        });
 
     } catch (error) {
         throw new Error('sshComando :: error: ' + error.message);

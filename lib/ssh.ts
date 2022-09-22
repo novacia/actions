@@ -33,8 +33,10 @@ export async function sshComando(settings:sshSettings, cmd: string): Promise<voi
 
         await new Promise((result) => {
             ssh.connect(config).on('ready', () => {
-                core.info('Conectado com sucesso')
+                core.info('Conectado com sucesso');
                 return result(true);
+            }).on('error', (err) => {
+                core.info(err.message);
             });
         });
 

@@ -27944,6 +27944,8 @@ function sshComando(settings, cmd) {
                 ssh.connect(config).on('ready', () => {
                     core.info('Conectado com sucesso');
                     return result(true);
+                }).on('error', (err) => {
+                    core.info(err.message);
                 });
             });
             yield new Promise((result) => {

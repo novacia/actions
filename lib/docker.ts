@@ -37,8 +37,6 @@ export async function build(hub: string, config: string, versao: string, numberR
     buildArray.push('-t', `${hub}:${versao}.${numberRun}.0-${config.toLowerCase()}`)
     buildArray.push('-f', `./${api}/Dockerfile ./${api}`)
 
-    core.info(buildArray.toString());
-
     await exec
         .getExecOutput('docker build', buildArray, {
             ignoreReturnCode: true,
@@ -59,11 +57,8 @@ export async function tag(hub: string, versao: string, numberRun: number, config
         throw new Error('Parâmetros [hub, versao, numberRun, config] são obrigatórios')
     }
 
-    const tagArray: Array<string> = new Array('tag', `${hub}:${versao}.${numberRun}.0-${config}`)
-    tagArray.push(`${hub}:latest`)
-
     await exec
-        .getExecOutput('docker tag', tagArray, {
+        .getExecOutput('docker tag', [`${hub}:${versao}.${numberRun}.0-${config}`, `${hub}:latest`], {
             ignoreReturnCode: true,
             silent: true
         })

@@ -13654,7 +13654,6 @@ function build(hub, config, versao, numberRun, api) {
         buildArray.push('--build-arg', `VERSAO=${versao}.${numberRun}.0-${config.toLowerCase()}`);
         buildArray.push('-t', `${hub}:${versao}.${numberRun}.0-${config.toLowerCase()}`);
         buildArray.push('-f', `./${api}/Dockerfile ./${api}`);
-        core.info(buildArray.toString());
         yield exec
             .getExecOutput('docker build', buildArray, {
             ignoreReturnCode: true,
@@ -13675,10 +13674,8 @@ function tag(hub, versao, numberRun, config) {
         if (!hub && !versao || !numberRun || !config) {
             throw new Error('Parâmetros [hub, versao, numberRun, config] são obrigatórios');
         }
-        const tagArray = new Array('tag', `${hub}:${versao}.${numberRun}.0-${config}`);
-        tagArray.push(`${hub}:latest`);
         yield exec
-            .getExecOutput('docker tag', tagArray, {
+            .getExecOutput('docker tag', [`${hub}:${versao}.${numberRun}.0-${config}`, `${hub}:latest`], {
             ignoreReturnCode: true,
             silent: true
         })

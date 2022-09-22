@@ -6,7 +6,7 @@ export interface sshSettings {
     port: number
     username: string
     password: string,
-    key?: string
+    key: string
 }
 
 export async function sshComando(settings:sshSettings, cmd: string): Promise<void> {

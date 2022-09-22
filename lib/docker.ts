@@ -37,12 +37,12 @@ export async function build(dominio: string, config: string, versao: string, num
     buildArray.push('-t', `${dominio}/${api}:${versao}.${numberRun}.0-${config.toLowerCase()}`)
     buildArray.push('-f', `./${api}/Dockerfile ./${api}`)
 
-    console.log(buildArray);
+    console.log(buildArray.toString());
 
     await exec
         .getExecOutput('docker build', buildArray, {
             ignoreReturnCode: true,
-            silent: true
+            silent: true            
         })
         .then(res => {
             if (res.stderr.length > 0 && res.exitCode != 0) {

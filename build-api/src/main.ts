@@ -8,42 +8,34 @@ async function run(): Promise<void> {
     try {
         const inputs: InputsBuildApi = getInputsBuildApi();
 
-        core.info('Hub: ' + inputs.hub);
-        core.info('api: ' + inputs.api);
-        core.info('stack: ' + inputs.stack);
-        core.info('config: ' + inputs.config);
-        core.info('versao: ' + inputs.versao);
-        core.info('docker_token: ' + inputs.docker_token);
-        core.info('docker_username: ' + inputs.docker_username);
+        core.info('Build API - ' + inputs.api);
 
-        // core.info('Build API - ' + inputs.api);
+        await docker.build(inputs.hub, inputs.config, inputs.versao, github.context.runNumber, inputs.api)
+            .catch((err) => {
+                throw new Error(err);
+            });
 
-        // await docker.build(inputs.hub, inputs.config, inputs.versao, github.context.runNumber, inputs.api)
-        //     .catch((err) => {
-        //         throw new Error(err);
-        //     });
+        await docker.tag(inputs.versao, github.context.runNumber, inputs.api, inputs.config)
+            .catch((err) => {
+                throw new Error(err);
+            });
 
-        // await docker.tag(inputs.versao, github.context.runNumber, inputs.api, inputs.config)
-        //     .catch((err) => {
-        //         throw new Error(err);
-        //     });
+        await docker.login(inputs.docker_username, inputs.docker_token)
+            .catch((err) => {
+                throw new Error(err);
+            });
 
-        // await docker.login(inputs.docker_username, inputs.docker_token)
-        //     .catch((err) => {
-        //         throw new Error(err);
-        //     });
-
-        // await docker.push(inputs.api, `${inputs.versao}.${github.context.runNumber}.0-${inputs.config}`)
-        //     .catch((err) => {
-        //         throw new Error(err);
-        //     });
+        await docker.push(inputs.api, `${inputs.versao}.${github.context.runNumber}.0-${inputs.config}`)
+            .catch((err) => {
+                throw new Error(err);
+            });
             
-        // await docker.push(inputs.api, 'latest')
-        //     .catch((err) => {
-        //         throw new Error(err);
-        //     });
+        await docker.push(inputs.api, 'latest')
+            .catch((err) => {
+                throw new Error(err);
+            });
         
-        // core.info('Build API Finalizado');
+        core.info('Build API Finalizado');
     } catch (error) {
         if (error instanceof Error) {
             core.setFailed(error.message);

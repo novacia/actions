@@ -23,7 +23,6 @@ export function getInputsBuildAssembly(): InputsBuildAssembly {
 export interface InputsBuildApi {
     hub: string
     api: string
-    stack: string
     config: string
     versao: string
     docker_username: string
@@ -34,7 +33,6 @@ export function getInputsBuildApi(): InputsBuildApi {
     return {
         hub: core.getInput('hub'),
         api: core.getInput('api'),
-        stack: core.getInput('stack'),
         config: core.getInput('config'),
         versao: core.getInput('versao'),
         docker_username: core.getInput('docker_username'),

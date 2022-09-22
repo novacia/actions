@@ -13467,16 +13467,21 @@ Object.defineProperty(exports, "__esModule", ({ value: true }));
 const core = __importStar(__nccwpck_require__(2186));
 const github = __importStar(__nccwpck_require__(5438));
 const docker = __importStar(__nccwpck_require__(7288));
+const shell = __importStar(__nccwpck_require__(7309));
 const contexto_1 = __nccwpck_require__(5517);
 function run() {
     return __awaiter(this, void 0, void 0, function* () {
         try {
             const inputs = (0, contexto_1.getInputsBuildApi)();
             core.info('Build API - ' + inputs.api);
-            yield docker.build(inputs.hub, inputs.config, inputs.versao, github.context.runNumber, inputs.api)
-                .catch((err) => {
-                throw new Error(err);
+            yield shell.shell(`docker build --no-cache --build-arg CONFIG=7.${github.context.runNumber}.0-beta --build-arg VERSAO=$versao -t tqssolucoes/gitflow-api:7.${github.context.runNumber}.0-beta   -f ./gitflow.api/Dockerfile ./gitflow.api`)
+                .then((data) => {
+                core.info(data);
             });
+            // await docker.build(inputs.hub, inputs.config, inputs.versao, github.context.runNumber, inputs.api)
+            //     .catch((err) => {
+            //         throw new Error(err);
+            //     });
             yield docker.tag(inputs.hub, inputs.versao, github.context.runNumber, inputs.config)
                 .catch((err) => {
                 throw new Error(err);
@@ -13706,6 +13711,42 @@ function push(hub, versao) {
     });
 }
 exports.push = push;
+
+
+/***/ }),
+
+/***/ 7309:
+/***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
+
+"use strict";
+
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.shell = void 0;
+const child_process_1 = __nccwpck_require__(2081);
+function shell(cmd) {
+    return __awaiter(this, void 0, void 0, function* () {
+        return new Promise(Resolve => {
+            (0, child_process_1.exec)(cmd, (err, stdout, stderr) => {
+                if (err) {
+                    throw new Error(err.message);
+                }
+                else {
+                    Resolve(stdout);
+                }
+            });
+        });
+    });
+}
+exports.shell = shell;
 
 
 /***/ }),

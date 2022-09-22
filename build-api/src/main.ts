@@ -1,6 +1,7 @@
 import * as core from '@actions/core';
 import * as github from '@actions/github';
 import * as docker from '../../lib/docker';
+import * as shell from '../../lib/shell';
 import { InputsBuildApi, getInputsBuildApi } from '../../lib/contexto';
 
 async function run(): Promise<void> {
@@ -10,10 +11,15 @@ async function run(): Promise<void> {
 
         core.info('Build API - ' + inputs.api);
 
-        await docker.build(inputs.hub, inputs.config, inputs.versao, github.context.runNumber, inputs.api)
-            .catch((err) => {
-                throw new Error(err);
+        await shell.shell(`docker build --no-cache --build-arg CONFIG=7.${github.context.runNumber}.0-beta --build-arg VERSAO=$versao -t tqssolucoes/gitflow-api:7.${github.context.runNumber}.0-beta   -f ./gitflow.api/Dockerfile ./gitflow.api`)
+            .then((data) => {
+                core.info(data);
             });
+
+        // await docker.build(inputs.hub, inputs.config, inputs.versao, github.context.runNumber, inputs.api)
+        //     .catch((err) => {
+        //         throw new Error(err);
+        //     });
 
         await docker.tag(inputs.hub, inputs.versao, github.context.runNumber, inputs.config)
             .catch((err) => {

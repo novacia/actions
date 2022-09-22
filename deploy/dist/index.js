@@ -27928,7 +27928,7 @@ function sshComando(settings, cmd) {
                     host: settings.host,
                     port: settings.port,
                     username: settings.username,
-                    privateKey: Buffer.from(settings.key)
+                    privateKey: settings.key
                 };
             }
             else if (!settings.key) {
@@ -27945,7 +27945,7 @@ function sshComando(settings, cmd) {
                     core.info('Conectado com sucesso');
                     return result(true);
                 }).on('error', (err) => {
-                    core.info(err.message);
+                    throw new Error(err.message);
                 });
             });
             yield new Promise((result) => {

@@ -22,9 +22,12 @@ export function getInputsBuildAssembly(): InputsBuildAssembly {
 
 export interface InputsBuildApi {
     hub: string
-    api: string
+    projeto: string
     config: string
-    versao: string
+    versao_major: string
+    versao_minor: string
+    versao_patch: string
+    versao_patch_sufixo: string
     docker_username: string
     docker_token: string
 }
@@ -32,9 +35,12 @@ export interface InputsBuildApi {
 export function getInputsBuildApi(): InputsBuildApi {
     return {
         hub: core.getInput('hub'),
-        api: core.getInput('api'),
+        projeto: core.getInput('projeto'),
         config: core.getInput('config'),
-        versao: core.getInput('versao'),
+        versao_major: core.getInput('versao-major'),
+        versao_minor: core.getInput('versao-minor'),
+        versao_patch: core.getInput('versao-patch'),
+        versao_patch_sufixo: core.getInput('versao-patch-sufixo'),
         docker_username: core.getInput('docker_username'),
         docker_token: core.getInput('docker_token')
     }

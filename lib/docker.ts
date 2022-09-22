@@ -1,5 +1,6 @@
 import * as exec from '@actions/exec'
 import * as core from '@actions/core'
+import * as shell from '../lib/shell';
 
 export async function login(username: string, password: string): Promise<void> {
     core.info('Autenticando no Docker Hub')
@@ -25,20 +26,34 @@ export async function login(username: string, password: string): Promise<void> {
         })
 }
 
-export async function build(hub: string, config: string, versao: string, numberRun: number, api: string): Promise<void> {
-    core.info('Build da imagem ' + api)
+export async function build(hub: string, projeto: string, config: string, versao_major: string, versao_minor: string, versao_patch: string, versao_patch_sufixo?: string): Promise<void> {
+    core.info('Build da imagem ' + projeto)
 
-    if (!config || !versao || !numberRun || !api) {
-        throw new Error('Parâmentros [config, version, numberRun, api] são obrigatórios')
+    if (!hub || !projeto || !config || !versao_major || !versao_minor || !versao_patch) {
+        throw new Error('Parâmentros [hub, projeto, config, versao_major, versao_minor, versao_patch] são obrigatórios')
     }
 
-    const buildArray: Array<string> = new Array('--no-cache', '--build-arg', 'CONFIG=' + config)
-    buildArray.push('--build-arg', `VERSAO=${versao}.${numberRun}.0-${config.toLowerCase()}`)
-    buildArray.push('-t', `${hub}:${versao}.${numberRun}.0-${config.toLowerCase()}`)
-    buildArray.push('-f', `./${api}/Dockerfile ./${api}`)
+    var versao: string = `${versao_major}.${versao_minor}.${versao_patch}`;
+    if (versao_patch_sufixo) {
+        versao = `${versao}-${versao_patch_sufixo}`;
+    }
+
+    // var cmd: string = `docker build --no-cache --build-arg CONFIG=${config} --build-arg VERSAO=${versao} -t ${hub}:${versao} -f ./${projeto}/Dockerfile ./${projeto}`;
+
+    // await shell.shell(cmd)
+    //     .then((data) => {
+    //         core.info(data);
+    //     }).catch((err) => {
+    //         throw new Error(err);
+    //     });
+
+    const buildArray: Array<string> = new Array('--build-arg', `CONFIG=${config}`)
+    buildArray.push('--build-arg', `VERSAO=${versao}`)
+    buildArray.push('-t', `${hub}:${versao}`)
+    buildArray.push('-f', `./${projeto}/Dockerfile`, `./${projeto}`)
 
     await exec
-        .getExecOutput('docker build', buildArray, {
+        .getExecOutput('docker build --no-cache', buildArray, {
             ignoreReturnCode: true,
             silent: true            
         })
@@ -50,15 +65,21 @@ export async function build(hub: string, config: string, versao: string, numberR
         })
 }
 
-export async function tag(hub: string, versao: string, numberRun: number, config: string): Promise<void> {
+export async function tag(hub: string, versao_major: string, versao_minor: string, versao_patch: string, versao_patch_sufixo: string): Promise<void> {
     core.info('Criando tag latest')
 
-    if (!hub && !versao || !numberRun || !config) {
+    if (!hub && !versao_major || !versao_minor || !versao_patch) {
         throw new Error('Parâmetros [hub, versao, numberRun, config] são obrigatórios')
     }
 
+    var tag: string = `${hub}:${versao_major}.${versao_minor}.${versao_patch}`;
+    if (versao_patch_sufixo) {
+        tag = `${tag}-${versao_patch_sufixo}`;
+    }
+    const tag_latest: string = `${hub}:latest`;
+
     await exec
-        .getExecOutput('docker tag', [`${hub}:${versao}.${numberRun}.0-${config}`, `${hub}:latest`], {
+        .getExecOutput('docker tag', [tag, tag_latest], {
             ignoreReturnCode: true,
             silent: true
         })
@@ -70,15 +91,26 @@ export async function tag(hub: string, versao: string, numberRun: number, config
         })
 }
 
-export async function push(hub: string, versao: string): Promise<void> {
-    core.info('Subindo imagem compilada - ' + versao)
-
-    if (!hub && !versao) {
-        throw new Error('Parâmetro [hub, versao] é obrigatório')
+export async function push(latest: boolean, hub: string, versao_major?: string, versao_minor?: string, versao_patch?: string, versao_patch_sufixo?: string): Promise<void> {
+    
+    if (!latest && !hub) {
+        throw new Error('Parâmetro [latest, hub] é obrigatório')
     }
 
+    var tag: string;
+    if (latest) {
+        tag = `${hub}:latest`;
+    } else {
+        tag = `${hub}:${versao_major}.${versao_minor}.${versao_patch}`;
+        if (versao_patch_sufixo) {
+            tag = `${tag}-${versao_patch_sufixo}`;
+        }
+    }
+
+    core.info('Subindo imagem compilada - ' + tag)
+
     await exec
-        .getExecOutput('docker push', [ `${hub}:${versao}` ], {
+        .getExecOutput('docker push', [ tag ], {
             ignoreReturnCode: true,
             silent: true
         })

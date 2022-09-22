@@ -9,19 +9,14 @@ async function run(): Promise<void> {
     try {
         const inputs: InputsBuildApi = getInputsBuildApi();
 
-        core.info('Build API - ' + inputs.api);
+        core.info('Build API - ' + inputs.projeto);
 
-        await shell.shell(`docker build --no-cache --build-arg CONFIG=Beta --build-arg VERSAO=7.${github.context.runNumber}.0-beta -t tqssolucoes/gitflow-api:7.${github.context.runNumber}.0-beta   -f ./gitflow.api/Dockerfile ./gitflow.api`)
-            .then((data) => {
-                core.info(data);
+        await docker.build(inputs.hub, inputs.projeto, inputs.config, inputs.versao_major, inputs.versao_minor, inputs.versao_patch, inputs.versao_patch_sufixo)
+            .catch((err) => {
+                throw new Error(err);
             });
 
-        // await docker.build(inputs.hub, inputs.config, inputs.versao, github.context.runNumber, inputs.api)
-        //     .catch((err) => {
-        //         throw new Error(err);
-        //     });
-
-        await docker.tag(inputs.hub, inputs.versao, github.context.runNumber, inputs.config)
+        await docker.tag(inputs.hub, inputs.versao_major, inputs.versao_minor, inputs.versao_patch, inputs.versao_patch_sufixo)
             .catch((err) => {
                 throw new Error(err);
             });
@@ -31,12 +26,12 @@ async function run(): Promise<void> {
                 throw new Error(err);
             });
 
-        await docker.push(inputs.api, `${inputs.versao}.${github.context.runNumber}.0-${inputs.config}`)
+        await docker.push(false, inputs.projeto, inputs.versao_major, inputs.versao_minor, inputs.versao_patch, inputs.versao_patch_sufixo)
             .catch((err) => {
                 throw new Error(err);
             });
             
-        await docker.push(inputs.api, 'latest')
+        await docker.push(true, inputs.projeto)
             .catch((err) => {
                 throw new Error(err);
             });

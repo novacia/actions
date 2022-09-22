@@ -1,6 +1,6 @@
 import { Client, ConnectConfig, utils } from 'ssh2'
 import * as core from '@actions/core'
-import { consumers, PassThrough, Stream } from 'stream'
+import SSH2Promise  from 'ssh2-promise';
 
 export interface sshSettings {
     host: string
@@ -73,26 +73,17 @@ export async function sshComando(settings:sshSettings, cmd: string): Promise<voi
             }
         }
 
-        const ssh = new Client()
+        var ssh = new SSH2Promise(config);
 
-        ssh.on('ready', () => {
-            core.info('Client SSH :: conectado com sucesso');
-            ssh.exec(cmd, (err, stream) => {
-                if (err) throw new Error(err.message);
-                stream.on('data', (data) => {
-                    core.info('exec STDOUT: ' + data);
-                }).stderr.on('data', (data) => {
-                    throw new Error('exec STDOUT: ' + data)
-                }).on('close', (code, signal) => {
-                    core.info('Code: ' + code + ', Signal: ' + signal)
-                    ssh.end();
-                })
+        ssh.connect()
+            .then(() => {
+                core.info('Conectado com sucesso')
             });
-        }).on('error', (err) => {
-            core.info('Client SSH :: error: ' + err.message);
-        }).connect(config).on('end', () => {
-            core.info('Client SSH :: desconectado');
-        });
+
+        ssh.exec(cmd)
+            .then((data) => {
+                core.info(data)
+            });
     } catch (error) {
         throw new Error('sshComando :: error: ' + error.message);
     }

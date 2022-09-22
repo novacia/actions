@@ -11,7 +11,7 @@ async function run(): Promise<void> {
 
         core.info('Build API - ' + inputs.api);
 
-        await shell.shell(`docker build --no-cache --build-arg CONFIG=7.${github.context.runNumber}.0-beta --build-arg VERSAO=$versao -t tqssolucoes/gitflow-api:7.${github.context.runNumber}.0-beta   -f ./gitflow.api/Dockerfile ./gitflow.api`)
+        await shell.shell(`docker build --no-cache --build-arg CONFIG=Beta --build-arg VERSAO=7.${github.context.runNumber}.0-beta -t tqssolucoes/gitflow-api:7.${github.context.runNumber}.0-beta   -f ./gitflow.api/Dockerfile ./gitflow.api`)
             .then((data) => {
                 core.info(data);
             });

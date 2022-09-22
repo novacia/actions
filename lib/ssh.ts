@@ -10,49 +10,6 @@ export interface sshSettings {
     key: string
 }
 
-export class sshGithub {
-
-    private _config: ConnectConfig;
-    private _ssh: Client;
-
-    constructor(settings:sshSettings) {
-        if (!settings.password) {
-            this._config = {
-                host: settings.host,
-                port: settings.port,
-                username: settings.username,
-                privateKey: settings.key
-            };
-        } else if (!settings.key) {
-            this._config = {
-                host: settings.host,
-                port: settings.port,
-                username: settings.username,
-                password: settings.password
-            };
-        }
-        this._ssh = new Client();
-    }
-
-    comado(cmd: string): void {
-        this._ssh.on('ready', () => {
-            this._ssh.exec(cmd, (err, stream) => {
-                if (err) throw new Error(err.message);
-                stream.on('data', (data) => {
-                    core.info('exec STDOUT: ' + data);
-                }).stderr.on('data', (data) => {
-                    throw new Error('exec STDOUT: ' + data)
-                }).on('close', (code, signal) => {
-                    core.info('Code: ' + code + ', Signal: ' + signal);
-                    this._ssh.end();
-                })
-            });
-        }).on('error', (err) => {
-            core.info('Client SSH :: error: ' + err.message);
-        }).connect(this._config);
-    }
-}
-
 export async function sshComando(settings:sshSettings, cmd: string): Promise<void> {
     
     try {

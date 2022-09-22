@@ -6,7 +6,7 @@ export interface sshSettings {
     port: number
     username: string
     password: string,
-    key: string
+    key?: string
 }
 
 export async function sshComando(settings:sshSettings, cmd: string): Promise<void> {
@@ -18,7 +18,7 @@ export async function sshComando(settings:sshSettings, cmd: string): Promise<voi
                 host: settings.host,
                 port: settings.port,
                 username: settings.username,
-                privateKey: Buffer.from(settings.key)
+                privateKey: settings.key
             }
         } else if (!settings.key) {
             config = {

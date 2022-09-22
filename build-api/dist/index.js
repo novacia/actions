@@ -5390,6 +5390,11 @@ function run() {
         try {
             const inputs = (0, contexto_1.getInputsBuildApi)();
             core.info('Hub: ' + inputs.hub);
+            core.info('api: ' + inputs.api);
+            core.info('stack: ' + inputs.stack);
+            core.info('config: ' + inputs.config);
+            core.info('docker_token: ' + inputs.docker_token);
+            core.info('docker_username: ' + inputs.docker_username);
             // core.info('Build API - ' + inputs.api);
             // await docker.build(inputs.hub, inputs.config, inputs.versao, github.context.runNumber, inputs.api)
             //     .catch((err) => {

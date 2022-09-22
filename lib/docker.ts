@@ -25,7 +25,7 @@ export async function login(username: string, password: string): Promise<void> {
         })
 }
 
-export async function build(dominio: string, config: string, versao: string, numberRun: number, api: string): Promise<void> {
+export async function build(hub: string, config: string, versao: string, numberRun: number, api: string): Promise<void> {
     core.info('Build da imagem ' + api)
 
     if (!config || !versao || !numberRun || !api) {
@@ -34,10 +34,8 @@ export async function build(dominio: string, config: string, versao: string, num
 
     const buildArray: Array<string> = new Array('--no-cache', '--build-arg', 'CONFIG=' + config)
     buildArray.push('--build-arg', `VERSAO=${versao}.${numberRun}.0-${config.toLowerCase()}`)
-    buildArray.push('-t', `${dominio}/${api}:${versao}.${numberRun}.0-${config.toLowerCase()}`)
+    buildArray.push('-t', `${hub}:${versao}.${numberRun}.0-${config.toLowerCase()}`)
     buildArray.push('-f', `./${api}/Dockerfile ./${api}`)
-
-    console.log(buildArray.toString());
 
     await exec
         .getExecOutput('docker build', buildArray, {
@@ -52,15 +50,15 @@ export async function build(dominio: string, config: string, versao: string, num
         })
 }
 
-export async function tag(versao: string, numberRun: number, api: string, config: string): Promise<void> {
+export async function tag(hub: string, versao: string, numberRun: number, config: string): Promise<void> {
     core.info('Criando tag latest')
 
-    if (!versao || !numberRun || !api || !config) {
-        throw new Error('Parâmetros [versao, numberRun, api, config] são obrigatórios')
+    if (!hub && !versao || !numberRun || !config) {
+        throw new Error('Parâmetros [hub, versao, numberRun, config] são obrigatórios')
     }
 
-    const tagArray: Array<string> = new Array('tag', `tqssolucoes/${api}:${versao}.${numberRun}.0-${config}`)
-    tagArray.push(`tqssolucoes/${api}:latest`)
+    const tagArray: Array<string> = new Array('tag', `${hub}:${versao}.${numberRun}.0-${config}`)
+    tagArray.push(`${hub}:latest`)
 
     await exec
         .getExecOutput('docker tag', tagArray, {
@@ -75,15 +73,15 @@ export async function tag(versao: string, numberRun: number, api: string, config
         })
 }
 
-export async function push(api: string, versao: string): Promise<void> {
+export async function push(hub: string, versao: string): Promise<void> {
     core.info('Subindo imagem compilada - ' + versao)
 
-    if (!versao || !api) {
-        throw new Error('Parâmetro [versao, tag] é obrigatório')
+    if (!hub && !versao) {
+        throw new Error('Parâmetro [hub, versao] é obrigatório')
     }
 
     await exec
-        .getExecOutput('docker push', [ `tqssolucoes/${api}:${versao}` ], {
+        .getExecOutput('docker push', [ `${hub}:${versao}` ], {
             ignoreReturnCode: true,
             silent: true
         })

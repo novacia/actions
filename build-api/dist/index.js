@@ -13477,7 +13477,7 @@ function run() {
                 .catch((err) => {
                 throw new Error(err);
             });
-            yield docker.tag(inputs.versao, github.context.runNumber, inputs.api, inputs.config)
+            yield docker.tag(inputs.hub, inputs.versao, github.context.runNumber, inputs.config)
                 .catch((err) => {
                 throw new Error(err);
             });
@@ -13639,7 +13639,7 @@ function login(username, password) {
     });
 }
 exports.login = login;
-function build(dominio, config, versao, numberRun, api) {
+function build(hub, config, versao, numberRun, api) {
     return __awaiter(this, void 0, void 0, function* () {
         core.info('Build da imagem ' + api);
         if (!config || !versao || !numberRun || !api) {
@@ -13647,9 +13647,8 @@ function build(dominio, config, versao, numberRun, api) {
         }
         const buildArray = new Array('--no-cache', '--build-arg', 'CONFIG=' + config);
         buildArray.push('--build-arg', `VERSAO=${versao}.${numberRun}.0-${config.toLowerCase()}`);
-        buildArray.push('-t', `${dominio}/${api}:${versao}.${numberRun}.0-${config.toLowerCase()}`);
+        buildArray.push('-t', `${hub}:${versao}.${numberRun}.0-${config.toLowerCase()}`);
         buildArray.push('-f', `./${api}/Dockerfile ./${api}`);
-        console.log(buildArray.toString());
         yield exec
             .getExecOutput('docker build', buildArray, {
             ignoreReturnCode: true,
@@ -13664,14 +13663,14 @@ function build(dominio, config, versao, numberRun, api) {
     });
 }
 exports.build = build;
-function tag(versao, numberRun, api, config) {
+function tag(hub, versao, numberRun, config) {
     return __awaiter(this, void 0, void 0, function* () {
         core.info('Criando tag latest');
-        if (!versao || !numberRun || !api || !config) {
-            throw new Error('Parâmetros [versao, numberRun, api, config] são obrigatórios');
+        if (!hub && !versao || !numberRun || !config) {
+            throw new Error('Parâmetros [hub, versao, numberRun, config] são obrigatórios');
         }
-        const tagArray = new Array('tag', `tqssolucoes/${api}:${versao}.${numberRun}.0-${config}`);
-        tagArray.push(`tqssolucoes/${api}:latest`);
+        const tagArray = new Array('tag', `${hub}:${versao}.${numberRun}.0-${config}`);
+        tagArray.push(`${hub}:latest`);
         yield exec
             .getExecOutput('docker tag', tagArray, {
             ignoreReturnCode: true,
@@ -13686,14 +13685,14 @@ function tag(versao, numberRun, api, config) {
     });
 }
 exports.tag = tag;
-function push(api, versao) {
+function push(hub, versao) {
     return __awaiter(this, void 0, void 0, function* () {
         core.info('Subindo imagem compilada - ' + versao);
-        if (!versao || !api) {
-            throw new Error('Parâmetro [versao, tag] é obrigatório');
+        if (!hub && !versao) {
+            throw new Error('Parâmetro [hub, versao] é obrigatório');
         }
         yield exec
-            .getExecOutput('docker push', [`tqssolucoes/${api}:${versao}`], {
+            .getExecOutput('docker push', [`${hub}:${versao}`], {
             ignoreReturnCode: true,
             silent: true
         })

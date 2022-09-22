@@ -15,7 +15,7 @@ async function run(): Promise<void> {
                 throw new Error(err);
             });
 
-        await docker.tag(inputs.versao, github.context.runNumber, inputs.api, inputs.config)
+        await docker.tag(inputs.hub, inputs.versao, github.context.runNumber, inputs.config)
             .catch((err) => {
                 throw new Error(err);
             });

@@ -27928,7 +27928,7 @@ function sshComando(settings, cmd) {
                     host: settings.host,
                     port: settings.port,
                     username: settings.username,
-                    privateKey: settings.key
+                    privateKey: Buffer.from(settings.key)
                 };
             }
             else if (!settings.key) {

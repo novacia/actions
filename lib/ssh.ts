@@ -18,7 +18,7 @@ export async function sshComando(settings:sshSettings, cmd: string): Promise<voi
                 host: settings.host,
                 port: settings.port,
                 username: settings.username,
-                privateKey: settings.key
+                privateKey: Buffer.from(settings.key)
             }
         } else if (!settings.key) {
             config = {

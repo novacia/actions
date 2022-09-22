@@ -5393,6 +5393,7 @@ function run() {
             core.info('api: ' + inputs.api);
             core.info('stack: ' + inputs.stack);
             core.info('config: ' + inputs.config);
+            core.info('versao: ' + inputs.versao);
             core.info('docker_token: ' + inputs.docker_token);
             core.info('docker_username: ' + inputs.docker_username);
             // core.info('Build API - ' + inputs.api);

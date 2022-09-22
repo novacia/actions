@@ -1,6 +1,5 @@
-import { Client, ConnectConfig, utils } from 'ssh2'
-import * as core from '@actions/core'
-import SSH2Promise  from 'ssh2-promise';
+import * as core from '@actions/core';
+import { NodeSSH, Config } from 'node-ssh';
 
 export interface sshSettings {
     host: string
@@ -13,13 +12,13 @@ export interface sshSettings {
 export async function sshComando(settings:sshSettings, cmd: string): Promise<void> {
     
     try {
-        var config: ConnectConfig;
+        var config;
         if (!settings.password) {
             config = {
                 host: settings.host,
                 port: settings.port,
                 username: settings.username,
-                privateKey: settings.key
+                privateKey: Buffer.from(settings.key)
             }
         } else if (!settings.key) {
             config = {
@@ -30,23 +29,19 @@ export async function sshComando(settings:sshSettings, cmd: string): Promise<voi
             }
         }
 
-        var ssh = new SSH2Promise(config);
+        const ssh = new NodeSSH();
 
-        ssh.connect()
+        ssh.connect(config)
             .then(() => {
                 core.info('Conectado com sucesso')
-            })
-            .catch((err) => {
-                throw new Error(err)
             });
 
-        ssh.exec(cmd)
-            .then((data) => {
-                core.info(data)
-            })
-            .catch((err) => {
-                throw new Error(err)
+        ssh.execCommand(cmd)
+            .then((result) => {
+                if (result.stderr.length) throw new Error(result.stderr)
+                core.info('STDOUT: ' + result.stdout)
             });
+
     } catch (error) {
         throw new Error('sshComando :: error: ' + error.message);
     }

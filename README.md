@@ -61,3 +61,24 @@ Github actions TLV7, concentra todas as actions responsaveis por realizar builds
 **Exemplo:**
 
 ![build-assembly](https://i.ibb.co/sgGVRyq/build-assembly.png)
+
+## deploy
+
+#### Action deploy derruba a stack e sobe novamente para carregar as modificações realizada nas aplicações
+
+```Action
+   novacia/actions/deploy@main
+```
+
+| Parâmetro   | Tipo       | Descrição                           |
+| :---------- | :--------- | :---------------------------------- |
+| `host` | `string` | **Obrigatório**. Host Server |
+| `port` | `string` | **Obrigatório**. Port SSH - Valor default: 22 |
+| `username` | `string` | **Obrigatório**. Username SSH |
+| `password` | `string` | **Obrigatório** Password SSH |
+| `key` | `string` | **Obrigatório**. Private Key SSH |
+| `stack` | `string` | **Obrigatório**. Nome da Stack |
+
+**Exemplo:**
+
+![build-assembly](https://i.ibb.co/rtfgsXv/deploy.png)

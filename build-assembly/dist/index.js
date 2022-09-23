@@ -6659,7 +6659,7 @@ function run() {
         try {
             const inputs = (0, contexto_1.getInputsBuildAssembly)();
             core.info('build - Assembly');
-            if (!inputs.csproj || !inputs.csproj.endsWith('.csproj') || !inputs.csproj.endsWith('.vbproj')) {
+            if (!inputs.csproj) {
                 throw new Error('Parâmetro [csproj] inválido ou não informado');
             }
             ;

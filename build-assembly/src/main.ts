@@ -9,7 +9,7 @@ async function run(): Promise<void> {
         
         core.info('build - Assembly');
 
-        if (!inputs.csproj || !inputs.csproj.endsWith('.csproj') || !inputs.csproj.endsWith('.vbproj')) {
+        if (!inputs.csproj) {
             throw new Error('Parâmetro [csproj] inválido ou não informado')
         };
 

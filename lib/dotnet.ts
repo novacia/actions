@@ -2,7 +2,7 @@ import * as exec from '@actions/exec';
 import * as core from '@actions/core';
 import * as contexto from '../lib/contexto';
 
-export async function build(csproj:string, config:string, versao_major:string, versao_minor: string, versao_patch: string, versao_patch_sufixo?: string): Promise<void> {
+export async function build(csproj:string, config:string, versao_major:string, versao_minor: string, versao_patch: string, versao_patch_sufixo: string): Promise<void> {
     core.info(`Build do projeto ${csproj} em versão ${config}`);
 
     var versao: string = contexto.getVersao(versao_major, versao_minor, versao_patch, versao_patch_sufixo);
@@ -24,7 +24,7 @@ export async function build(csproj:string, config:string, versao_major:string, v
         });
 }
 
-export async function pack(csproj:string, config:string, versao_major:string, versao_minor: string, versao_patch: string, versao_patch_sufixo?: string): Promise<void> {
+export async function pack(csproj:string, config:string, versao_major:string, versao_minor: string, versao_patch: string, versao_patch_sufixo: string): Promise<void> {
     core.info(`Gerando pacote ${csproj} em versão ${config}`);
 
     var versao: string = contexto.getVersao(versao_major, versao_minor, versao_patch, versao_patch_sufixo);
@@ -73,7 +73,7 @@ export async function nuget_add_source(username:string, token:string): Promise<v
         });
 }
 
-export async function nuget_push(nupkg:string, token:string, versao_major:string, versao_minor: string, versao_patch: string, versao_patch_sufixo?: string): Promise<void> {
+export async function nuget_push(nupkg:string, token:string, versao_major:string, versao_minor: string, versao_patch: string, versao_patch_sufixo: string): Promise<void> {
     core.info(`Publicando pacote ${nupkg} em versão ${build}`);
 
     if (!nupkg || !token) {

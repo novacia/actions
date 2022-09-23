@@ -6894,7 +6894,7 @@ function nuget_push(nupkg, token, versao_major, versao_minor, versao_patch, vers
         const nuget_push_array = new Array('nuget', 'push');
         nuget_push_array.push(`${nupkg}.${versao}.nupkg`);
         nuget_push_array.push('-k', token);
-        nuget_push_array.push('--source', 'github', '--skip-dupli;cate');
+        nuget_push_array.push('--source', 'github', '--skip-duplicate');
         yield exec
             .getExecOutput('dotnet', nuget_push_array, {
             ignoreReturnCode: true,

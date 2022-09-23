@@ -86,7 +86,7 @@ export async function nuget_push(nupkg:string, token:string, versao_major:string
     const nuget_push_array: Array<string> = new Array('nuget', 'push');
     nuget_push_array.push(`${nupkg}.${versao}.nupkg`);
     nuget_push_array.push('-k', token);
-    nuget_push_array.push('--source', 'github', '--skip-dupli;cate');
+    nuget_push_array.push('--source', 'github', '--skip-duplicate');
 
     await exec
         .getExecOutput('dotnet', nuget_push_array, {

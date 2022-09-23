@@ -1,12 +1,15 @@
-import * as exec from '@actions/exec'
-import * as core from '@actions/core'
+import * as exec from '@actions/exec';
+import * as core from '@actions/core';
+import * as contexto from '../lib/contexto';
 
-export async function build(csproj:string, build:string, version:string, runNumber: number): Promise<void> {
-    core.info(`Build do projeto ${csproj} em versão ${build}`);
+export async function build(csproj:string, config:string, versao_major:string, versao_minor: string, versao_patch: string, versao_patch_sufixo?: string): Promise<void> {
+    core.info(`Build do projeto ${csproj} em versão ${config}`);
+
+    var versao: string = contexto.getVersao(versao_major, versao_minor, versao_patch, versao_patch_sufixo);
 
     const buildArray: Array<string> = new Array('build', csproj);
-    buildArray.push('-c', build)
-    buildArray.push(`-p:Version=${version}.${runNumber}.0-${build.toLowerCase()}`)
+    buildArray.push('-c', config);
+    buildArray.push(`-p:Version=${versao}`);
 
     await exec
         .getExecOutput('dotnet', buildArray, {
@@ -17,17 +20,19 @@ export async function build(csproj:string, build:string, version:string, runNumb
             if (res.stderr.length > 0 && res.exitCode != 0) {
                 throw new Error(res.stderr.trim());
             }
-            core.info(res.stdout)
+            core.info(res.stdout);
         });
 }
 
-export async function pack(csproj:string, build:string, version:string, runNumber: number): Promise<void> {
-    core.info(`Gerando pacote ${csproj} em versão ${build}`);
+export async function pack(csproj:string, config:string, versao_major:string, versao_minor: string, versao_patch: string, versao_patch_sufixo?: string): Promise<void> {
+    core.info(`Gerando pacote ${csproj} em versão ${config}`);
 
-    const packArray: Array<string> = new Array('pack', csproj)
-    packArray.push('-c', build)
-    packArray.push(`-p:PackageVersion=${version}.${runNumber}.0-${build.toLowerCase()}`)
-    packArray.push('--no-build')
+    var versao: string = contexto.getVersao(versao_major, versao_minor, versao_patch, versao_patch_sufixo);
+
+    const packArray: Array<string> = new Array('pack', csproj);
+    packArray.push('-c', config);
+    packArray.push(`-p:PackageVersion=${versao}`);
+    packArray.push('--no-build');
 
     await exec
         .getExecOutput('dotnet', packArray, {
@@ -38,7 +43,7 @@ export async function pack(csproj:string, build:string, version:string, runNumbe
             if (res.stderr.length > 0 && res.exitCode != 0) {
                 throw new Error(res.stderr.trim());
             }
-            core.info(res.stdout)
+            core.info(res.stdout);
         });
 }
 
@@ -46,14 +51,14 @@ export async function nuget_add_source(username:string, token:string): Promise<v
     core.info('Adicionando nuget source');
 
     if (!username || !token) {
-        throw new Error('username e token são obrigatórios')
+        throw new Error('username e token são obrigatórios');;
     }
 
-    const nuget_add_array: Array<string> = new Array('nuget', 'add', 'source')
-    nuget_add_array.push('-u', username)
-    nuget_add_array.push('-p', token, '--store-password-in-clear-text')
-    nuget_add_array.push('-n', 'github')
-    nuget_add_array.push('https://nuget.pkg.github.com/novacia/index.json')
+    const nuget_add_array: Array<string> = new Array('nuget', 'add', 'source');
+    nuget_add_array.push('-u', username);
+    nuget_add_array.push('-p', token, '--store-password-in-clear-text');
+    nuget_add_array.push('-n', 'github');
+    nuget_add_array.push('https://nuget.pkg.github.com/novacia/index.json');
 
     await exec
         .getExecOutput('dotnet', nuget_add_array, {
@@ -64,21 +69,23 @@ export async function nuget_add_source(username:string, token:string): Promise<v
             if (res.stderr.length > 0 && res.exitCode != 0) {
                 throw new Error(res.stderr.trim());
             }
-            core.info(res.stdout)
+            core.info(res.stdout);
         });
 }
 
-export async function nuget_push(nupkg:string, version:string, runNumber: number, build:string, token:string): Promise<void> {
+export async function nuget_push(nupkg:string, token:string, versao_major:string, versao_minor: string, versao_patch: string, versao_patch_sufixo?: string): Promise<void> {
     core.info(`Publicando pacote ${nupkg} em versão ${build}`);
 
     if (!nupkg || !token) {
-        throw new Error('Parâmetros [nupkg, token] são obrigatórios')
+        throw new Error('Parâmetros [nupkg, token] são obrigatórios');
     }
 
-    const nuget_push_array: Array<string> = new Array('nuget', 'push')
-    nuget_push_array.push(`${nupkg}.${version}.${runNumber}.0-${build.toLowerCase()}.nupkg`)
-    nuget_push_array.push('-k', token)
-    nuget_push_array.push('--source', 'github', '--skip-duplicate')
+    var versao: string = contexto.getVersao(versao_major, versao_minor, versao_patch, versao_patch_sufixo);
+
+    const nuget_push_array: Array<string> = new Array('nuget', 'push');
+    nuget_push_array.push(`${nupkg}.${versao}.nupkg`);
+    nuget_push_array.push('-k', token);
+    nuget_push_array.push('--source', 'github', '--skip-dupli;cate');
 
     await exec
         .getExecOutput('dotnet', nuget_push_array, {
@@ -89,6 +96,6 @@ export async function nuget_push(nupkg:string, version:string, runNumber: number
             if (res.stderr.length > 0 && res.exitCode != 0) {
                 throw new Error(res.stderr.trim());
             }
-            core.info(res.stdout)
+            core.info(res.stdout);
         });
 }

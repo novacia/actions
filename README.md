@@ -33,6 +33,4 @@ Github actions TLV7, concentra todas as actions responsaveis por realizar builds
 
 ## build-assembly
 
-## Action build-assembly
-
-#### Action build-assembly faz 
+#### Action build-assembly faz

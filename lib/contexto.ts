@@ -1,8 +1,11 @@
 import * as core from '@actions/core'
 
 export interface InputsBuildAssembly {
-    version: string
-    build: string
+    versao_major: string
+    versao_minor: string
+    versao_patch: string
+    versao_patch_sufixo: string
+    config: string
     csproj: string
     nupkg: string
     username: string
@@ -11,8 +14,11 @@ export interface InputsBuildAssembly {
 
 export function getInputsBuildAssembly(): InputsBuildAssembly {
     return {
-        version: core.getInput('version'),
-        build: core.getInput('build'),
+        versao_major: core.getInput('versao-major'),
+        versao_minor: core.getInput('versao-minor'),
+        versao_patch: core.getInput('versao-patch'),
+        versao_patch_sufixo: core.getInput('versao-patch-sufixo'),
+        config: core.getInput('config'),
         csproj: core.getInput('csproj'),
         nupkg: core.getInput('nupkg'),
         username: core.getInput('username'),
@@ -64,4 +70,24 @@ export function getInputsDeploy(): InputsDeploy {
         key: core.getInput('key'),
         stack: core.getInput('stack')
     }
+}
+
+export function getVersao(versao_major:string, versao_minor: string, versao_patch: string, versao_patch_sufixo?: string): string {
+
+    core.info('gerando versão');
+
+    if (!!versao_major || !versao_minor || !versao_patch) {
+        throw new Error('parâmetros [versao_major, versao_minor, versao_patch] são obrigatórios');
+    }
+
+    if (!['beta', 'rc'].indexOf(versao_patch_sufixo)) {
+        throw new Error("parêmetro [versao_patch_sufixo] inválido - inputs permitidos (beta, rc)");
+    }
+
+    var versao: string = `${versao_major}.${versao_minor}:${versao_patch}`;
+    if (versao_patch_sufixo) {
+        versao = `${versao}-${versao_patch_sufixo}`;
+    }
+
+    return versao;
 }

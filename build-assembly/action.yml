@@ -3,14 +3,26 @@ description: Action de Build de Assembly
 author: Silask1
 
 inputs:
-  version:
+  versao-major:
     required: false
     type: string
-    description: Número da Versão
-  build:
+    description: Quando fizer mudanças incompatíveis na API
+  versao-minor:
     required: false
     type: string
-    description: Tipo do Build (beta, rc, release)
+    description: Quando adicionar funcionalidades mantendo compatibilidade
+  versao-patch:
+    required: false
+    type: string
+    description: Quando corrigir falhas mantendo compatibilidade
+  versao-patch-sufixo:
+    required: false
+    type: string
+    description: Sufixo do build (beta, rc)
+  config:
+    required: false
+    type: string
+    description: Tipo do Build (Beta, Rc, Release)
   csproj:
     required: false
     type: string

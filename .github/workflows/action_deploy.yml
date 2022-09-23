@@ -5,7 +5,7 @@ on:
     branches: 
       - main
     paths: 
-      - ./deploy/**
+      - deploy/src/**
       
 jobs:
   build_action:

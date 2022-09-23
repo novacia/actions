@@ -5,7 +5,7 @@ on:
     branches: 
       - main
     paths: 
-      - ./build-assembly/**
+      - build-assembly/src/**
       
 jobs:
   build_action:

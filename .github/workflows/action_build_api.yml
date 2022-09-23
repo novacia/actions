@@ -5,7 +5,7 @@ on:
     branches: 
       - main
     paths: 
-      - ./build-api/**
+      - build-api/src/**
       
 jobs:
   build_action:

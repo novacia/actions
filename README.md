@@ -1,4 +1,4 @@
-# Actions
+# Actions TLV7
 Github actions TLV7, concentra todas as actions responsaveis por realizar builds, deploys e subidas de aplicações.
 
 ## build-api
@@ -10,7 +10,7 @@ Github actions TLV7, concentra todas as actions responsaveis por realizar builds
 ```
 **Observação:** antes da chamada da action build-api, deve ser chamada a action de checkout
 
-**Exemplo**
+**Exemplo:**
 ```Checkout
     actions/checkout@v3
 ```
@@ -26,3 +26,13 @@ Github actions TLV7, concentra todas as actions responsaveis por realizar builds
 | `versao-patch-sufixo` | `string` | Sufixo do build (beta, rc) |
 | `docker_username` | `string` | **Obrigatório**. Usuário para autenticação do Docker Hub |
 | `docker_token` | `string` | **Obrigatório**. Token para autenticação do Docker Hub |
+
+**Desmostração:**
+
+![build-api](https://ibb.co/jbsQd35)
+
+## build-assembly
+
+## Action build-assembly
+
+#### Action build-assembly faz 

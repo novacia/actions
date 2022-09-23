@@ -37,16 +37,7 @@ export async function build(hub: string, projeto: string, config: string, versao
     if (versao_patch_sufixo) {
         versao = `${versao}-${versao_patch_sufixo}`;
     }
-
-    // var cmd: string = `docker build --no-cache --build-arg CONFIG=${config} --build-arg VERSAO=${versao} -t ${hub}:${versao} -f ./${projeto}/Dockerfile ./${projeto}`;
-
-    // await shell.shell(cmd)
-    //     .then((data) => {
-    //         core.info(data);
-    //     }).catch((err) => {
-    //         throw new Error(err);
-    //     });
-
+    
     const buildArray: Array<string> = new Array('--build-arg', `CONFIG=${config}`)
     buildArray.push('--build-arg', `VERSAO=${versao}`)
     buildArray.push('-t', `${hub}:${versao}`)
@@ -66,7 +57,7 @@ export async function build(hub: string, projeto: string, config: string, versao
 }
 
 export async function tag(hub: string, versao_major: string, versao_minor: string, versao_patch: string, versao_patch_sufixo: string): Promise<void> {
-    core.info('Criando tag latest')
+    core.info('Criando tag')
 
     if (!hub && !versao_major || !versao_minor || !versao_patch) {
         throw new Error('Parâmetros [hub, versao, numberRun, config] são obrigatórios')

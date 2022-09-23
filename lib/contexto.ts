@@ -76,7 +76,7 @@ export function getVersao(versao_major:string, versao_minor: string, versao_patc
 
     core.info('gerando versão');
 
-    if (!!versao_major || !versao_minor || !versao_patch) {
+    if (!versao_major || !versao_minor || !versao_patch) {
         throw new Error('parâmetros [versao_major, versao_minor, versao_patch] são obrigatórios');
     }
 

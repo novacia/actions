@@ -29,7 +29,7 @@ Github actions TLV7, concentra todas as actions responsaveis por realizar builds
 
 **Desmostração:**
 
-![build-api](https://ibb.co/jbsQd35)
+![build-api](https://i.ibb.co/BcFQmTP/build-api.png)
 
 ## build-assembly
 

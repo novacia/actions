@@ -6,30 +6,39 @@ inputs:
   hub:
     required: false
     type: string
+    description: Junção do Repositório no Docker Hub + Nome do Projeto
   projeto:
     required: false
     type: string
+    description: Nome do projeto no Repositóri
   config:
     required: false
     type: string
+    description: Tipo de build (Beta, Rc, Release)
   versao-major:
     required: false
     type: string
+    description: Quando fizer mudanças incompatíveis na API
   versao-minor:
     required: false
     type: string
+    description: Quando adicionar funcionalidades mantendo compatibilidade
   versao-patch:
     required: false
     type: string
+    description: Quando corrigir falhas mantendo compatibilidade
   versao-patch-sufixo:
     required: false
     type: string
+    description: Sufixo do build (beta, rc)
   docker_username:
     required: false
     type: string
+    description: Usuário para autenticação do Docker Hub
   docker_token:
     required: false
     type: string
+    description: Token para autenticação do Docker Hub
 
 runs:
   using: 'node12'

@@ -24,12 +24,12 @@ async function run(): Promise<void> {
 
         core.info('Version: ' + inputs.version);
         core.info('Build: ' + inputs.build);
-        core.info('GITHUB_RUN_NUMBER: ' + github.context.runNumber);
+        core.info('GITHUB_RUN_ID: ' + github.context.runId);
 
-        await dotnet.build(inputs.csproj, inputs.build, inputs.version, github.context.runNumber);
-        await dotnet.pack(inputs.csproj, inputs.build, inputs.version, github.context.runNumber);
+        await dotnet.build(inputs.csproj, inputs.build, inputs.version, github.context.runId);
+        await dotnet.pack(inputs.csproj, inputs.build, inputs.version, github.context.runId);
         await dotnet.nuget_add_source(inputs.username, inputs.token);
-        await dotnet.nuget_push(inputs.nupkg, inputs.version, github.context.runNumber, inputs.build, inputs.token);
+        await dotnet.nuget_push(inputs.nupkg, inputs.version, github.context.runId, inputs.build, inputs.token);
 
         core.info('build - Assembly [Finalizado]');
 

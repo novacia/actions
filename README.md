@@ -33,4 +33,31 @@ Github actions TLV7, concentra todas as actions responsaveis por realizar builds
 
 ## build-assembly
 
-#### Action build-assembly faz
+#### Action build-assembly realiza o build dos projetos e suas dependências, também o empacotamento dos códigos para o Nuget e faz a sua publicação.
+
+```Action
+   novacia/actions/build-assembly@main
+```
+
+**Observação:** antes da chamada da action build-api, deve ser chamada a action de checkout
+
+**Exemplo:**
+```Checkout
+    actions/checkout@v3
+```
+
+| Parâmetro   | Tipo       | Descrição                           |
+| :---------- | :--------- | :---------------------------------- |
+| `versao-major` | `string` | **Obrigatório**. Quando fizer mudanças incompatíveis na API |
+| `versao-minor` | `string` | **Obrigatório**. Quando adicionar funcionalidades mantendo compatibilidade |
+| `versao-patch` | `string` | **Obrigatório**. Quando corrigir falhas mantendo compatibilidade |
+| `versao-patch-sufixo` | `string` | Sufixo do build (beta, rc) |
+| `config` | `string` | **Obrigatório**. Tipo de build (Beta, Rc, Release) |
+| `csproj` | `string` | **Obrigatório**. Arquivo de Build Microsoft |
+| `nupkg` | `string` | **Obrigatório**. Path pacote nuget |
+| `username` | `string` | **Obrigatório**. Username Nuget |
+| `token` | `string` | **Obrigatório**. Token Nuget |
+
+**Demonstração:**
+
+![build-assembly](https://i.ibb.co/sgGVRyq/build-assembly.png)

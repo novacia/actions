@@ -15,4 +15,5 @@ jobs:
       - name: Build action deploy
         run: |
           cd deploy
+          npm i -g @vercel/ncc
           npm run build

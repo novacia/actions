@@ -6759,6 +6759,7 @@ function getVersao(versao_major, versao_minor, versao_patch, versao_patch_sufixo
     if (!versao_major || !versao_minor || !versao_patch) {
         throw new Error('parâmetros [versao_major, versao_minor, versao_patch] são obrigatórios');
     }
+    core.info(versao_patch_sufixo);
     if (!['beta', 'rc'].indexOf(versao_patch_sufixo)) {
         throw new Error("parêmetro [versao_patch_sufixo] inválido - inputs permitidos (beta, rc)");
     }
@@ -6818,7 +6819,6 @@ const contexto = __importStar(__nccwpck_require__(5517));
 function build(csproj, config, versao_major, versao_minor, versao_patch, versao_patch_sufixo) {
     return __awaiter(this, void 0, void 0, function* () {
         core.info(`Build do projeto ${csproj} em versão ${config}`);
-        core.info(versao_patch_sufixo);
         var versao = contexto.getVersao(versao_major, versao_minor, versao_patch, versao_patch_sufixo);
         const buildArray = new Array('build', csproj);
         buildArray.push('-c', config);

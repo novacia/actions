@@ -80,6 +80,7 @@ export function getVersao(versao_major:string, versao_minor: string, versao_patc
         throw new Error('parâmetros [versao_major, versao_minor, versao_patch] são obrigatórios');
     }
 
+    core.info(versao_patch_sufixo);
     if (!['beta', 'rc'].indexOf(versao_patch_sufixo)) {
         throw new Error("parêmetro [versao_patch_sufixo] inválido - inputs permitidos (beta, rc)");
     }

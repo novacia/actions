@@ -27,7 +27,7 @@ Github actions TLV7, concentra todas as actions responsaveis por realizar builds
 | `docker_username` | `string` | **Obrigatório**. Usuário para autenticação do Docker Hub |
 | `docker_token` | `string` | **Obrigatório**. Token para autenticação do Docker Hub |
 
-**Desmostração:**
+**Exemplo:**
 
 ![build-api](https://i.ibb.co/BcFQmTP/build-api.png)
 
@@ -58,6 +58,6 @@ Github actions TLV7, concentra todas as actions responsaveis por realizar builds
 | `username` | `string` | **Obrigatório**. Username Nuget |
 | `token` | `string` | **Obrigatório**. Token Nuget |
 
-**Demonstração:**
+**Exemplo:**
 
 ![build-assembly](https://i.ibb.co/sgGVRyq/build-assembly.png)

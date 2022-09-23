@@ -4,7 +4,7 @@ import * as contexto from '../lib/contexto';
 
 export async function build(csproj:string, config:string, versao_major:string, versao_minor: string, versao_patch: string, versao_patch_sufixo: string): Promise<void> {
     core.info(`Build do projeto ${csproj} em versão ${config}`);
-
+    core.info(['beta', 'rc'].indexOf(versao_patch_sufixo).toString());
     var versao: string = contexto.getVersao(versao_major, versao_minor, versao_patch, versao_patch_sufixo);
 
     const buildArray: Array<string> = new Array('build', csproj);

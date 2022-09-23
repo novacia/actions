@@ -1,7 +1,5 @@
 import * as core from '@actions/core';
-import * as github from '@actions/github';
 import * as docker from '../../lib/docker';
-import * as shell from '../../lib/shell';
 import { InputsBuildApi, getInputsBuildApi } from '../../lib/contexto';
 
 async function run(): Promise<void> {

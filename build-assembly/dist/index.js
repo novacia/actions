@@ -6886,11 +6886,11 @@ function nuget_add_source(username, token) {
 exports.nuget_add_source = nuget_add_source;
 function nuget_push(nupkg, token, versao_major, versao_minor, versao_patch, versao_patch_sufixo) {
     return __awaiter(this, void 0, void 0, function* () {
-        core.info(`Publicando pacote ${nupkg} em versão ${build}`);
         if (!nupkg || !token) {
             throw new Error('Parâmetros [nupkg, token] são obrigatórios');
         }
         var versao = contexto.getVersao(versao_major, versao_minor, versao_patch, versao_patch_sufixo);
+        core.info(`Publicando pacote ${nupkg} em versão ${versao}`);
         const nuget_push_array = new Array('nuget', 'push');
         nuget_push_array.push(`${nupkg}.${versao}.nupkg`);
         nuget_push_array.push('-k', token);

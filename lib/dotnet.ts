@@ -74,13 +74,14 @@ export async function nuget_add_source(username:string, token:string): Promise<v
 }
 
 export async function nuget_push(nupkg:string, token:string, versao_major:string, versao_minor: string, versao_patch: string, versao_patch_sufixo: string): Promise<void> {
-    core.info(`Publicando pacote ${nupkg} em versão ${build}`);
 
     if (!nupkg || !token) {
         throw new Error('Parâmetros [nupkg, token] são obrigatórios');
     }
 
     var versao: string = contexto.getVersao(versao_major, versao_minor, versao_patch, versao_patch_sufixo);
+
+    core.info(`Publicando pacote ${nupkg} em versão ${versao}`);
 
     const nuget_push_array: Array<string> = new Array('nuget', 'push');
     nuget_push_array.push(`${nupkg}.${versao}.nupkg`);

@@ -1,4 +1,4 @@
-name: Build das Actions TLV7
+name: Build das Actions TLV7 (build-assembly)
 
 on:
   push:

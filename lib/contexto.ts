@@ -84,7 +84,7 @@ export function getVersao(versao_major:string, versao_minor: string, versao_patc
         throw new Error("parêmetro [versao_patch_sufixo] inválido - inputs permitidos (beta, rc)");
     }
 
-    var versao: string = `${versao_major}.${versao_minor}:${versao_patch}`;
+    var versao: string = `${versao_major}.${versao_minor}.${versao_patch}`;
     if (versao_patch_sufixo) {
         versao = `${versao}-${versao_patch_sufixo}`;
     }

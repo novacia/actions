@@ -6762,7 +6762,7 @@ function getVersao(versao_major, versao_minor, versao_patch, versao_patch_sufixo
     if (['beta', 'rc'].indexOf(versao_patch_sufixo) == -1) {
         throw new Error("parêmetro [versao_patch_sufixo] inválido - inputs permitidos (beta, rc)");
     }
-    var versao = `${versao_major}.${versao_minor}:${versao_patch}`;
+    var versao = `${versao_major}.${versao_minor}.${versao_patch}`;
     if (versao_patch_sufixo) {
         versao = `${versao}-${versao_patch_sufixo}`;
     }

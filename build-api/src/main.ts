@@ -26,12 +26,12 @@ async function run(): Promise<void> {
                 throw new Error(err);
             });
 
-        await docker.push(false, inputs.projeto, inputs.versao_major, inputs.versao_minor, inputs.versao_patch, inputs.versao_patch_sufixo)
+        await docker.push(false, inputs.hub, inputs.versao_major, inputs.versao_minor, inputs.versao_patch, inputs.versao_patch_sufixo)
             .catch((err) => {
                 throw new Error(err);
             });
             
-        await docker.push(true, inputs.projeto)
+        await docker.push(true, inputs.hub)
             .catch((err) => {
                 throw new Error(err);
             });

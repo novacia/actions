@@ -61,7 +61,7 @@ export async function build(hub: string, projeto: string, config: string, versao
             if (res.stderr.length > 0 && res.exitCode != 0) {
                 throw new Error(res.stderr.trim())
             }
-            core.info('Build completo com Sucesso - STDOUT: ' + res.stdout)
+            core.info('STDOUT: ' + res.stdout)
         })
 }
 
@@ -87,7 +87,7 @@ export async function tag(hub: string, versao_major: string, versao_minor: strin
             if (res.stderr.length > 0 &&  res.exitCode != 0) {
                 throw new Error(res.stderr.trim())
             }
-            core.info('Tag criado com Sucesso - STDOUT: ' + res.stdout)
+            core.info('STDOUT: ' + res.stdout)
         })
 }
 
@@ -118,6 +118,6 @@ export async function push(latest: boolean, hub: string, versao_major?: string, 
             if (res.stderr.length > 0 &&  res.exitCode != 0) {
                 throw new Error(res.stderr.trim())
             }
-            core.info('Subida conclída - STDOUT: ' + res.stdout)
+            core.info('STDOUT: ' + res.stdout)
         })
 }

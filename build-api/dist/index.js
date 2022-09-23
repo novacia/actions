@@ -6670,11 +6670,11 @@ function run() {
                 .catch((err) => {
                 throw new Error(err);
             });
-            yield docker.push(false, inputs.projeto, inputs.versao_major, inputs.versao_minor, inputs.versao_patch, inputs.versao_patch_sufixo)
+            yield docker.push(false, inputs.hub, inputs.versao_major, inputs.versao_minor, inputs.versao_patch, inputs.versao_patch_sufixo)
                 .catch((err) => {
                 throw new Error(err);
             });
-            yield docker.push(true, inputs.projeto)
+            yield docker.push(true, inputs.hub)
                 .catch((err) => {
                 throw new Error(err);
             });
@@ -6857,7 +6857,7 @@ function build(hub, projeto, config, versao_major, versao_minor, versao_patch, v
             if (res.stderr.length > 0 && res.exitCode != 0) {
                 throw new Error(res.stderr.trim());
             }
-            core.info('Build completo com Sucesso - STDOUT: ' + res.stdout);
+            core.info('STDOUT: ' + res.stdout);
         });
     });
 }
@@ -6882,7 +6882,7 @@ function tag(hub, versao_major, versao_minor, versao_patch, versao_patch_sufixo)
             if (res.stderr.length > 0 && res.exitCode != 0) {
                 throw new Error(res.stderr.trim());
             }
-            core.info('Tag criado com Sucesso - STDOUT: ' + res.stdout);
+            core.info('STDOUT: ' + res.stdout);
         });
     });
 }
@@ -6912,7 +6912,7 @@ function push(latest, hub, versao_major, versao_minor, versao_patch, versao_patc
             if (res.stderr.length > 0 && res.exitCode != 0) {
                 throw new Error(res.stderr.trim());
             }
-            core.info('Subida conclída - STDOUT: ' + res.stdout);
+            core.info('STDOUT: ' + res.stdout);
         });
     });
 }

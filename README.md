@@ -1,14 +1,14 @@
 # Actions TLV7
 Github actions TLV7, concentra todas as actions responsaveis por realizar builds, deploys e subidas de aplicações.
 
-## build-api
+## build-docker
 
-#### Action build-api faz a criação de imagens Docker a partir de um Dockerfile, criação da tag da imagem Docker e também envia a imagem para um repositório.
+#### Action build-docker faz a criação de imagens Docker a partir de um Dockerfile, criação da tag da imagem Docker e também envia a imagem para um repositório.
 
 ```Action
-   novacia/actions/build-api@main
+   novacia/actions/build-docker@main
 ```
-**Observação:** antes da chamada da action build-api, deve ser chamada a action de checkout
+**Observação:** antes da chamada da action build-docker, deve ser chamada a action de checkout
 
 **Exemplo:**
 ```Checkout
@@ -29,7 +29,7 @@ Github actions TLV7, concentra todas as actions responsaveis por realizar builds
 
 **Exemplo:**
 
-![build-api](https://i.ibb.co/BcFQmTP/build-api.png)
+![build-docker](https://i.ibb.co/BcFQmTP/build-api.png)
 
 ## build-assembly
 

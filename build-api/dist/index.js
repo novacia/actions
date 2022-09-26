@@ -6721,12 +6721,15 @@ var __importStar = (this && this.__importStar) || function (mod) {
     return result;
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.getInputsDeploy = exports.getInputsBuildApi = exports.getInputsBuildAssembly = void 0;
+exports.getVersao = exports.getInputsDeploy = exports.getInputsBuildApi = exports.getInputsBuildAssembly = void 0;
 const core = __importStar(__nccwpck_require__(3820));
 function getInputsBuildAssembly() {
     return {
-        version: core.getInput('version'),
-        build: core.getInput('build'),
+        versao_major: core.getInput('versao-major'),
+        versao_minor: core.getInput('versao-minor'),
+        versao_patch: core.getInput('versao-patch'),
+        versao_patch_sufixo: core.getInput('versao-patch-sufixo'),
+        config: core.getInput('config'),
         csproj: core.getInput('csproj'),
         nupkg: core.getInput('nupkg'),
         username: core.getInput('username'),
@@ -6759,6 +6762,21 @@ function getInputsDeploy() {
     };
 }
 exports.getInputsDeploy = getInputsDeploy;
+function getVersao(versao_major, versao_minor, versao_patch, versao_patch_sufixo) {
+    core.info('gerando versão');
+    if (!versao_major || !versao_minor || !versao_patch) {
+        throw new Error('parâmetros [versao_major, versao_minor, versao_patch] são obrigatórios');
+    }
+    if (['beta', 'rc'].indexOf(versao_patch_sufixo) == -1) {
+        throw new Error("parêmetro [versao_patch_sufixo] inválido - inputs permitidos (beta, rc)");
+    }
+    var versao = `${versao_major}.${versao_minor}.${versao_patch}`;
+    if (versao_patch_sufixo) {
+        versao = `${versao}-${versao_patch_sufixo}`;
+    }
+    return versao;
+}
+exports.getVersao = getVersao;
 
 
 /***/ }),
@@ -6804,6 +6822,7 @@ Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.push = exports.tag = exports.build = exports.login = void 0;
 const exec = __importStar(__nccwpck_require__(9343));
 const core = __importStar(__nccwpck_require__(3820));
+const contexto = __importStar(__nccwpck_require__(5517));
 function login(username, password) {
     return __awaiter(this, void 0, void 0, function* () {
         core.info('Autenticando no Docker Hub');
@@ -6833,10 +6852,7 @@ function build(hub, projeto, config, versao_major, versao_minor, versao_patch, v
         if (!hub || !projeto || !config || !versao_major || !versao_minor || !versao_patch) {
             throw new Error('Parâmentros [hub, projeto, config, versao_major, versao_minor, versao_patch] são obrigatórios');
         }
-        var versao = `${versao_major}.${versao_minor}.${versao_patch}`;
-        if (versao_patch_sufixo) {
-            versao = `${versao}-${versao_patch_sufixo}`;
-        }
+        var versao = contexto.getVersao(versao_major, versao_minor, versao_patch, versao_patch_sufixo);
         const buildArray = new Array('--build-arg', `CONFIG=${config}`);
         buildArray.push('--build-arg', `VERSAO=${versao}`);
         buildArray.push('-t', `${hub}:${versao}`);

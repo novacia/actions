@@ -1,6 +1,6 @@
 import * as exec from '@actions/exec'
 import * as core from '@actions/core'
-import * as shell from '../lib/shell';
+import * as contexto from '../lib/contexto';
 
 export async function login(username: string, password: string): Promise<void> {
     core.info('Autenticando no Docker Hub')
@@ -33,10 +33,7 @@ export async function build(hub: string, projeto: string, config: string, versao
         throw new Error('Parâmentros [hub, projeto, config, versao_major, versao_minor, versao_patch] são obrigatórios')
     }
 
-    var versao: string = `${versao_major}.${versao_minor}.${versao_patch}`;
-    if (versao_patch_sufixo) {
-        versao = `${versao}-${versao_patch_sufixo}`;
-    }
+    var versao = contexto.getVersao(versao_major, versao_minor, versao_patch, versao_patch_sufixo)
     
     const buildArray: Array<string> = new Array('--build-arg', `CONFIG=${config}`)
     buildArray.push('--build-arg', `VERSAO=${versao}`)

@@ -1,5 +1,5 @@
-name: Build API
-description: Action de Build API
+name: Build Docker
+description: Action de Build Docker
 author: Silask1
 
 inputs:

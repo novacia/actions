@@ -1,7 +1,7 @@
 {
-  "name": "build-api",
+  "name": "build-docker",
   "version": "1.0.0",
-  "description": "build API",
+  "description": "Build Docker",
   "main": "dist/index.js",
   "scripts": {
     "build": "ncc build src/main.ts -o dist",

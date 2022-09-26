@@ -29,7 +29,7 @@ Github actions TLV7, concentra todas as actions responsaveis por realizar builds
 
 **Exemplo:**
 
-![build-docker](https://i.ibb.co/BcFQmTP/build-api.png)
+![build-docker](https://i.ibb.co/t8VpJkb/build-docker.png)
 
 ## build-assembly
 

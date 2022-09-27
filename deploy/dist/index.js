@@ -27791,7 +27791,7 @@ function run() {
                 password: inputs.password,
                 key: inputs.key
             };
-            const stack_name = (0, contexto_1.getStack)(inputs.stack);
+            var stack_name = (0, contexto_1.getStack)(inputs.stack);
             core.info('Removendo stack ' + stack_name);
             yield ssh.sshComando(config, `sudo docker stack rm ${stack_name}`);
             core.info('Subindo stack ' + stack_name);
@@ -27896,11 +27896,8 @@ function getVersao(versao_major, versao_minor, versao_patch, versao_patch_sufixo
 }
 exports.getVersao = getVersao;
 function getStack(stack) {
-    core.info(stack);
     var mStack = stack.substring(stack.indexOf('/') + 1);
-    core.info(mStack);
     if (mStack.indexOf('/') !== 1) {
-        core.info(mStack.substring(0, mStack.indexOf('/')));
         return mStack.substring(0, mStack.indexOf('/'));
     }
     return mStack;

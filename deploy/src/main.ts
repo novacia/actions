@@ -6,8 +6,6 @@ async function run(): Promise<void> {
     try {
         const inputs: InputsDeploy = getInputsDeploy();
 
-        core.info('Deploy - ' + inputs.stack);
-
         const config: ssh.sshSettings = {
             host: inputs.host,
             port: inputs.port,
@@ -16,8 +14,8 @@ async function run(): Promise<void> {
             key: inputs.key
         }
 
-        core.info(getStack(inputs.stack));
         var stack_name: string = getStack(inputs.stack);
+        core.info('Deploy - Stack: ' + stack_name);
 
         core.info('Removendo stack ' + stack_name);
         await ssh.sshComando(config, `sudo docker stack rm ${stack_name}`);

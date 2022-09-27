@@ -27783,7 +27783,6 @@ function run() {
     return __awaiter(this, void 0, void 0, function* () {
         try {
             const inputs = (0, contexto_1.getInputsDeploy)();
-            core.info('Deploy - ' + inputs.stack);
             const config = {
                 host: inputs.host,
                 port: inputs.port,
@@ -27791,8 +27790,8 @@ function run() {
                 password: inputs.password,
                 key: inputs.key
             };
-            core.info((0, contexto_1.getStack)(inputs.stack));
             var stack_name = (0, contexto_1.getStack)(inputs.stack);
+            core.info('Deploy - Stack: ' + stack_name);
             core.info('Removendo stack ' + stack_name);
             yield ssh.sshComando(config, `sudo docker stack rm ${stack_name}`);
             core.info('Subindo stack ' + stack_name);

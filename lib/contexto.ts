@@ -93,8 +93,7 @@ export function getVersao(versao_major:string, versao_minor: string, versao_patc
     return versao;
 }
 
-export function getStack(stack: string) {
-
+export function getStack(stack: string): string {
 
     var mStack: string = stack.substring(stack.indexOf('/')+1);
 

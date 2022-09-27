@@ -91,3 +91,14 @@ export function getVersao(versao_major:string, versao_minor: string, versao_patc
 
     return versao;
 }
+
+export function getStack(stack: string) {
+    
+    var mStack: string = stack.substring(stack.indexOf('/')+1);
+
+    if (mStack.indexOf('/') !== 1) {
+        return mStack.substring(0, mStack.indexOf('/'));
+    }
+
+    return mStack;
+}

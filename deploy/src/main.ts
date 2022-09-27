@@ -1,5 +1,5 @@
 import * as core from '@actions/core';
-import { InputsDeploy, getInputsDeploy } from '../../lib/contexto';
+import { InputsDeploy, getInputsDeploy, getStack } from '../../lib/contexto';
 import * as ssh from '../../lib/ssh';
 
 async function run(): Promise<void> {
@@ -16,11 +16,13 @@ async function run(): Promise<void> {
             key: inputs.key
         }
 
-        core.info('Removendo stack ' + inputs.stack);
-        await ssh.sshComando(config, `sudo docker stack rm ${inputs.stack}`);
+        const stack_name = getStack(inputs.stack);
 
-        core.info('Subindo stack ' + inputs.stack);
-        await ssh.sshComando(config, `sudo docker stack deploy -c ./${inputs.stack}/docker-compose.yml ${inputs.stack}`);
+        core.info('Removendo stack ' + stack_name);
+        await ssh.sshComando(config, `sudo docker stack rm ${stack_name}`);
+
+        core.info('Subindo stack ' + stack_name);
+        await ssh.sshComando(config, `sudo docker stack deploy -c ./${inputs.stack}/docker-compose.yml ${stack_name}`);
         
         core.info('Finalizando Deploy');
 

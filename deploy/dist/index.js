@@ -27791,10 +27791,11 @@ function run() {
                 password: inputs.password,
                 key: inputs.key
             };
-            core.info('Removendo stack ' + inputs.stack);
-            yield ssh.sshComando(config, `sudo docker stack rm ${inputs.stack}`);
-            core.info('Subindo stack ' + inputs.stack);
-            yield ssh.sshComando(config, `sudo docker stack deploy -c ./${inputs.stack}/docker-compose.yml ${inputs.stack}`);
+            const stack_name = (0, contexto_1.getStack)(inputs.stack);
+            core.info('Removendo stack ' + stack_name);
+            yield ssh.sshComando(config, `sudo docker stack rm ${stack_name}`);
+            core.info('Subindo stack ' + stack_name);
+            yield ssh.sshComando(config, `sudo docker stack deploy -c ./${inputs.stack}/docker-compose.yml ${stack_name}`);
             core.info('Finalizando Deploy');
         }
         catch (error) {
@@ -27838,12 +27839,15 @@ var __importStar = (this && this.__importStar) || function (mod) {
     return result;
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.getInputsDeploy = exports.getInputsBuildApi = exports.getInputsBuildAssembly = void 0;
+exports.getStack = exports.getVersao = exports.getInputsDeploy = exports.getInputsBuildApi = exports.getInputsBuildAssembly = void 0;
 const core = __importStar(__nccwpck_require__(3820));
 function getInputsBuildAssembly() {
     return {
-        version: core.getInput('version'),
-        build: core.getInput('build'),
+        versao_major: core.getInput('versao-major'),
+        versao_minor: core.getInput('versao-minor'),
+        versao_patch: core.getInput('versao-patch'),
+        versao_patch_sufixo: core.getInput('versao-patch-sufixo'),
+        config: core.getInput('config'),
         csproj: core.getInput('csproj'),
         nupkg: core.getInput('nupkg'),
         username: core.getInput('username'),
@@ -27854,10 +27858,12 @@ exports.getInputsBuildAssembly = getInputsBuildAssembly;
 function getInputsBuildApi() {
     return {
         hub: core.getInput('hub'),
-        api: core.getInput('api'),
-        stack: core.getInput('stack'),
+        projeto: core.getInput('projeto'),
         config: core.getInput('config'),
-        versao: core.getInput('versao'),
+        versao_major: core.getInput('versao-major'),
+        versao_minor: core.getInput('versao-minor'),
+        versao_patch: core.getInput('versao-patch'),
+        versao_patch_sufixo: core.getInput('versao-patch-sufixo'),
         docker_username: core.getInput('docker_username'),
         docker_token: core.getInput('docker_token')
     };
@@ -27874,6 +27880,29 @@ function getInputsDeploy() {
     };
 }
 exports.getInputsDeploy = getInputsDeploy;
+function getVersao(versao_major, versao_minor, versao_patch, versao_patch_sufixo) {
+    core.info('gerando versão');
+    if (!versao_major || !versao_minor || !versao_patch) {
+        throw new Error('parâmetros [versao_major, versao_minor, versao_patch] são obrigatórios');
+    }
+    if (['beta', 'rc'].indexOf(versao_patch_sufixo) == -1) {
+        throw new Error("parêmetro [versao_patch_sufixo] inválido - inputs permitidos (beta, rc)");
+    }
+    var versao = `${versao_major}.${versao_minor}.${versao_patch}`;
+    if (versao_patch_sufixo) {
+        versao = `${versao}-${versao_patch_sufixo}`;
+    }
+    return versao;
+}
+exports.getVersao = getVersao;
+function getStack(stack) {
+    var mStack = stack.substring(stack.indexOf('/') + 1);
+    if (mStack.indexOf('/') !== 1) {
+        return mStack.substring(0, mStack.indexOf('/'));
+    }
+    return mStack;
+}
+exports.getStack = getStack;
 
 
 /***/ }),

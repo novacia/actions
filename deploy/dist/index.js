@@ -27901,6 +27901,7 @@ function getStack(stack) {
     if (mStack.indexOf('/') !== 1) {
         return mStack.substring(0, mStack.indexOf('/'));
     }
+    core.info('Return: ' + mStack);
     return mStack;
 }
 exports.getStack = getStack;

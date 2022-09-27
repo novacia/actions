@@ -1,4 +1,5 @@
 import * as core from '@actions/core'
+import { consumers } from 'stream'
 
 export interface InputsBuildAssembly {
     versao_major: string
@@ -94,9 +95,14 @@ export function getVersao(versao_major:string, versao_minor: string, versao_patc
 
 export function getStack(stack: string) {
     
+    core.info(stack)
+
     var mStack: string = stack.substring(stack.indexOf('/')+1);
 
+    core.info(mStack);
+
     if (mStack.indexOf('/') !== 1) {
+        core.info(mStack.substring(0, mStack.indexOf('/')));
         return mStack.substring(0, mStack.indexOf('/'));
     }
 

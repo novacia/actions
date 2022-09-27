@@ -27896,8 +27896,11 @@ function getVersao(versao_major, versao_minor, versao_patch, versao_patch_sufixo
 }
 exports.getVersao = getVersao;
 function getStack(stack) {
+    core.info(stack);
     var mStack = stack.substring(stack.indexOf('/') + 1);
+    core.info(mStack);
     if (mStack.indexOf('/') !== 1) {
+        core.info(mStack.substring(0, mStack.indexOf('/')));
         return mStack.substring(0, mStack.indexOf('/'));
     }
     return mStack;

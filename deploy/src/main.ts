@@ -33,3 +33,4 @@ async function run(): Promise<void> {
 }
 
 run();
+core.info('degub');

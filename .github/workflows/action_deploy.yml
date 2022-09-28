@@ -11,8 +11,9 @@ jobs:
   build_action:
     runs-on: ubuntu-latest
     steps:
+      - uses: actions/checkout@v3
       - name: Build action deploy
-        uses: actions/checkout@v3
-      - run: cd deploy
-      - run: npm install
-      - run: npm run build
+        run: |
+          cd deploy
+          npm install
+          npm run build

@@ -6713,7 +6713,7 @@ var __importStar = (this && this.__importStar) || function (mod) {
     return result;
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.getVersao = exports.getInputsDeploy = exports.getInputsBuildApi = exports.getInputsBuildAssembly = void 0;
+exports.getStack = exports.getVersao = exports.getInputsDeploy = exports.getInputsBuildApi = exports.getInputsBuildAssembly = void 0;
 const core = __importStar(__nccwpck_require__(3820));
 function getInputsBuildAssembly() {
     return {
@@ -6759,7 +6759,7 @@ function getVersao(versao_major, versao_minor, versao_patch, versao_patch_sufixo
     if (!versao_major || !versao_minor || !versao_patch) {
         throw new Error('parâmetros [versao_major, versao_minor, versao_patch] são obrigatórios');
     }
-    if (['beta', 'rc'].indexOf(versao_patch_sufixo) == -1) {
+    if (versao_patch_sufixo && ['beta', 'rc'].indexOf(versao_patch_sufixo) == -1) {
         throw new Error("parêmetro [versao_patch_sufixo] inválido - inputs permitidos (beta, rc)");
     }
     var versao = `${versao_major}.${versao_minor}.${versao_patch}`;
@@ -6769,6 +6769,14 @@ function getVersao(versao_major, versao_minor, versao_patch, versao_patch_sufixo
     return versao;
 }
 exports.getVersao = getVersao;
+function getStack(stack) {
+    var mStack = stack.substring(stack.indexOf('/') + 1);
+    if (mStack.indexOf('/') !== -1) {
+        return mStack.substring(0, mStack.indexOf('/'));
+    }
+    return mStack;
+}
+exports.getStack = getStack;
 
 
 /***/ }),

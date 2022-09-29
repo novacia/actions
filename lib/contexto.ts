@@ -81,7 +81,7 @@ export function getVersao(versao_major:string, versao_minor: string, versao_patc
         throw new Error('parâmetros [versao_major, versao_minor, versao_patch] são obrigatórios');
     }
 
-    if (['beta', 'rc'].indexOf(versao_patch_sufixo) == -1) {
+    if (versao_patch_sufixo && ['beta', 'rc'].indexOf(versao_patch_sufixo) == -1) {
         throw new Error("parêmetro [versao_patch_sufixo] inválido - inputs permitidos (beta, rc)");
     }
 

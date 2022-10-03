@@ -26,7 +26,7 @@ export async function login(username: string, password: string): Promise<void> {
         })
 }
 
-export async function build(hub: string, projeto: string, config: string, versao_major: string, versao_minor: string, versao_patch: string, versao_patch_sufixo?: string): Promise<void> {
+export async function build(hub: string, projeto: string, config: string, versao_major: string, versao_minor: string, versao_patch: string, versao_patch_sufixo: string): Promise<void> {
     core.info('Build da imagem ' + projeto)
 
     if (!hub || !projeto || !config || !versao_major || !versao_minor || !versao_patch) {

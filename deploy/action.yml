@@ -27,6 +27,27 @@ inputs:
     required: false
     type: string
     description: Nome da Stack
+  versao-major:
+    required: false
+    type: string
+    description: Quando fizer mudanças incompatíveis na API
+  versao-minor:
+    required: false
+    type: string
+    description: Quando adicionar funcionalidades mantendo compatibilidade
+  versao-patch:
+    required: false
+    type: string
+    description: Quando corrigir falhas mantendo compatibilidade
+  versao-patch-sufixo:
+    required: false
+    type: string
+    description: Sufixo do build (beta, rc)
+  latest:
+    required: false
+    type: boolean
+    description: Informa se a versão a ser gerada é latest (Produção)
+    default: false
 
 runs:
   using: 'node12'

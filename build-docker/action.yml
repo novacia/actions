@@ -10,7 +10,7 @@ inputs:
   projeto:
     required: false
     type: string
-    description: Nome do projeto no Repositóri
+    description: Nome do projeto no Repositório
   config:
     required: false
     type: string
@@ -31,6 +31,11 @@ inputs:
     required: false
     type: string
     description: Sufixo do build (beta, rc)
+  latest:
+    required: false
+    type: boolean
+    description: Informa se a versão a ser gerada é latest (Produção)
+    default: false
   docker_username:
     required: false
     type: string

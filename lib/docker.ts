@@ -53,21 +53,32 @@ export async function build(hub: string, projeto: string, config: string, versao
         })
 }
 
-export async function tag(hub: string, versao_major: string, versao_minor: string, versao_patch: string, versao_patch_sufixo: string): Promise<void> {
+export async function tag(latest: boolean, hub: string, versao_major: string, versao_minor: string, versao_patch: string, versao_patch_sufixo: string): Promise<void> {
     core.info('Criando tag')
 
     if (!hub && !versao_major || !versao_minor || !versao_patch) {
         throw new Error('Parâmetros [hub, versao, numberRun, config] são obrigatórios')
     }
 
-    var tag: string = `${hub}:${versao_major}.${versao_minor}.${versao_patch}`;
-    if (versao_patch_sufixo) {
-        tag = `${tag}-${versao_patch_sufixo}`;
+    var tagArray: Array<string> = new Array();
+    if (!latest) {
+        var tag: string = `${hub}:${versao_major}.${versao_minor}.${versao_patch}`;
+        if (versao_patch_sufixo) {
+            tag = `${tag}-${versao_patch_sufixo}`;
+        }
+        tagArray.push(tag);
     }
-    const tag_latest: string = `${hub}:latest`;
+    else {
+        var tag: string = `${hub}:${versao_major}.${versao_minor}.${versao_patch}`;
+        if (versao_patch_sufixo) {
+            tag = `${tag}-${versao_patch_sufixo}`;
+        }
+        var tag_latest: string = `${hub}:latest`;
+        tagArray.push(tag, tag_latest);
+    }
 
     await exec
-        .getExecOutput('docker tag', [tag, tag_latest], {
+        .getExecOutput('docker tag', tagArray, {
             ignoreReturnCode: true,
             silent: true
         })

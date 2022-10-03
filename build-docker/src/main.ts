@@ -1,11 +1,11 @@
 import * as core from '@actions/core';
 import * as docker from '../../lib/docker';
-import { InputsBuildApi, getInputsBuildApi } from '../../lib/contexto';
+import { InputsBuildDocker, getInputsBuildDocker } from '../../lib/contexto';
 
 async function run(): Promise<void> {
     
     try {
-        const inputs: InputsBuildApi = getInputsBuildApi();
+        const inputs: InputsBuildDocker = getInputsBuildDocker();
 
         core.info('Build API - ' + inputs.projeto);
 
@@ -14,7 +14,7 @@ async function run(): Promise<void> {
                 throw new Error(err);
             });
 
-        await docker.tag(inputs.hub, inputs.versao_major, inputs.versao_minor, inputs.versao_patch, inputs.versao_patch_sufixo)
+        await docker.tag(inputs.latest, inputs.hub, inputs.versao_major, inputs.versao_minor, inputs.versao_patch, inputs.versao_patch_sufixo)
             .catch((err) => {
                 throw new Error(err);
             });
@@ -24,15 +24,22 @@ async function run(): Promise<void> {
                 throw new Error(err);
             });
 
-        await docker.push(false, inputs.hub, inputs.versao_major, inputs.versao_minor, inputs.versao_patch, inputs.versao_patch_sufixo)
-            .catch((err) => {
-                throw new Error(err);
-            });
-            
-        await docker.push(true, inputs.hub)
-            .catch((err) => {
-                throw new Error(err);
-            });
+        if (inputs.latest) {
+            await docker.push(inputs.latest, inputs.hub, inputs.versao_major, inputs.versao_minor, inputs.versao_patch, inputs.versao_patch_sufixo)
+                .catch((err) => {
+                    throw new Error(err);
+                });
+            await docker.push(inputs.latest, inputs.hub)
+                .catch((err) => {
+                    throw new Error(err);
+                });
+        }
+        else {
+            await docker.push(inputs.latest, inputs.hub, inputs.versao_major, inputs.versao_minor, inputs.versao_patch, inputs.versao_patch_sufixo)
+                .catch((err) => {
+                    throw new Error(err);
+                });
+        }
         
         core.info('Build API Finalizado');
     } catch (error) {

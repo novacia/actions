@@ -6656,13 +6656,13 @@ const contexto_1 = __nccwpck_require__(5517);
 function run() {
     return __awaiter(this, void 0, void 0, function* () {
         try {
-            const inputs = (0, contexto_1.getInputsBuildApi)();
+            const inputs = (0, contexto_1.getInputsBuildDocker)();
             core.info('Build API - ' + inputs.projeto);
             yield docker.build(inputs.hub, inputs.projeto, inputs.config, inputs.versao_major, inputs.versao_minor, inputs.versao_patch, inputs.versao_patch_sufixo)
                 .catch((err) => {
                 throw new Error(err);
             });
-            yield docker.tag(inputs.hub, inputs.versao_major, inputs.versao_minor, inputs.versao_patch, inputs.versao_patch_sufixo)
+            yield docker.tag(inputs.latest, inputs.hub, inputs.versao_major, inputs.versao_minor, inputs.versao_patch, inputs.versao_patch_sufixo)
                 .catch((err) => {
                 throw new Error(err);
             });
@@ -6670,14 +6670,22 @@ function run() {
                 .catch((err) => {
                 throw new Error(err);
             });
-            yield docker.push(false, inputs.hub, inputs.versao_major, inputs.versao_minor, inputs.versao_patch, inputs.versao_patch_sufixo)
-                .catch((err) => {
-                throw new Error(err);
-            });
-            yield docker.push(true, inputs.hub)
-                .catch((err) => {
-                throw new Error(err);
-            });
+            if (inputs.latest) {
+                yield docker.push(inputs.latest, inputs.hub, inputs.versao_major, inputs.versao_minor, inputs.versao_patch, inputs.versao_patch_sufixo)
+                    .catch((err) => {
+                    throw new Error(err);
+                });
+                yield docker.push(inputs.latest, inputs.hub)
+                    .catch((err) => {
+                    throw new Error(err);
+                });
+            }
+            else {
+                yield docker.push(inputs.latest, inputs.hub, inputs.versao_major, inputs.versao_minor, inputs.versao_patch, inputs.versao_patch_sufixo)
+                    .catch((err) => {
+                    throw new Error(err);
+                });
+            }
             core.info('Build API Finalizado');
         }
         catch (error) {
@@ -6721,7 +6729,7 @@ var __importStar = (this && this.__importStar) || function (mod) {
     return result;
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.getStack = exports.getVersao = exports.getInputsDeploy = exports.getInputsBuildApi = exports.getInputsBuildAssembly = void 0;
+exports.getStack = exports.getVersao = exports.getInputsDeploy = exports.getInputsBuildDocker = exports.getInputsBuildAssembly = void 0;
 const core = __importStar(__nccwpck_require__(3820));
 function getInputsBuildAssembly() {
     return {
@@ -6737,7 +6745,7 @@ function getInputsBuildAssembly() {
     };
 }
 exports.getInputsBuildAssembly = getInputsBuildAssembly;
-function getInputsBuildApi() {
+function getInputsBuildDocker() {
     return {
         hub: core.getInput('hub'),
         projeto: core.getInput('projeto'),
@@ -6746,11 +6754,12 @@ function getInputsBuildApi() {
         versao_minor: core.getInput('versao-minor'),
         versao_patch: core.getInput('versao-patch'),
         versao_patch_sufixo: core.getInput('versao-patch-sufixo'),
+        latest: core.getBooleanInput('latest'),
         docker_username: core.getInput('docker_username'),
         docker_token: core.getInput('docker_token')
     };
 }
-exports.getInputsBuildApi = getInputsBuildApi;
+exports.getInputsBuildDocker = getInputsBuildDocker;
 function getInputsDeploy() {
     return {
         host: core.getInput('host'),
@@ -6879,19 +6888,30 @@ function build(hub, projeto, config, versao_major, versao_minor, versao_patch, v
     });
 }
 exports.build = build;
-function tag(hub, versao_major, versao_minor, versao_patch, versao_patch_sufixo) {
+function tag(latest, hub, versao_major, versao_minor, versao_patch, versao_patch_sufixo) {
     return __awaiter(this, void 0, void 0, function* () {
         core.info('Criando tag');
         if (!hub && !versao_major || !versao_minor || !versao_patch) {
             throw new Error('Parâmetros [hub, versao, numberRun, config] são obrigatórios');
         }
-        var tag = `${hub}:${versao_major}.${versao_minor}.${versao_patch}`;
-        if (versao_patch_sufixo) {
-            tag = `${tag}-${versao_patch_sufixo}`;
+        var tagArray = new Array();
+        if (!latest) {
+            var tag = `${hub}:${versao_major}.${versao_minor}.${versao_patch}`;
+            if (versao_patch_sufixo) {
+                tag = `${tag}-${versao_patch_sufixo}`;
+            }
+            tagArray.push(tag);
         }
-        const tag_latest = `${hub}:latest`;
+        else {
+            var tag = `${hub}:${versao_major}.${versao_minor}.${versao_patch}`;
+            if (versao_patch_sufixo) {
+                tag = `${tag}-${versao_patch_sufixo}`;
+            }
+            var tag_latest = `${hub}:latest`;
+            tagArray.push(tag, tag_latest);
+        }
         yield exec
-            .getExecOutput('docker tag', [tag, tag_latest], {
+            .getExecOutput('docker tag', tagArray, {
             ignoreReturnCode: true,
             silent: true
         })

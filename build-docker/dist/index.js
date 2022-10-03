@@ -6767,7 +6767,12 @@ function getInputsDeploy() {
         username: core.getInput('username'),
         password: core.getInput('password'),
         key: core.getInput('key'),
-        stack: core.getInput('stack')
+        stack: core.getInput('stack'),
+        versao_major: core.getInput('versao_major'),
+        versao_minor: core.getInput('versao-minor'),
+        versao_patch: core.getInput('versao-patch'),
+        versao_patch_sufixo: core.getInput('versao-patch-sufixo'),
+        latest: core.getBooleanInput('latest')
     };
 }
 exports.getInputsDeploy = getInputsDeploy;

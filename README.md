@@ -24,6 +24,7 @@ Github actions TLV7, concentra todas as actions responsaveis por realizar builds
 | `versao-minor` | `string` | **Obrigatório**. Quando adicionar funcionalidades mantendo compatibilidade |
 | `versao-patch` | `string` | **Obrigatório**. Quando corrigir falhas mantendo compatibilidade |
 | `versao-patch-sufixo` | `string` | Sufixo do build (beta, rc) |
+| `latest` | `boolean` | Informa se a versão a ser gerada é latest (Produção) **Default: false** |
 | `docker_username` | `string` | **Obrigatório**. Usuário para autenticação do Docker Hub |
 | `docker_token` | `string` | **Obrigatório**. Token para autenticação do Docker Hub |
 
@@ -78,6 +79,11 @@ Github actions TLV7, concentra todas as actions responsaveis por realizar builds
 | `password` | `string` | **Obrigatório** Password SSH |
 | `key` | `string` | **Obrigatório**. Private Key SSH |
 | `stack` | `string` | **Obrigatório**. Nome da Stack |
+| `versao-major` | `string` | **Obrigatório**. Quando fizer mudanças incompatíveis na API |
+| `versao-minor` | `string` | **Obrigatório**. Quando adicionar funcionalidades mantendo compatibilidade |
+| `versao-patch` | `string` | **Obrigatório**. Quando corrigir falhas mantendo compatibilidade |
+| `versao-patch-sufixo` | `string` | Sufixo do build (beta, rc) |
+| `latest` | `boolean` | Informa se a versão a ser gerada é latest (Produção) **Default: false** |
 
 **Exemplo:**
 

@@ -27795,7 +27795,13 @@ function run() {
             core.info('Removendo stack ' + stack_name);
             yield ssh.sshComando(config, `sudo docker stack rm ${stack_name}`);
             core.info('Subindo stack ' + stack_name);
-            yield ssh.sshComando(config, `sudo docker stack deploy -c ./${inputs.stack}/docker-compose.yml ${stack_name}`);
+            if (inputs.latest) {
+                yield ssh.sshComando(config, `sudo docker stack deploy -c ./${inputs.stack}/docker-compose.yml ${stack_name}`);
+            }
+            else {
+                var versao = (0, contexto_1.getVersao)(inputs.versao_major, inputs.versao_minor, inputs.versao_patch, inputs.versao_patch_sufixo);
+                yield ssh.sshComando(config, `sudo docker stack deploy --build-arg VERSAO=${versao} -c ./${inputs.stack}/docker-compose.yml ${stack_name}`);
+            }
             core.info('Finalizando Deploy');
         }
         catch (error) {
@@ -27839,7 +27845,7 @@ var __importStar = (this && this.__importStar) || function (mod) {
     return result;
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.getStack = exports.getVersao = exports.getInputsDeploy = exports.getInputsBuildApi = exports.getInputsBuildAssembly = void 0;
+exports.getStack = exports.getVersao = exports.getInputsDeploy = exports.getInputsBuildDocker = exports.getInputsBuildAssembly = void 0;
 const core = __importStar(__nccwpck_require__(3820));
 function getInputsBuildAssembly() {
     return {
@@ -27855,7 +27861,7 @@ function getInputsBuildAssembly() {
     };
 }
 exports.getInputsBuildAssembly = getInputsBuildAssembly;
-function getInputsBuildApi() {
+function getInputsBuildDocker() {
     return {
         hub: core.getInput('hub'),
         projeto: core.getInput('projeto'),
@@ -27864,11 +27870,12 @@ function getInputsBuildApi() {
         versao_minor: core.getInput('versao-minor'),
         versao_patch: core.getInput('versao-patch'),
         versao_patch_sufixo: core.getInput('versao-patch-sufixo'),
+        latest: core.getBooleanInput('latest'),
         docker_username: core.getInput('docker_username'),
         docker_token: core.getInput('docker_token')
     };
 }
-exports.getInputsBuildApi = getInputsBuildApi;
+exports.getInputsBuildDocker = getInputsBuildDocker;
 function getInputsDeploy() {
     return {
         host: core.getInput('host'),
@@ -27876,7 +27883,12 @@ function getInputsDeploy() {
         username: core.getInput('username'),
         password: core.getInput('password'),
         key: core.getInput('key'),
-        stack: core.getInput('stack')
+        stack: core.getInput('stack'),
+        versao_major: core.getInput('versao_major'),
+        versao_minor: core.getInput('versao-minor'),
+        versao_patch: core.getInput('versao-patch'),
+        versao_patch_sufixo: core.getInput('versao-patch-sufixo'),
+        latest: core.getBooleanInput('latest')
     };
 }
 exports.getInputsDeploy = getInputsDeploy;

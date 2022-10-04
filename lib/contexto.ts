@@ -85,7 +85,7 @@ export function getInputsDeploy(): InputsDeploy {
     }
 }
 
-export function getVersao(versao_major:string, versao_minor: string, versao_patch: string, versao_patch_sufixo: string): string {
+export function getVersao(versao_major:string, versao_minor: string, versao_patch: string, versao_patch_sufixo?: string): string {
 
     core.info('gerando versão');
 

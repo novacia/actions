@@ -16,7 +16,7 @@ async function run(): Promise<void> {
 
         
         if (inputs.latest) {
-            await docker.tag(inputs.latest, inputs.hub, inputs.versao_major, inputs.versao_minor, inputs.versao_patch, inputs.versao_patch_sufixo)
+            await docker.tag(inputs.hub, inputs.versao_major, inputs.versao_minor, inputs.versao_patch, inputs.versao_patch_sufixo)
                 .catch((err) => {
                     throw new Error(err);
                 });

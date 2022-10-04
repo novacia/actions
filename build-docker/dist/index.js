@@ -6663,7 +6663,7 @@ function run() {
                 throw new Error(err);
             });
             if (inputs.latest) {
-                yield docker.tag(inputs.latest, inputs.hub, inputs.versao_major, inputs.versao_minor, inputs.versao_patch, inputs.versao_patch_sufixo)
+                yield docker.tag(inputs.hub, inputs.versao_major, inputs.versao_minor, inputs.versao_patch, inputs.versao_patch_sufixo)
                     .catch((err) => {
                     throw new Error(err);
                 });
@@ -6895,30 +6895,19 @@ function build(hub, projeto, config, versao_major, versao_minor, versao_patch, v
     });
 }
 exports.build = build;
-function tag(latest, hub, versao_major, versao_minor, versao_patch, versao_patch_sufixo) {
+function tag(hub, versao_major, versao_minor, versao_patch, versao_patch_sufixo) {
     return __awaiter(this, void 0, void 0, function* () {
         core.info('Criando tag');
         if (!hub && !versao_major || !versao_minor || !versao_patch) {
             throw new Error('Parâmetros [hub, versao, numberRun, config] são obrigatórios');
         }
-        var tagArray = new Array();
-        if (!latest) {
-            var tag = `${hub}:${versao_major}.${versao_minor}.${versao_patch}`;
-            if (versao_patch_sufixo) {
-                tag = `${tag}-${versao_patch_sufixo}`;
-            }
-            tagArray.push(tag);
+        var tag = `${hub}:${versao_major}.${versao_minor}.${versao_patch}`;
+        if (versao_patch_sufixo) {
+            tag = `${tag}-${versao_patch_sufixo}`;
         }
-        else {
-            var tag = `${hub}:${versao_major}.${versao_minor}.${versao_patch}`;
-            if (versao_patch_sufixo) {
-                tag = `${tag}-${versao_patch_sufixo}`;
-            }
-            var tag_latest = `${hub}:latest`;
-            tagArray.push(tag, tag_latest);
-        }
+        var tag_latest = `${hub}:latest`;
         yield exec
-            .getExecOutput('docker tag', tagArray, {
+            .getExecOutput('docker tag', [tag, tag_latest], {
             ignoreReturnCode: true,
             silent: true
         })

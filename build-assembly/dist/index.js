@@ -6752,7 +6752,7 @@ function getInputsDeploy() {
         password: core.getInput('password'),
         key: core.getInput('key'),
         stack: core.getInput('stack'),
-        versao_major: core.getInput('versao_major'),
+        versao_major: core.getInput('versao-major'),
         versao_minor: core.getInput('versao-minor'),
         versao_patch: core.getInput('versao-patch'),
         versao_patch_sufixo: core.getInput('versao-patch-sufixo'),

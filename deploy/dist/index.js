@@ -27799,9 +27799,6 @@ function run() {
                 yield ssh.sshComando(config, `sudo docker stack deploy -c ./${inputs.stack}/docker-compose.yml ${stack_name}`);
             }
             else {
-                core.info(inputs.versao_major);
-                core.info(inputs.versao_minor);
-                core.info(inputs.versao_patch);
                 var versao = (0, contexto_1.getVersao)(inputs.versao_major, inputs.versao_minor, inputs.versao_patch, inputs.versao_patch_sufixo);
                 yield ssh.sshComando(config, `sudo docker stack deploy --build-arg VERSAO=${versao} -c ./${inputs.stack}/docker-compose.yml ${stack_name}`);
             }
@@ -27887,7 +27884,7 @@ function getInputsDeploy() {
         password: core.getInput('password'),
         key: core.getInput('key'),
         stack: core.getInput('stack'),
-        versao_major: core.getInput('versao_major'),
+        versao_major: core.getInput('versao-major'),
         versao_minor: core.getInput('versao-minor'),
         versao_patch: core.getInput('versao-patch'),
         versao_patch_sufixo: core.getInput('versao-patch-sufixo'),

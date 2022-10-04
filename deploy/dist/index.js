@@ -27800,7 +27800,7 @@ function run() {
             }
             else {
                 var versao = (0, contexto_1.getVersao)(inputs.versao_major, inputs.versao_minor, inputs.versao_patch, inputs.versao_patch_sufixo);
-                yield ssh.sshComando(config, `sudo docker stack deploy --build-arg VERSAO=${versao} -c ./${inputs.stack}/docker-compose.yml ${stack_name}`);
+                yield ssh.sshComando(config, `sudo env VERSAO=${versao} docker stack deploy -c ./${inputs.stack}/docker-compose.yml ${stack_name}`);
             }
             core.info('Finalizando Deploy');
         }

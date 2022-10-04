@@ -27,7 +27,7 @@ async function run(): Promise<void> {
         }
         else {
             var versao = getVersao(inputs.versao_major, inputs.versao_minor, inputs.versao_patch, inputs.versao_patch_sufixo);
-            await ssh.sshComando(config, `sudo docker stack deploy --build-arg VERSAO=${versao} -c ./${inputs.stack}/docker-compose.yml ${stack_name}`);
+            await ssh.sshComando(config, `sudo env VERSAO=${versao} docker stack deploy -c ./${inputs.stack}/docker-compose.yml ${stack_name}`);
         }
         
         core.info('Finalizando Deploy');

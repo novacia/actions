@@ -87,4 +87,4 @@ Github actions TLV7, concentra todas as actions responsaveis por realizar builds
 
 **Exemplo:**
 
-![build-assembly](https://i.ibb.co/rtfgsXv/deploy.png)
+![build-assembly](https://i.ibb.co/HGBHsw5/deploy.png)

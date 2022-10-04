@@ -6673,17 +6673,17 @@ function run() {
                 throw new Error(err);
             });
             if (inputs.latest) {
-                yield docker.push(inputs.latest, inputs.hub, inputs.versao_major, inputs.versao_minor, inputs.versao_patch, inputs.versao_patch_sufixo)
+                yield docker.push(inputs.hub, false, inputs.versao_major, inputs.versao_minor, inputs.versao_patch, inputs.versao_patch_sufixo)
                     .catch((err) => {
                     throw new Error(err);
                 });
-                yield docker.push(inputs.latest, inputs.hub)
+                yield docker.push(inputs.hub, true)
                     .catch((err) => {
                     throw new Error(err);
                 });
             }
             else {
-                yield docker.push(inputs.latest, inputs.hub, inputs.versao_major, inputs.versao_minor, inputs.versao_patch, inputs.versao_patch_sufixo)
+                yield docker.push(inputs.hub, false, inputs.versao_major, inputs.versao_minor, inputs.versao_patch, inputs.versao_patch_sufixo)
                     .catch((err) => {
                     throw new Error(err);
                 });
@@ -6920,10 +6920,10 @@ function tag(hub, versao_major, versao_minor, versao_patch, versao_patch_sufixo)
     });
 }
 exports.tag = tag;
-function push(latest, hub, versao_major, versao_minor, versao_patch, versao_patch_sufixo) {
+function push(hub, latest, versao_major, versao_minor, versao_patch, versao_patch_sufixo) {
     return __awaiter(this, void 0, void 0, function* () {
-        if (!latest && !hub) {
-            throw new Error('Parâmetro [latest, hub] é obrigatório');
+        if (!hub) {
+            throw new Error('Parâmetro [ hub ] é obrigatório');
         }
         var tag;
         if (latest) {

@@ -28,17 +28,16 @@ async function run(): Promise<void> {
             });
 
         if (inputs.latest) {
-            await docker.push(inputs.latest, inputs.hub, inputs.versao_major, inputs.versao_minor, inputs.versao_patch, inputs.versao_patch_sufixo)
+            await docker.push(inputs.hub, false, inputs.versao_major, inputs.versao_minor, inputs.versao_patch, inputs.versao_patch_sufixo)
                 .catch((err) => {
                     throw new Error(err);
                 });
-            await docker.push(inputs.latest, inputs.hub)
+            await docker.push(inputs.hub, true)
                 .catch((err) => {
                     throw new Error(err);
                 });
-        }
-        else {
-            await docker.push(inputs.latest, inputs.hub, inputs.versao_major, inputs.versao_minor, inputs.versao_patch, inputs.versao_patch_sufixo)
+        } else {
+            await docker.push(inputs.hub, false, inputs.versao_major, inputs.versao_minor, inputs.versao_patch, inputs.versao_patch_sufixo)
                 .catch((err) => {
                     throw new Error(err);
                 });

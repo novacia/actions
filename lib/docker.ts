@@ -79,10 +79,10 @@ export async function tag(hub: string, versao_major: string, versao_minor: strin
         })
 }
 
-export async function push(latest: boolean, hub: string, versao_major?: string, versao_minor?: string, versao_patch?: string, versao_patch_sufixo?: string): Promise<void> {
+export async function push(hub: string, latest?: boolean, versao_major?: string, versao_minor?: string, versao_patch?: string, versao_patch_sufixo?: string, ): Promise<void> {
     
-    if (!latest && !hub) {
-        throw new Error('Parâmetro [latest, hub] é obrigatório')
+    if (!hub) {
+        throw new Error('Parâmetro [ hub ] é obrigatório')
     }
 
     var tag: string;

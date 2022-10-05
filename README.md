@@ -71,19 +71,20 @@ Github actions TLV7, concentra todas as actions responsaveis por realizar builds
    novacia/actions/deploy@main
 ```
 
-| Parâmetro   | Tipo       | Descrição                           |
-| :---------- | :--------- | :---------------------------------- |
-| `host` | `string` | **Obrigatório**. Host Server |
-| `port` | `string` | **Obrigatório**. Port SSH - Valor default: 22 |
-| `username` | `string` | **Obrigatório**. Username SSH |
-| `password` | `string` | **Obrigatório** Password SSH |
-| `key` | `string` | **Obrigatório**. Private Key SSH |
-| `stack` | `string` | **Obrigatório**. Nome da Stack |
-| `versao-major` | `string` | **Obrigatório**. Quando fizer mudanças incompatíveis na API |
-| `versao-minor` | `string` | **Obrigatório**. Quando adicionar funcionalidades mantendo compatibilidade |
-| `versao-patch` | `string` | **Obrigatório**. Quando corrigir falhas mantendo compatibilidade |
-| `versao-patch-sufixo` | `string` | Sufixo do build (beta, rc) |
-| `latest` | `boolean` | Informa se a versão a ser gerada é latest (Produção) **Default: false** |
+| Parâmetro   | Tipo       | Descrição                           | Obrigatório             |
+| :---------- | :--------- | :---------------------------------- | :---------------------- |
+| `host` | `string` | Host Server | Sim |
+| `port` | `string` | Port SSH - Valor default: 22 | Sim |
+| `username` | `string` | Username SSH | Sim |
+| `password` | `string` | Password SSH | Sim |
+| `key` | `string` | Private Key SSH | Sim |
+| `stack` | `string` | Nome da Stack | Sim |
+| `config` | `string` | Tipo de build (Beta, Rc, Release) | Não |
+| `versao-major` | `string` | Quando fizer mudanças incompatíveis na API | Sim |
+| `versao-minor` | `string` | Quando adicionar funcionalidades mantendo compatibilidade | Sim |
+| `versao-patch` | `string` | Quando corrigir falhas mantendo compatibilidade | Sim |
+| `versao-patch-sufixo` | `string` | Sufixo do build (beta, rc) | Não |
+| `latest` | `boolean` | Informa se a versão a ser gerada é latest (Produção) **Default: false** | Não |
 
 **Exemplo:**
 

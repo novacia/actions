@@ -15,18 +15,18 @@ Github actions TLV7, concentra todas as actions responsaveis por realizar builds
     actions/checkout@v3
 ```
 
-| Parâmetro   | Tipo       | Descrição                           |
-| :---------- | :--------- | :---------------------------------- |
-| `hub` | `string` | **Obrigatório**. Junção do Repositório no Docker Hub + Nome do Projeto |
-| `projeto` | `string` | **Obrigatório**. Nome do projeto no Repositório |
-| `config` | `string` | **Obrigatório**. Tipo de build (Beta, Rc, Release) |
-| `versao-major` | `string` | **Obrigatório**. Quando fizer mudanças incompatíveis na API |
-| `versao-minor` | `string` | **Obrigatório**. Quando adicionar funcionalidades mantendo compatibilidade |
-| `versao-patch` | `string` | **Obrigatório**. Quando corrigir falhas mantendo compatibilidade |
-| `versao-patch-sufixo` | `string` | Sufixo do build (beta, rc) |
-| `latest` | `boolean` | Informa se a versão a ser gerada é latest (Produção) **Default: false** |
-| `docker_username` | `string` | **Obrigatório**. Usuário para autenticação do Docker Hub |
-| `docker_token` | `string` | **Obrigatório**. Token para autenticação do Docker Hub |
+| Parâmetro   | Tipo       | Descrição                           | Obrigatório             |
+| :---------- | :--------- | :---------------------------------- | :---------------------- |
+| `hub` | `string` | Junção do Repositório no Docker Hub + Nome do Projeto | Sim |
+| `projeto` | `string` | Nome do projeto no Repositório | Sim |
+| `config` | `string` | Tipo de build (Beta, Rc, Release) | Sim |
+| `versao-major` | `string` | Quando fizer mudanças incompatíveis na API | Sim |
+| `versao-minor` | `string` | Quando adicionar funcionalidades mantendo compatibilidade | Sim |
+| `versao-patch` | `string` | Quando corrigir falhas mantendo compatibilidade | Sim |
+| `versao-patch-sufixo` | `string` | Sufixo do build (beta, rc) | Não |
+| `latest` | `boolean` | Informa se a versão a ser gerada é latest (Produção) **Default: false** | Não |
+| `docker_username` | `string` | Usuário para autenticação do Docker Hub | Sim |
+| `docker_token` | `string` | Token para autenticação do Docker Hub | Sim |
 
 **Exemplo:**
 
@@ -47,17 +47,17 @@ Github actions TLV7, concentra todas as actions responsaveis por realizar builds
     actions/checkout@v3
 ```
 
-| Parâmetro   | Tipo       | Descrição                           |
-| :---------- | :--------- | :---------------------------------- |
-| `versao-major` | `string` | **Obrigatório**. Quando fizer mudanças incompatíveis na API |
-| `versao-minor` | `string` | **Obrigatório**. Quando adicionar funcionalidades mantendo compatibilidade |
-| `versao-patch` | `string` | **Obrigatório**. Quando corrigir falhas mantendo compatibilidade |
-| `versao-patch-sufixo` | `string` | Sufixo do build (beta, rc) |
-| `config` | `string` | **Obrigatório**. Tipo de build (Beta, Rc, Release) |
-| `csproj` | `string` | **Obrigatório**. Arquivo de Build Microsoft |
-| `nupkg` | `string` | **Obrigatório**. Path pacote nuget |
-| `username` | `string` | **Obrigatório**. Username Nuget |
-| `token` | `string` | **Obrigatório**. Token Nuget |
+| Parâmetro   | Tipo       | Descrição                           | Obrigatório             |
+| :---------- | :--------- | :---------------------------------- | :---------------------- |
+| `versao-major` | `string` | Quando fizer mudanças incompatíveis na API | Sim |
+| `versao-minor` | `string` | Quando adicionar funcionalidades mantendo compatibilidade | Sim |
+| `versao-patch` | `string` | Quando corrigir falhas mantendo compatibilidade | Sim |
+| `versao-patch-sufixo` | `string` | Sufixo do build (beta, rc) | Não |
+| `config` | `string` | Tipo de build (Beta, Rc, Release) | Sim |
+| `csproj` | `string` | Arquivo de Build Microsoft | Sim |
+| `nupkg` | `string` | Path pacote nuget | Sim |
+| `username` | `string` | Username Nuget | Sim |
+| `token` | `string` | Token Nuget | Sim |
 
 **Exemplo:**
 

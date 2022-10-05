@@ -3,6 +3,9 @@ import { InputsDeploy, getInputsDeploy, getStack, getVersao } from '../../lib/co
 import * as ssh from '../../lib/ssh';
 
 async function run(): Promise<void> {
+
+    var _config: string = '';
+
     try {
         const inputs: InputsDeploy = getInputsDeploy();
 
@@ -21,13 +24,17 @@ async function run(): Promise<void> {
         await ssh.sshComando(config, `sudo docker stack rm ${stack_name}`);
 
         core.info('Subindo stack ' + stack_name);
-
+        
+        if (inputs.config) {
+            _config= `CONFIG=${inputs.config}`;
+        }
+         
         if (inputs.latest) {
-            await ssh.sshComando(config, `sudo docker stack deploy -c ./${inputs.stack}/docker-compose.yml ${stack_name}`);
+            await ssh.sshComando(config, `sudo env ${_config} docker stack deploy -c ./${inputs.stack}/docker-compose.yml ${stack_name}`);
         }
         else {
-            var versao = getVersao(inputs.versao_major, inputs.versao_minor, inputs.versao_patch, inputs.versao_patch_sufixo);
-            await ssh.sshComando(config, `sudo env VERSAO=${versao} docker stack deploy -c ./${inputs.stack}/docker-compose.yml ${stack_name}`);
+            var _versao = getVersao(inputs.versao_major, inputs.versao_minor, inputs.versao_patch, inputs.versao_patch_sufixo);
+            await ssh.sshComando(config, `sudo env ${_config} VERSAO=${_versao} docker stack deploy -c ./${inputs.stack}/docker-compose.yml ${stack_name}`);
         }
         
         core.info('Finalizando Deploy');

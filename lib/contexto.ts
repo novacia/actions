@@ -62,6 +62,7 @@ export interface InputsDeploy {
     password: string
     key: string
     stack: string
+    config: string
     versao_major: string
     versao_minor: string
     versao_patch: string
@@ -77,6 +78,7 @@ export function getInputsDeploy(): InputsDeploy {
         password: core.getInput('password'),
         key: core.getInput('key'),
         stack: core.getInput('stack'),
+        config: core.getInput('config'),
         versao_major: core.getInput('versao-major'),
         versao_minor: core.getInput('versao-minor'),
         versao_patch: core.getInput('versao-patch'),

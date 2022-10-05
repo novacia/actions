@@ -27781,6 +27781,7 @@ const contexto_1 = __nccwpck_require__(5517);
 const ssh = __importStar(__nccwpck_require__(1208));
 function run() {
     return __awaiter(this, void 0, void 0, function* () {
+        var _config = '';
         try {
             const inputs = (0, contexto_1.getInputsDeploy)();
             const config = {
@@ -27795,12 +27796,15 @@ function run() {
             core.info('Removendo stack ' + stack_name);
             yield ssh.sshComando(config, `sudo docker stack rm ${stack_name}`);
             core.info('Subindo stack ' + stack_name);
+            if (inputs.config) {
+                _config = `CONFIG=${inputs.config}`;
+            }
             if (inputs.latest) {
-                yield ssh.sshComando(config, `sudo docker stack deploy -c ./${inputs.stack}/docker-compose.yml ${stack_name}`);
+                yield ssh.sshComando(config, `sudo env ${_config} docker stack deploy -c ./${inputs.stack}/docker-compose.yml ${stack_name}`);
             }
             else {
-                var versao = (0, contexto_1.getVersao)(inputs.versao_major, inputs.versao_minor, inputs.versao_patch, inputs.versao_patch_sufixo);
-                yield ssh.sshComando(config, `sudo env VERSAO=${versao} docker stack deploy -c ./${inputs.stack}/docker-compose.yml ${stack_name}`);
+                var _versao = (0, contexto_1.getVersao)(inputs.versao_major, inputs.versao_minor, inputs.versao_patch, inputs.versao_patch_sufixo);
+                yield ssh.sshComando(config, `sudo env ${_config} VERSAO=${_versao} docker stack deploy -c ./${inputs.stack}/docker-compose.yml ${stack_name}`);
             }
             core.info('Finalizando Deploy');
         }
@@ -27884,6 +27888,7 @@ function getInputsDeploy() {
         password: core.getInput('password'),
         key: core.getInput('key'),
         stack: core.getInput('stack'),
+        config: core.getInput('config'),
         versao_major: core.getInput('versao-major'),
         versao_minor: core.getInput('versao-minor'),
         versao_patch: core.getInput('versao-patch'),

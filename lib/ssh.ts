@@ -12,7 +12,7 @@ export interface sshSettings {
 export async function sshComando(settings:sshSettings, cmd: string): Promise<void> {
     
     try {
-        var config;
+        var config: ConnectConfig;
         if (!settings.password) {
             config = {
                 host: settings.host,
@@ -20,7 +20,8 @@ export async function sshComando(settings:sshSettings, cmd: string): Promise<voi
                 username: settings.username,
                 privateKey: settings.key
             }
-        } else if (!settings.key) {
+        }
+        else if (!settings.key) {
             config = {
                 host: settings.host,
                 port: settings.port,

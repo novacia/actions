@@ -5,6 +5,7 @@ import { PushEvent } from '@octokit/webhooks-definitions/schema';
 import * as pipeline from './lib/pipeline';
 import { getInputsPipeline, InputsPipeline } from '../../lib/contexto';
 import { Http2ServerRequest, Http2ServerResponse } from 'http2';
+import { copyFile } from 'fs';
 
 async function run(): Promise<void> {
     try {
@@ -14,31 +15,33 @@ async function run(): Promise<void> {
 
         var octokit = getOctokit(inputs.github_token);
 
-        core.info('iniciando request');
-
         const result = await octokit.request("GET /repos/{owner}/{repo}/commits/{ref}", {
             owner: push.repository.full_name.split('/')[0],
             repo: push.repository.name,
             ref: push.after
         });
         if (result.status = 200) {
-            core.info(JSON.stringify(result.data.files));
+            var files: Array<pipeline.Files> | undefined = result.data.files;
+
+            files?.forEach((file) => {
+                switch (file.status) {
+                    case 'added':
+                        pipeline.Created(inputs, file);
+                        break;
+                    case 'modified': case 'changed': case 'renamed':
+                        pipeline.Edited(inputs, file);
+                        break;
+                    case 'removed':
+                        pipeline.Deleted(inputs, file);
+                        break;
+                    default:
+                        core.info(`Status [${file.status}] sem tratamento`);
+                        break;
+                }
+            });
         }
 
-        // switch (context.payload.action) {
-        //     case 'created':
-        //         await pipeline.Created(inputs);
-        //         break;
-        //     case 'edited':
-        //         await pipeline.Edited(inputs);
-        //         break;
-        //     case 'deleted':
-        //         await pipeline.Deleted(inputs);
-        //         break;
-        //     default:
-        //         core.info(`Action [${context.eventName}] sem tratamento`);
-        //         break;
-        // }
+        
     }
     catch (error) {
         if (error instanceof Error) {

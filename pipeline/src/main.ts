@@ -15,6 +15,12 @@ async function run(): Promise<void> {
         if (push.created) {
             core.info("Created");
         }
+        if (push.forced) {
+            core.info("forced");
+        }
+        if (push.deleted) {
+            core.info("deleted");
+        }
 
         switch (github.context.action) {
             case 'created':

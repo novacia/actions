@@ -7,7 +7,7 @@ import { getInputsPipeline, InputsPipeline } from '../../lib/contexto';
 
 async function run(): Promise<void> {
     
-    var token: string = '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';
+    var token: string = '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';
 
     try {
         var inputs: InputsPipeline = getInputsPipeline();
@@ -17,9 +17,9 @@ async function run(): Promise<void> {
         var octokit = getOctokit(token);
 
         const result = await octokit.request("GET /repos/{owner}/{repo}/commits/{ref}", {
-            headers: {
-                authorization: `bearer ${token}`
-            },
+            // headers: {
+            //     authorization: `bearer ${token}`
+            // },
             owner: push.repository.full_name.split('/')[0],
             repo: push.repository.name,
             ref: push.after

@@ -12919,15 +12919,15 @@ const github_1 = __nccwpck_require__(5438);
 const contexto_1 = __nccwpck_require__(5517);
 function run() {
     return __awaiter(this, void 0, void 0, function* () {
-        var token = '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';
+        var token = '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';
         try {
             var inputs = (0, contexto_1.getInputsPipeline)();
             var push = github_1.context.payload;
             var octokit = (0, github_1.getOctokit)(token);
             const result = yield octokit.request("GET /repos/{owner}/{repo}/commits/{ref}", {
-                headers: {
-                    authorization: `bearer ${token}`
-                },
+                // headers: {
+                //     authorization: `bearer ${token}`
+                // },
                 owner: push.repository.full_name.split('/')[0],
                 repo: push.repository.name,
                 ref: push.after

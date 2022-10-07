@@ -12,9 +12,10 @@ async function run(): Promise<void> {
 
         var push: PushEvent = github.context.payload as PushEvent;
 
-        console.log(github.context.payload);
         console.log(github.context.payload.action);
-        console.log(push.commits);
+        console.log(push.head_commit?.added)
+        console.log(push.head_commit?.modified)
+        console.log(push.head_commit?.removed)
 
         switch (github.context.payload.action) {
             case 'created':

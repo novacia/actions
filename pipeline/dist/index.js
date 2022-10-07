@@ -12430,13 +12430,15 @@ const github = __importStar(__nccwpck_require__(5438));
 const pipeline = __importStar(__nccwpck_require__(5173));
 const contexto_1 = __nccwpck_require__(5517);
 function run() {
+    var _a, _b, _c;
     return __awaiter(this, void 0, void 0, function* () {
         try {
             var inputs = (0, contexto_1.getInputsPipeline)();
             var push = github.context.payload;
-            console.log(github.context.payload);
             console.log(github.context.payload.action);
-            console.log(push.commits);
+            console.log((_a = push.head_commit) === null || _a === void 0 ? void 0 : _a.added);
+            console.log((_b = push.head_commit) === null || _b === void 0 ? void 0 : _b.modified);
+            console.log((_c = push.head_commit) === null || _c === void 0 ? void 0 : _c.removed);
             switch (github.context.payload.action) {
                 case 'created':
                     yield pipeline.Created(inputs);

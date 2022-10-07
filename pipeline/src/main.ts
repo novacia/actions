@@ -16,6 +16,8 @@ async function run(): Promise<void> {
 
         var octokit = getOctokit(token);
 
+        core.info('iniciando request');
+
         const result = await octokit.request("GET /repos/{owner}/{repo}/commits/{ref}", {
             // headers: {
             //     authorization: `bearer ${token}`

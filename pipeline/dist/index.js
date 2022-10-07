@@ -12924,6 +12924,7 @@ function run() {
             var inputs = (0, contexto_1.getInputsPipeline)();
             var push = github_1.context.payload;
             var octokit = (0, github_1.getOctokit)(token);
+            core.info('iniciando request');
             const result = yield octokit.request("GET /repos/{owner}/{repo}/commits/{ref}", {
                 // headers: {
                 //     authorization: `bearer ${token}`

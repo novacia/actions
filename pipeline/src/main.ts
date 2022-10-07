@@ -1,6 +1,6 @@
 import * as core from '@actions/core';
 import * as exec from '@actions/exec';
-import * as github from '@actions/github';
+import { context, getOctokit } from '@actions/github';
 import { PushEvent } from '@octokit/webhooks-definitions/schema'
 import * as pipeline from './lib/pipeline';
 import { getInputsPipeline, InputsPipeline } from '../../lib/contexto';
@@ -10,14 +10,12 @@ async function run(): Promise<void> {
     try {
         var inputs: InputsPipeline = getInputsPipeline();
 
-        var push: PushEvent = github.context.payload as PushEvent;
+        var push: PushEvent = context.payload as PushEvent;
 
-        console.log(github.context.payload.action);
-        console.log(push.head_commit?.added)
-        console.log(push.head_commit?.modified)
-        console.log(push.head_commit?.removed)
+        console.log(context.payload.action);
+        console.log(push);
 
-        switch (github.context.payload.action) {
+        switch (context.payload.action) {
             case 'created':
                 await pipeline.Created(inputs);
                 break;
@@ -28,7 +26,7 @@ async function run(): Promise<void> {
                 await pipeline.Deleted(inputs);
                 break;
             default:
-                core.info(`Action [${github.context.eventName}] sem tratamento`);
+                core.info(`Action [${context.eventName}] sem tratamento`);
                 break;
         }
     }

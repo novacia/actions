@@ -1,12 +1,12 @@
 import * as core from '@actions/core';
-import * as github from '@actions/github';
+import { context } from '@actions/github';
 import { PushEvent } from '@octokit/webhooks-definitions/schema'
 import { InputsPipeline } from '../../../lib/contexto';
 import * as ssh from '../../../lib/ssh';
 
 export async function Created(inputs: InputsPipeline): Promise<void> {
     try {
-        var push: PushEvent = github.context.payload as PushEvent;
+        var push: PushEvent = context.payload as PushEvent;
 
         push.commits.forEach((data) => {
             data.added.forEach((added) => {
@@ -23,7 +23,7 @@ export async function Created(inputs: InputsPipeline): Promise<void> {
 
 export async function Deleted(inputs: InputsPipeline): Promise<void> {
     try {
-        var push: PushEvent = github.context.payload as PushEvent;
+        var push: PushEvent = context.payload as PushEvent;
     }
     catch (error) {
         if (error instanceof Error) {
@@ -34,7 +34,7 @@ export async function Deleted(inputs: InputsPipeline): Promise<void> {
 
 export async function Edited(inputs: InputsPipeline): Promise<void> {
     try {
-        var push: PushEvent = github.context.payload as PushEvent;
+        var push: PushEvent = context.payload as PushEvent;
 
         push.commits.forEach((data) => {
             data.modified.forEach((modified) => {

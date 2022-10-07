@@ -1,0 +1,25 @@
+name: Pipeline
+description: Action Pipeline
+author: Silask1
+
+inputs:
+  host:
+    required: false
+    type: string
+    description: Host Server
+  port:
+    required: false
+    type: string
+    description: Port SSH
+  username:
+    required: false
+    type: string
+    description: Username SSH
+  password:
+    required: false
+    type: string
+    description: Password SSH
+  key:
+    required: false
+    type: string
+    description: Private Key SSH

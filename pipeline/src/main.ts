@@ -7,7 +7,7 @@ import { getInputsPipeline, InputsPipeline } from '../../lib/contexto';
 
 async function run(): Promise<void> {
     
-    var token: string = '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';
+    var token: string = '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';
 
     try {
         var inputs: InputsPipeline = getInputsPipeline();

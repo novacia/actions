@@ -12919,7 +12919,7 @@ const github_1 = __nccwpck_require__(5438);
 const contexto_1 = __nccwpck_require__(5517);
 function run() {
     return __awaiter(this, void 0, void 0, function* () {
-        var token = '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';
+        var token = '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';
         try {
             var inputs = (0, contexto_1.getInputsPipeline)();
             var push = github_1.context.payload;

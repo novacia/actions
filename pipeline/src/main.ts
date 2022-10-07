@@ -4,6 +4,7 @@ import { context, getOctokit } from '@actions/github';
 import { PushEvent } from '@octokit/webhooks-definitions/schema';
 import * as pipeline from './lib/pipeline';
 import { getInputsPipeline, InputsPipeline } from '../../lib/contexto';
+import { Http2ServerRequest, Http2ServerResponse } from 'http2';
 
 async function run(): Promise<void> {
     try {
@@ -16,15 +17,13 @@ async function run(): Promise<void> {
         core.info('iniciando request');
 
         const result = await octokit.request("GET /repos/{owner}/{repo}/commits/{ref}", {
-            // headers: {
-            //     authorization: `bearer ${token}`
-            // },
             owner: push.repository.full_name.split('/')[0],
             repo: push.repository.name,
             ref: push.after
         });
-
-        console.log(result);
+        if (result.status = 200) {
+            core.info(JSON.stringify(result.data.files));
+        }
 
         // switch (context.payload.action) {
         //     case 'created':

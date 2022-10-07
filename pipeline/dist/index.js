@@ -12926,14 +12926,13 @@ function run() {
             var octokit = (0, github_1.getOctokit)(inputs.github_token);
             core.info('iniciando request');
             const result = yield octokit.request("GET /repos/{owner}/{repo}/commits/{ref}", {
-                // headers: {
-                //     authorization: `bearer ${token}`
-                // },
                 owner: push.repository.full_name.split('/')[0],
                 repo: push.repository.name,
                 ref: push.after
             });
-            console.log(result);
+            if (result.status = 200) {
+                core.info(JSON.stringify(result.data.files));
+            }
             // switch (context.payload.action) {
             //     case 'created':
             //         await pipeline.Created(inputs);

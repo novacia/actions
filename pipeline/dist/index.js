@@ -12434,6 +12434,8 @@ function run() {
         try {
             var inputs = (0, contexto_1.getInputsPipeline)();
             var push = github.context.payload;
+            console.log(github.context.payload);
+            console.log(github.context.payload.action);
             switch (github.context.payload.action) {
                 case 'created':
                     yield pipeline.Created(inputs);

@@ -12924,11 +12924,12 @@ function run() {
             var inputs = (0, contexto_1.getInputsPipeline)();
             var push = github_1.context.payload;
             var octokit = (0, github_1.getOctokit)(token);
-            const result = yield octokit.request("GET repos/{owner_repo}/commits/{ref}", {
+            const result = yield octokit.request("GET /repos/{owner}/{repo}/commits/{ref}", {
                 headers: {
                     authorization: `token ${token}`
                 },
-                owner_repo: push.repository.full_name,
+                owner: push.repository.full_name.split('/')[0],
+                repo: push.repository.name,
                 ref: push.after
             });
             console.log(result);

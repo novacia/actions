@@ -12434,16 +12434,7 @@ function run() {
         try {
             var inputs = (0, contexto_1.getInputsPipeline)();
             var push = github.context.payload;
-            if (push.created) {
-                core.info("Created");
-            }
-            if (push.forced) {
-                core.info("forced");
-            }
-            if (push.deleted) {
-                core.info("deleted");
-            }
-            switch (github.context.action) {
+            switch (github.context.payload.action) {
                 case 'created':
                     yield pipeline.Created(inputs);
                     break;

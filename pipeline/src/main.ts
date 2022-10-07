@@ -12,17 +12,7 @@ async function run(): Promise<void> {
 
         var push: PushEvent = github.context.payload as PushEvent;
 
-        if (push.created) {
-            core.info("Created");
-        }
-        if (push.forced) {
-            core.info("forced");
-        }
-        if (push.deleted) {
-            core.info("deleted");
-        }
-
-        switch (github.context.action) {
+        switch (github.context.payload.action) {
             case 'created':
                 await pipeline.Created(inputs);
                 break;

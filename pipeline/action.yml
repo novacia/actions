@@ -23,3 +23,7 @@ inputs:
     required: false
     type: string
     description: Private Key SSH
+
+runs:
+  using: 'node12'
+  main: 'dist/index.js'

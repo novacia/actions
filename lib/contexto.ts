@@ -87,6 +87,24 @@ export function getInputsDeploy(): InputsDeploy {
     }
 }
 
+export interface InputsPipeline {
+    host: string
+    port: number
+    username: string
+    password: string
+    key: string
+}
+
+export function getInputsPipeline(): InputsPipeline {
+    return {
+        host: core.getInput(''),
+        port: Number(core.getInput('')),
+        username: core.getInput(''),
+        password: core.getInput(''),
+        key: core.getInput('')
+    }
+}
+
 export function getVersao(versao_major:string, versao_minor: string, versao_patch: string, versao_patch_sufixo?: string): string {
 
     core.info('gerando versão');

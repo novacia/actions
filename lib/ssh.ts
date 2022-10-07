@@ -1,5 +1,7 @@
 import * as core from '@actions/core';
 import { ConnectConfig, Client } from 'ssh2';
+import ClientSftp from 'ssh2-sftp-client';
+import * as fs from 'fs';
 
 export interface sshSettings {
     host: string
@@ -9,26 +11,31 @@ export interface sshSettings {
     key: string
 }
 
+export function sshConfig(settings: sshSettings): ConnectConfig {
+
+    if (!settings.password) {
+        return {
+            host: settings.host,
+            port: settings.port,
+            username: settings.username,
+            privateKey: settings.key
+        }
+    }
+    else if (!settings.key) {
+        return {
+            host: settings.host,
+            port: settings.port,
+            username: settings.username,
+            password: settings.password
+        }
+    }
+    return {};
+}
+
 export async function sshComando(settings:sshSettings, cmd: string): Promise<void> {
     
     try {
-        var config: ConnectConfig;
-        if (!settings.password) {
-            config = {
-                host: settings.host,
-                port: settings.port,
-                username: settings.username,
-                privateKey: settings.key
-            }
-        }
-        else if (!settings.key) {
-            config = {
-                host: settings.host,
-                port: settings.port,
-                username: settings.username,
-                password: settings.password
-            }
-        }
+        var config: ConnectConfig = sshConfig(settings);
 
         const ssh = new Client();
 
@@ -57,5 +64,34 @@ export async function sshComando(settings:sshSettings, cmd: string): Promise<voi
 
     } catch (error) {
         throw new Error('sshComando :: error: ' + error.message);
+    }
+}
+
+export async function sshMkdir(settings: sshSettings, path: string, recursive?: boolean): Promise<void> {
+    try {
+        var config: ConnectConfig = sshConfig(settings);
+
+        const ssh = new ClientSftp();
+
+        await ssh.connect(config);
+
+        await ssh.mkdir(path, recursive);
+
+        await ssh.stat(path)
+            .then((stat) => {
+                if (stat.isDirectory) {
+                    core.info(`Diretório [ ${path} ] criado com sucesso`);
+                }
+            })
+            .catch((err) => {
+                if (err instanceof Error) {
+                    throw new Error(err.message);
+                }
+            });
+
+        await ssh.end();
+    }
+    catch (error) {
+        throw new Error('sshMkdir :: error: ' + error.message);
     }
 }

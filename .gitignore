@@ -1,2 +1,5 @@
 node_modules
 pipeline/node_modules
+deploy/node_modules
+build-docker/node_modules
+build-assembly/node_modules

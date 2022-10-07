@@ -12433,6 +12433,10 @@ function run() {
     return __awaiter(this, void 0, void 0, function* () {
         try {
             var inputs = (0, contexto_1.getInputsPipeline)();
+            var push = github.context.payload;
+            if (push.created) {
+                core.info("Created");
+            }
             switch (github.context.action) {
                 case 'created':
                     yield pipeline.Created(inputs);
@@ -12444,7 +12448,7 @@ function run() {
                     yield pipeline.Deleted(inputs);
                     break;
                 default:
-                    core.info(`Action [${github.context.action}] sem tratamento`);
+                    core.info(`Action [${github.context.eventName}] sem tratamento`);
                     break;
             }
         }

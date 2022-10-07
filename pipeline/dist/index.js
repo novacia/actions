@@ -12426,17 +12426,17 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 const core = __importStar(__nccwpck_require__(2186));
-const github_1 = __nccwpck_require__(5438);
+const utils_1 = __nccwpck_require__(3030);
 const pipeline = __importStar(__nccwpck_require__(5173));
 const contexto_1 = __nccwpck_require__(5517);
 function run() {
     return __awaiter(this, void 0, void 0, function* () {
         try {
             var inputs = (0, contexto_1.getInputsPipeline)();
-            var push = github_1.context.payload;
-            console.log(github_1.context.payload.action);
+            var push = utils_1.context.payload;
+            console.log(utils_1.context.payload.action);
             console.log(push);
-            switch (github_1.context.payload.action) {
+            switch (utils_1.context.payload.action) {
                 case 'created':
                     yield pipeline.Created(inputs);
                     break;
@@ -12447,7 +12447,7 @@ function run() {
                     yield pipeline.Deleted(inputs);
                     break;
                 default:
-                    core.info(`Action [${github_1.context.eventName}] sem tratamento`);
+                    core.info(`Action [${utils_1.context.eventName}] sem tratamento`);
                     break;
             }
         }

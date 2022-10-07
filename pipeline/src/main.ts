@@ -1,6 +1,6 @@
 import * as core from '@actions/core';
 import * as exec from '@actions/exec';
-import { context, getOctokit } from '@actions/github';
+import { context } from '@actions/github/lib/utils';
 import { PushEvent } from '@octokit/webhooks-definitions/schema'
 import * as pipeline from './lib/pipeline';
 import { getInputsPipeline, InputsPipeline } from '../../lib/contexto';

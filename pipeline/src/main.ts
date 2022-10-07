@@ -6,15 +6,12 @@ import * as pipeline from './lib/pipeline';
 import { getInputsPipeline, InputsPipeline } from '../../lib/contexto';
 
 async function run(): Promise<void> {
-    
-    var token: string = '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';
-
     try {
         var inputs: InputsPipeline = getInputsPipeline();
 
         var push: PushEvent = context.payload as PushEvent;
 
-        var octokit = getOctokit(token);
+        var octokit = getOctokit(inputs.github_token);
 
         core.info('iniciando request');
 

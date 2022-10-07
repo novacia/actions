@@ -92,16 +92,18 @@ export interface InputsPipeline {
     port: number
     username: string
     password: string
-    key: string
+    key: string,
+    github_token: string
 }
 
 export function getInputsPipeline(): InputsPipeline {
     return {
-        host: core.getInput(''),
-        port: Number(core.getInput('')),
-        username: core.getInput(''),
-        password: core.getInput(''),
-        key: core.getInput('')
+        host: core.getInput('host'),
+        port: Number(core.getInput('port')),
+        username: core.getInput('username'),
+        password: core.getInput('password'),
+        key: core.getInput('key'),
+        github_token: core.getInput('github_token')
     }
 }
 

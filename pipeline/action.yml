@@ -23,6 +23,9 @@ inputs:
     required: false
     type: string
     description: Private Key SSH
+  github_token:
+    required: false
+    type: string
 
 runs:
   using: 'node12'

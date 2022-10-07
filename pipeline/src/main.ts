@@ -16,11 +16,12 @@ async function run(): Promise<void> {
 
         var octokit = getOctokit(token);
 
-        const result = await octokit.request("GET repos/{owner_repo}/commits/{ref}", {
+        const result = await octokit.request("GET repos/{owner}/{repo}/commits/{ref}", {
             headers: {
                 authorization: `token ${token}`
             },
-            owner_repo: push.repository.full_name,
+            owner: push.repository.full_name.split('/')[0],
+            repo: push.repository.name,
             ref: push.after
         });
 

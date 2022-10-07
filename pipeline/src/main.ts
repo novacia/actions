@@ -14,6 +14,7 @@ async function run(): Promise<void> {
 
         console.log(github.context.payload);
         console.log(github.context.payload.action);
+        console.log(push.commits);
 
         switch (github.context.payload.action) {
             case 'created':

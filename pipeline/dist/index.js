@@ -12926,7 +12926,7 @@ function run() {
             var octokit = (0, github_1.getOctokit)(token);
             const result = yield octokit.request("GET /repos/{owner}/{repo}/commits/{ref}", {
                 headers: {
-                    authorization: `token ${token}`
+                    authorization: `bearer ${token}`
                 },
                 owner: push.repository.full_name.split('/')[0],
                 repo: push.repository.name,

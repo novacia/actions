@@ -53,9 +53,9 @@ export async function sshComando(settings:sshSettings, cmd: string): Promise<voi
                     ssh.end();
                     return result(true);
                 }).on('data', (data) => {
-                    core.info('STDOUT: ' + data.trimEnd());
+                    core.info('STDOUT: ' + data);
                 }).stderr.on('data', (data) => {
-                    core.info('STDERR: ' + data.trimEnd());
+                    core.info('STDERR: ' + data);
                 })
             });
         });
@@ -88,9 +88,9 @@ export async function sshMkdir(settings: sshSettings, path: string): Promise<voi
                     ssh.end();
                     return result(true);
                 }).on('data', (data) => {
-                    core.info('STDOUT: ' + data.trimEnd());
+                    core.info('STDOUT: ' +  data);
                 }).stderr.on('data', (data) => {
-                    core.info('STDERR: ' + data.trimEnd());
+                    core.info('STDERR: ' + data);
                 })
             });
         });

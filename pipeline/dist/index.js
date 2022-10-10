@@ -42129,9 +42129,9 @@ function sshComando(settings, cmd) {
                         ssh.end();
                         return result(true);
                     }).on('data', (data) => {
-                        core.info('STDOUT: ' + data.trimEnd());
+                        core.info('STDOUT: ' + data);
                     }).stderr.on('data', (data) => {
-                        core.info('STDERR: ' + data.trimEnd());
+                        core.info('STDERR: ' + data);
                     });
                 });
             });
@@ -42163,9 +42163,9 @@ function sshMkdir(settings, path) {
                         ssh.end();
                         return result(true);
                     }).on('data', (data) => {
-                        core.info('STDOUT: ' + data.trimEnd());
+                        core.info('STDOUT: ' + data);
                     }).stderr.on('data', (data) => {
-                        core.info('STDERR: ' + data.trimEnd());
+                        core.info('STDERR: ' + data);
                     });
                 });
             });

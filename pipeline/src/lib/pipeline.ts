@@ -23,19 +23,23 @@ export async function Created(inputs: InputsPipeline, file: Files | undefined): 
             throw new Error('paramêtro file indefinido')
         }
 
+        var settings: ssh.sshSettings = {
+            host: inputs.host,
+            port: inputs.port,
+            username: inputs.username,
+            password: inputs.password,
+            key: inputs.key
+        }
+
         var arquivo = file.filename.match(/(?<caminho>.+)(?<arquivo>\/[a-z]+\.[a-z]+)/)?.groups;
 
         if (!arquivo) {
             throw new Error('falha na expressão regular');
         }
 
-        await ssh.sshMkdir({
-                host: inputs.host,
-                port: inputs.port,
-                username: inputs.username,
-                password: inputs.password,
-                key: inputs.key
-            }, arquivo.caminho, true);
+        await ssh.sshMkdir(settings, arquivo.caminho, true);
+
+        await ssh.sshScp(settings, `./${file}`, file);
 
     }
     catch (error) {
@@ -47,6 +51,7 @@ export async function Created(inputs: InputsPipeline, file: Files | undefined): 
 
 export async function Deleted(inputs: InputsPipeline, file: Files | undefined): Promise<void> {
     try {
+        core.info('pipeline Deleted');
     }
     catch (error) {
         if (error instanceof Error) {
@@ -57,7 +62,7 @@ export async function Deleted(inputs: InputsPipeline, file: Files | undefined): 
 
 export async function Edited(inputs: InputsPipeline, file: Files | undefined): Promise<void> {
     try {
-
+        core.info('pipeline Edited');
     }
     catch (error) {
         if (error instanceof Error) {

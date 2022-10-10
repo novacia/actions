@@ -33,7 +33,7 @@ export function Created(inputs: InputsPipeline, file: Files | undefined): void {
 
         var arquivo = file.filename.match(/(?<caminho>.+)(?<arquivo>\/[a-z0-9]+\.[a-z]+)/)?.groups;
 
-        if (!arquivo.caminho) {
+        if (!arquivo) {
             throw new Error('falha na expressão regular');
         }
 

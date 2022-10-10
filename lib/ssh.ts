@@ -1,6 +1,6 @@
 import * as core from '@actions/core';
 import { ConnectConfig, Client } from 'ssh2';
-import { Client as ClientScp } from 'node-scp';
+import ClientSftp = require('ssh2-sftp-client');
 
 export interface sshSettings {
     host: string
@@ -79,7 +79,7 @@ export async function sshMkdir(settings: sshSettings, path: string): Promise<voi
             });
         });
 
-        core.info(`criando Diretório [${path}]`);
+        core.info(`criando Diretório '${path}'`);
 
         await new Promise((result) => {
             ssh.exec(`mkdir -pv ${path}`, (err, stream) => {
@@ -102,20 +102,25 @@ export async function sshMkdir(settings: sshSettings, path: string): Promise<voi
 
 export async function sshScp(settings: sshSettings, target, source): Promise<void> {
     try {
+        const client = new ClientSftp();
 
-        var client = await ClientScp({
-            host: settings.host,
-            port: settings.port,
-            username: settings.username,
-            password: settings.password,
-            privateKey: settings.key
-        });
-        
-        core.info(`copiando arquivo [${target}]`)
-        await client.uploadFile(target, source);
+        await client.connect({
+                host: settings.host,
+                port: settings.port,
+                username: settings.username,
+                password: settings.password,
+                privateKey: settings.key
+            }).then(() => null);
 
-        client.close();
+        await client.put(target, source)
+            .then((data) =>  { 
+                core.info('STDOUT: ' + data);
+            })
+            .catch((err) => {
+                throw new Error(err);
+            });
 
+        await client.end();
     }
     catch (error) {
         throw new Error('sshScp :: error: ' + error.message);

@@ -98,6 +98,13 @@ Github actions TLV7, concentra todas as actions responsaveis por realizar builds
    novacia/actions/pipeline@main
 ```
 
+**Observação:** antes da chamada da action pipeline, deve ser chamada a action de checkout
+
+**Exemplo:**
+```Checkout
+    actions/checkout@v3
+```
+
 | Parâmetro   | Tipo       | Descrição                           | Obrigatório             |
 | :---------- | :--------- | :---------------------------------- | :---------------------- |
 | `host` | `string` | Host Server | Sim |

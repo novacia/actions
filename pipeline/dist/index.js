@@ -42188,7 +42188,7 @@ function sshRmdir(settings, path) {
                     throw new Error(err.message);
                 });
             });
-            core.info(`removendo Diretório '${path}'`);
+            core.info(`removendo arquivo '${path}'`);
             yield new Promise((result) => {
                 ssh.exec(`rm -rfv ${path}`, (err, stream) => {
                     if (err)

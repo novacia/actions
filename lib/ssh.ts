@@ -114,7 +114,7 @@ export async function sshRmdir(settings: sshSettings, path: string): Promise<voi
             });
         });
 
-        core.info(`removendo Diretório '${path}'`);
+        core.info(`removendo arquivo '${path}'`);
 
         await new Promise((result) => {
             ssh.exec(`rm -rfv ${path}`, (err, stream) => {

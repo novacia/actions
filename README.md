@@ -89,3 +89,24 @@ Github actions TLV7, concentra todas as actions responsaveis por realizar builds
 **Exemplo:**
 
 ![build-assembly](https://i.ibb.co/HGBHsw5/deploy.png)
+
+## pipeline
+
+#### Action pipeline faz a criação, edição e remove os arquivo de pipeline das aplicações Tlv7
+
+```Action
+   novacia/actions/pipeline@main
+```
+
+| Parâmetro   | Tipo       | Descrição                           | Obrigatório             |
+| :---------- | :--------- | :---------------------------------- | :---------------------- |
+| `host` | `string` | Host Server | Sim |
+| `port` | `string` | Port SSH - Valor default: 22 | Sim |
+| `username` | `string` | Username SSH | Sim |
+| `password` | `string` | Password SSH | Sim |
+| `key` | `string` | Private Key SSH | Sim |
+| `github_token` | `string` | Secret gerada automaticamente ao ser trigado um Evento de Push | Sim |
+
+**Exemplo:**
+
+![pipeline](https://i.ibb.co/nwpcT6S/pipeline.png)

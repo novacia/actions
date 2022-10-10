@@ -1,6 +1,7 @@
 import * as core from '@actions/core';
 import { ConnectConfig, Client } from 'ssh2';
 import ClientSftp from 'ssh2-sftp-client';
+import { Client as ClientScp } from 'node-scp';
 import * as fs from 'fs';
 
 export interface sshSettings {
@@ -75,6 +76,8 @@ export async function sshMkdir(settings: sshSettings, path: string, recursive?: 
 
         await ssh.connect(config);
 
+        core.info(`criado Diretório [${path}]`);
+
         await ssh.mkdir(path, recursive);
 
         await ssh.stat(path)
@@ -85,6 +88,7 @@ export async function sshMkdir(settings: sshSettings, path: string, recursive?: 
             })
             .catch((err) => {
                 if (err instanceof Error) {
+                    ssh.end();
                     throw new Error(err.message);
                 }
             });
@@ -93,5 +97,27 @@ export async function sshMkdir(settings: sshSettings, path: string, recursive?: 
     }
     catch (error) {
         throw new Error('sshMkdir :: error: ' + error.message);
+    }
+}
+
+export async function sshScp(settings: sshSettings, target, source) {
+    try {
+
+        var client = await ClientScp(settings);
+        
+        await client.uploadFile(target, source)
+            .then(() => {
+                core.info('uploadoFile concluido com sucesso');
+            })
+            .catch(() => {
+                client.close();
+                throw new Error('falha ao efetuar uploadoFile');
+            });
+
+        client.close();
+
+    }
+    catch (error) {
+        throw new Error('sshScp :: error: ' + error.message);
     }
 }

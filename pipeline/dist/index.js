@@ -37131,12 +37131,14 @@ function sshMkdir(settings, path) {
             });
             core.info(`criando Diretório [${path}]`);
             yield new Promise((result) => {
-                ssh.exec(`mkdir -p ${path}`, (err, stream) => {
+                ssh.exec(`mkdir -pv ${path}`, (err, stream) => {
                     if (err)
                         throw new Error(err.message);
                     stream.on('close', (code, sginal) => {
                         ssh.end();
                         return result(true);
+                    }).on('data', (data) => {
+                        core.info('STDOUT: ' + data);
                     }).stderr.on('data', (data) => {
                         core.info('STDERR: ' + data);
                     });
@@ -37159,6 +37161,7 @@ function sshScp(settings, target, source) {
                 password: settings.password,
                 privateKey: settings.key
             });
+            core.info(`copiando arquivo [${target}]`);
             yield client.uploadFile(target, source);
             client.close();
         }

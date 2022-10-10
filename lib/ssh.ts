@@ -82,11 +82,13 @@ export async function sshMkdir(settings: sshSettings, path: string): Promise<voi
         core.info(`criando Diretório [${path}]`);
 
         await new Promise((result) => {
-            ssh.exec(`mkdir -p ${path}`, (err, stream) => {
+            ssh.exec(`mkdir -pv ${path}`, (err, stream) => {
                 if (err) throw new Error(err.message)
                 stream.on('close', (code, sginal) => {
                     ssh.end();
                     return result(true);
+                }).on('data', (data) => {
+                    core.info('STDOUT: ' + data);
                 }).stderr.on('data', (data) => {
                     core.info('STDERR: ' + data);
                 })
@@ -98,7 +100,7 @@ export async function sshMkdir(settings: sshSettings, path: string): Promise<voi
     }
 }
 
-export async function sshScp(settings: sshSettings, target, source) {
+export async function sshScp(settings: sshSettings, target, source): Promise<void> {
     try {
 
         var client = await ClientScp({
@@ -109,6 +111,7 @@ export async function sshScp(settings: sshSettings, target, source) {
             privateKey: settings.key
         });
         
+        core.info(`copiando arquivo [${target}]`)
         await client.uploadFile(target, source);
 
         client.close();

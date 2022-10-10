@@ -42187,6 +42187,7 @@ function sshScp(settings, target, source) {
                 password: settings.password,
                 privateKey: settings.key
             }).then(() => null);
+            core.info(`copiando arquivo '${target}'`);
             yield client.put(target, source)
                 .then((data) => {
                 core.info('STDOUT: ' + data.trimEnd());

@@ -112,6 +112,7 @@ export async function sshScp(settings: sshSettings, target, source): Promise<voi
                 privateKey: settings.key
             }).then(() => null);
 
+        core.info(`copiando arquivo '${target}'`);
         await client.put(target, source)
             .then((data) =>  { 
                 core.info('STDOUT: ' + data.trimEnd());

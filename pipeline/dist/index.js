@@ -37159,14 +37159,7 @@ function sshScp(settings, target, source) {
                 password: settings.password,
                 privateKey: settings.key
             });
-            yield client.uploadFile(target, source)
-                .then(() => {
-                core.info('uploadoFile concluido com sucesso');
-            })
-                .catch(() => {
-                client.close();
-                throw new Error('falha ao efetuar uploadoFile');
-            });
+            yield client.uploadFile(target, source);
             client.close();
         }
         catch (error) {

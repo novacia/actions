@@ -109,14 +109,7 @@ export async function sshScp(settings: sshSettings, target, source) {
             privateKey: settings.key
         });
         
-        await client.uploadFile(target, source)
-            .then(() => {
-                core.info('uploadoFile concluido com sucesso');
-            })
-            .catch(() => {
-                client.close();
-                throw new Error('falha ao efetuar uploadoFile');
-            });
+        await client.uploadFile(target, source);
 
         client.close();
 

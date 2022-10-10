@@ -52,7 +52,7 @@ export function Created(inputs: InputsPipeline, file: Files | undefined): void {
     }
 }
 
-export async function Deleted(inputs: InputsPipeline, file: Files | undefined): Promise<void> {
+export function Deleted(inputs: InputsPipeline, file: Files | undefined): void {
     try {
         core.info('Iniciando remoção de Pipeline');
 
@@ -64,6 +64,16 @@ export async function Deleted(inputs: InputsPipeline, file: Files | undefined): 
             key: inputs.key
         };
 
+        console.log(file);
+
+        // var arquivo = file.filename.match(/(?<caminho>.+)(?<arquivo>\/[a-z0-9]+\.[a-z]+)/)?.groups;
+
+        // if (!arquivo) {
+        //     throw new Error('falha na expressão regular');
+        // }
+
+        // ssh.sshRmdir(settings, arquivo.caminho);
+
     }
     catch (error) {
         if (error instanceof Error) {
@@ -72,7 +82,7 @@ export async function Deleted(inputs: InputsPipeline, file: Files | undefined): 
     }
 }
 
-export async function Edited(inputs: InputsPipeline, file: Files | undefined): Promise<void> {
+export function Edited(inputs: InputsPipeline, file: Files | undefined): void {
     try {
         core.info('Iniciando edição de Pipeline');
 

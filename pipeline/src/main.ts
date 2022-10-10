@@ -26,16 +26,10 @@ async function run(): Promise<void> {
                         pipeline.Created(inputs, file);
                         break;
                     case 'modified': case 'changed': case 'renamed':
-                        pipeline.Edited(inputs, file)
-                            .catch((err) => {
-                                throw new Error(err);
-                            });
+                        pipeline.Edited(inputs, file);
                         break;
                     case 'removed':
-                        pipeline.Deleted(inputs, file)
-                            .catch((err) => {
-                                throw new Error(err);
-                            });
+                        pipeline.Deleted(inputs, file);
                         break;
                     default:
                         core.info(`Status [${file.status}] sem tratamento`);

@@ -42085,7 +42085,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.sshScp = exports.sshMkdir = exports.sshComando = exports.sshConfig = void 0;
+exports.sshScp = exports.sshRmdir = exports.sshMkdir = exports.sshComando = exports.sshConfig = void 0;
 const core = __importStar(__nccwpck_require__(3820));
 const ssh2_1 = __nccwpck_require__(3353);
 const ClientSftp = __nccwpck_require__(7873);
@@ -42176,6 +42176,40 @@ function sshMkdir(settings, path) {
     });
 }
 exports.sshMkdir = sshMkdir;
+function sshRmdir(settings, path) {
+    return __awaiter(this, void 0, void 0, function* () {
+        try {
+            var config = sshConfig(settings);
+            const ssh = new ssh2_1.Client();
+            yield new Promise((result) => {
+                ssh.connect(config).on('ready', () => {
+                    return result(true);
+                }).on('error', (err) => {
+                    throw new Error(err.message);
+                });
+            });
+            core.info(`removendo Diretório '${path}'`);
+            yield new Promise((result) => {
+                ssh.exec(`rm -rfv ${path}`, (err, stream) => {
+                    if (err)
+                        throw new Error(err.message);
+                    stream.on('close', (code, sginal) => {
+                        ssh.end();
+                        return result(true);
+                    }).on('data', (data) => {
+                        core.info('STDOUT: ' + data);
+                    }).stderr.on('data', (data) => {
+                        core.info('STDERR: ' + data);
+                    });
+                });
+            });
+        }
+        catch (error) {
+            throw new Error('sshRmdir :: error: ' + error.message);
+        }
+    });
+}
+exports.sshRmdir = sshRmdir;
 function sshScp(settings, target, source) {
     return __awaiter(this, void 0, void 0, function* () {
         try {
@@ -42235,15 +42269,6 @@ var __importStar = (this && this.__importStar) || function (mod) {
     __setModuleDefault(result, mod);
     return result;
 };
-var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
-    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
-    return new (P || (P = Promise))(function (resolve, reject) {
-        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
-        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
-        step((generator = generator.apply(thisArg, _arguments || [])).next());
-    });
-};
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.Edited = exports.Deleted = exports.Created = void 0;
 const core = __importStar(__nccwpck_require__(2186));
@@ -42278,44 +42303,46 @@ function Created(inputs, file) {
 }
 exports.Created = Created;
 function Deleted(inputs, file) {
-    return __awaiter(this, void 0, void 0, function* () {
-        try {
-            core.info('Iniciando remoção de Pipeline');
-            var settings = {
-                host: inputs.host,
-                port: inputs.port,
-                username: inputs.username,
-                password: inputs.password,
-                key: inputs.key
-            };
+    try {
+        core.info('Iniciando remoção de Pipeline');
+        var settings = {
+            host: inputs.host,
+            port: inputs.port,
+            username: inputs.username,
+            password: inputs.password,
+            key: inputs.key
+        };
+        console.log(file);
+        // var arquivo = file.filename.match(/(?<caminho>.+)(?<arquivo>\/[a-z0-9]+\.[a-z]+)/)?.groups;
+        // if (!arquivo) {
+        //     throw new Error('falha na expressão regular');
+        // }
+        // ssh.sshRmdir(settings, arquivo.caminho);
+    }
+    catch (error) {
+        if (error instanceof Error) {
+            throw new Error('Pipeline Deleted - ' + error.message);
         }
-        catch (error) {
-            if (error instanceof Error) {
-                throw new Error('Pipeline Deleted - ' + error.message);
-            }
-        }
-    });
+    }
 }
 exports.Deleted = Deleted;
 function Edited(inputs, file) {
-    return __awaiter(this, void 0, void 0, function* () {
-        try {
-            core.info('Iniciando edição de Pipeline');
-            var settings = {
-                host: inputs.host,
-                port: inputs.port,
-                username: inputs.username,
-                password: inputs.password,
-                key: inputs.key
-            };
-            ssh.sshScp(settings, path.join('./', file.filename), file.filename);
+    try {
+        core.info('Iniciando edição de Pipeline');
+        var settings = {
+            host: inputs.host,
+            port: inputs.port,
+            username: inputs.username,
+            password: inputs.password,
+            key: inputs.key
+        };
+        ssh.sshScp(settings, path.join('./', file.filename), file.filename);
+    }
+    catch (error) {
+        if (error instanceof Error) {
+            throw new Error('Pipeline Edited - ' + error.message);
         }
-        catch (error) {
-            if (error instanceof Error) {
-                throw new Error('Pipeline Edited - ' + error.message);
-            }
-        }
-    });
+    }
 }
 exports.Edited = Edited;
 
@@ -42385,16 +42412,10 @@ function run() {
                         case 'modified':
                         case 'changed':
                         case 'renamed':
-                            pipeline.Edited(inputs, file)
-                                .catch((err) => {
-                                throw new Error(err);
-                            });
+                            pipeline.Edited(inputs, file);
                             break;
                         case 'removed':
-                            pipeline.Deleted(inputs, file)
-                                .catch((err) => {
-                                throw new Error(err);
-                            });
+                            pipeline.Deleted(inputs, file);
                             break;
                         default:
                             core.info(`Status [${file.status}] sem tratamento`);

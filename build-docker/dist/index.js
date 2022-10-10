@@ -6660,6 +6660,8 @@ function run() {
             core.info('Build API - ' + inputs.projeto);
             yield docker.build(inputs.hub, inputs.projeto, inputs.config, inputs.versao_major, inputs.versao_minor, inputs.versao_patch, inputs.versao_patch_sufixo)
                 .catch((err) => {
+                console.info('deu erro....!!!!!');
+                console.error(err);
                 throw new Error(err);
             });
             if (inputs.latest) {

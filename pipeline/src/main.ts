@@ -23,13 +23,22 @@ async function run(): Promise<void> {
             files?.forEach((file) => {
                 switch (file.status) {
                     case 'added':
-                        pipeline.Created(inputs, file);
+                        pipeline.Created(inputs, file)
+                            .catch((err) => {
+                                throw new Error(err);
+                            });
                         break;
                     case 'modified': case 'changed': case 'renamed':
-                        pipeline.Edited(inputs, file);
+                        pipeline.Edited(inputs, file)
+                            .catch((err) => {
+                                throw new Error(err);
+                            });
                         break;
                     case 'removed':
-                        pipeline.Deleted(inputs, file);
+                        pipeline.Deleted(inputs, file)
+                            .catch((err) => {
+                                throw new Error(err);
+                            });
                         break;
                     default:
                         core.info(`Status [${file.status}] sem tratamento`);

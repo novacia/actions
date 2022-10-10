@@ -37232,6 +37232,7 @@ function Created(inputs, file) {
                 key: inputs.key
             };
             var arquivo = (_a = file.filename.match(/(?<caminho>.+)(?<arquivo>\/[a-z]+\.[a-z]+)/)) === null || _a === void 0 ? void 0 : _a.groups;
+            console.log(arquivo);
             if (!arquivo) {
                 throw new Error('falha na expressão regular');
             }
@@ -37334,15 +37335,24 @@ function run() {
                 files === null || files === void 0 ? void 0 : files.forEach((file) => {
                     switch (file.status) {
                         case 'added':
-                            pipeline.Created(inputs, file);
+                            pipeline.Created(inputs, file)
+                                .catch((err) => {
+                                throw new Error(err);
+                            });
                             break;
                         case 'modified':
                         case 'changed':
                         case 'renamed':
-                            pipeline.Edited(inputs, file);
+                            pipeline.Edited(inputs, file)
+                                .catch((err) => {
+                                throw new Error(err);
+                            });
                             break;
                         case 'removed':
-                            pipeline.Deleted(inputs, file);
+                            pipeline.Deleted(inputs, file)
+                                .catch((err) => {
+                                throw new Error(err);
+                            });
                             break;
                         default:
                             core.info(`Status [${file.status}] sem tratamento`);

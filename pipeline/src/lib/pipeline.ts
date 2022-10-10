@@ -2,6 +2,7 @@ import * as core from '@actions/core';
 import { InputsPipeline } from '../../../lib/contexto';
 import * as ssh from '../../../lib/ssh';
 import * as path from 'path'
+import { join } from 'path';
 
 export interface Files {
     sha: string;
@@ -53,7 +54,16 @@ export function Created(inputs: InputsPipeline, file: Files | undefined): void {
 
 export async function Deleted(inputs: InputsPipeline, file: Files | undefined): Promise<void> {
     try {
-        core.info('pipeline Deleted');
+        core.info('Iniciando remoção de Pipeline');
+
+        var settings: ssh.sshSettings = {
+            host: inputs.host,
+            port: inputs.port,
+            username: inputs.username,
+            password: inputs.password,
+            key: inputs.key
+        };
+
     }
     catch (error) {
         if (error instanceof Error) {
@@ -64,7 +74,17 @@ export async function Deleted(inputs: InputsPipeline, file: Files | undefined): 
 
 export async function Edited(inputs: InputsPipeline, file: Files | undefined): Promise<void> {
     try {
-        core.info('pipeline Edited');
+        core.info('Iniciando edição de Pipeline');
+
+        var settings: ssh.sshSettings = {
+            host: inputs.host,
+            port: inputs.port,
+            username: inputs.username,
+            password: inputs.password,
+            key: inputs.key
+        };
+
+        ssh.sshScp(settings, path.join('./', file.filename), file.filename);
     }
     catch (error) {
         if (error instanceof Error) {

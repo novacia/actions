@@ -42280,7 +42280,14 @@ exports.Created = Created;
 function Deleted(inputs, file) {
     return __awaiter(this, void 0, void 0, function* () {
         try {
-            core.info('pipeline Deleted');
+            core.info('Iniciando remoção de Pipeline');
+            var settings = {
+                host: inputs.host,
+                port: inputs.port,
+                username: inputs.username,
+                password: inputs.password,
+                key: inputs.key
+            };
         }
         catch (error) {
             if (error instanceof Error) {
@@ -42293,7 +42300,15 @@ exports.Deleted = Deleted;
 function Edited(inputs, file) {
     return __awaiter(this, void 0, void 0, function* () {
         try {
-            core.info('pipeline Edited');
+            core.info('Iniciando edição de Pipeline');
+            var settings = {
+                host: inputs.host,
+                port: inputs.port,
+                username: inputs.username,
+                password: inputs.password,
+                key: inputs.key
+            };
+            ssh.sshScp(settings, path.join('./', file.filename), file.filename);
         }
         catch (error) {
             if (error instanceof Error) {

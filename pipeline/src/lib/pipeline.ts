@@ -19,8 +19,10 @@ export interface Files {
 
 export function Created(inputs: InputsPipeline, file: Files | undefined): void {
     try {
+        core.info('Iniciando criação de Pipeline');
+
         if (file == undefined) {
-            throw new Error('paramêtro file indefinido')
+            throw new Error('paramêtro file indefinido');
         }
 
         var settings: ssh.sshSettings = {
@@ -29,7 +31,7 @@ export function Created(inputs: InputsPipeline, file: Files | undefined): void {
             username: inputs.username,
             password: inputs.password,
             key: inputs.key
-        }
+        };
 
         var arquivo = file.filename.match(/(?<caminho>.+)(?<arquivo>\/[a-z0-9]+\.[a-z]+)/)?.groups;
 

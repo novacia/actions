@@ -42129,9 +42129,9 @@ function sshComando(settings, cmd) {
                         ssh.end();
                         return result(true);
                     }).on('data', (data) => {
-                        core.info('STDOUT: ' + data);
+                        core.info('STDOUT: ' + data.trimEnd());
                     }).stderr.on('data', (data) => {
-                        core.info('STDERR: ' + data);
+                        core.info('STDERR: ' + data.trimEnd());
                     });
                 });
             });
@@ -42163,9 +42163,9 @@ function sshMkdir(settings, path) {
                         ssh.end();
                         return result(true);
                     }).on('data', (data) => {
-                        core.info('STDOUT: ' + data);
+                        core.info('STDOUT: ' + data.trimEnd());
                     }).stderr.on('data', (data) => {
-                        core.info('STDERR: ' + data);
+                        core.info('STDERR: ' + data.trimEnd());
                     });
                 });
             });
@@ -42189,7 +42189,7 @@ function sshScp(settings, target, source) {
             }).then(() => null);
             yield client.put(target, source)
                 .then((data) => {
-                core.info('STDOUT: ' + data);
+                core.info('STDOUT: ' + data.trimEnd());
             })
                 .catch((err) => {
                 throw new Error(err);
@@ -42251,6 +42251,7 @@ const path = __importStar(__nccwpck_require__(1017));
 function Created(inputs, file) {
     var _a;
     try {
+        core.info('Iniciando criação de Pipeline');
         if (file == undefined) {
             throw new Error('paramêtro file indefinido');
         }

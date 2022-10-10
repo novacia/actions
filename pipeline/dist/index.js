@@ -37091,7 +37091,6 @@ function sshComando(settings, cmd) {
             const ssh = new ssh2_1.Client();
             yield new Promise((result) => {
                 ssh.connect(config).on('ready', () => {
-                    core.info('Conectado com sucesso');
                     return result(true);
                 }).on('error', (err) => {
                     throw new Error(err.message);
@@ -37125,12 +37124,12 @@ function sshMkdir(settings, path) {
             const ssh = new ssh2_1.Client();
             yield new Promise((result) => {
                 ssh.connect(config).on('ready', () => {
-                    core.info('Conectado com sucesso');
                     return result(true);
                 }).on('error', (err) => {
                     throw new Error(err.message);
                 });
             });
+            core.info(`criando Diretório [${path}]`);
             yield new Promise((result) => {
                 ssh.exec(`mkdir -p ${path}`, (err, stream) => {
                     if (err)
@@ -37138,8 +37137,6 @@ function sshMkdir(settings, path) {
                     stream.on('close', (code, sginal) => {
                         ssh.end();
                         return result(true);
-                    }).on('data', (data) => {
-                        core.info('STDOUT: ' + data);
                     }).stderr.on('data', (data) => {
                         core.info('STDERR: ' + data);
                     });
@@ -37155,7 +37152,13 @@ exports.sshMkdir = sshMkdir;
 function sshScp(settings, target, source) {
     return __awaiter(this, void 0, void 0, function* () {
         try {
-            var client = yield (0, node_scp_1.Client)(settings);
+            var client = yield (0, node_scp_1.Client)({
+                host: settings.host,
+                port: settings.port,
+                username: settings.username,
+                password: settings.password,
+                privateKey: settings.key
+            });
             yield client.uploadFile(target, source)
                 .then(() => {
                 core.info('uploadoFile concluido com sucesso');
@@ -37220,31 +37223,29 @@ const ssh = __importStar(__nccwpck_require__(1208));
 const path = __importStar(__nccwpck_require__(1017));
 function Created(inputs, file) {
     var _a;
-    return __awaiter(this, void 0, void 0, function* () {
-        try {
-            if (file == undefined) {
-                throw new Error('paramêtro file indefinido');
-            }
-            var settings = {
-                host: inputs.host,
-                port: inputs.port,
-                username: inputs.username,
-                password: inputs.password,
-                key: inputs.key
-            };
-            var arquivo = (_a = file.filename.match(/(?<caminho>.+)(?<arquivo>\/[a-z0-9]+\.[a-z]+)/)) === null || _a === void 0 ? void 0 : _a.groups;
-            if (!arquivo.caminho) {
-                throw new Error('falha na expressão regular');
-            }
-            yield ssh.sshMkdir(settings, arquivo.caminho);
-            yield ssh.sshScp(settings, path.join('./', file.filename), file.filename);
+    try {
+        if (file == undefined) {
+            throw new Error('paramêtro file indefinido');
         }
-        catch (error) {
-            if (error instanceof Error) {
-                throw new Error('Pipeline Created - ' + error.message);
-            }
+        var settings = {
+            host: inputs.host,
+            port: inputs.port,
+            username: inputs.username,
+            password: inputs.password,
+            key: inputs.key
+        };
+        var arquivo = (_a = file.filename.match(/(?<caminho>.+)(?<arquivo>\/[a-z0-9]+\.[a-z]+)/)) === null || _a === void 0 ? void 0 : _a.groups;
+        if (!arquivo.caminho) {
+            throw new Error('falha na expressão regular');
         }
-    });
+        ssh.sshMkdir(settings, arquivo.caminho);
+        ssh.sshScp(settings, path.join('./', file.filename), file.filename);
+    }
+    catch (error) {
+        if (error instanceof Error) {
+            throw new Error('Pipeline Created - ' + error.message);
+        }
+    }
 }
 exports.Created = Created;
 function Deleted(inputs, file) {
@@ -37335,10 +37336,7 @@ function run() {
                 files === null || files === void 0 ? void 0 : files.forEach((file) => {
                     switch (file.status) {
                         case 'added':
-                            pipeline.Created(inputs, file)
-                                .catch((err) => {
-                                throw new Error(err);
-                            });
+                            pipeline.Created(inputs, file);
                             break;
                         case 'modified':
                         case 'changed':

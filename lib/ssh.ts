@@ -40,7 +40,6 @@ export async function sshComando(settings:sshSettings, cmd: string): Promise<voi
 
         await new Promise((result) => {
             ssh.connect(config).on('ready', () => {
-                core.info('Conectado com sucesso');
                 return result(true);
             }).on('error', (err) => {
                 throw new Error(err.message);
@@ -74,12 +73,13 @@ export async function sshMkdir(settings: sshSettings, path: string): Promise<voi
 
         await new Promise((result) => {
             ssh.connect(config).on('ready', () => {
-                core.info('Conectado com sucesso');
                 return result(true);
             }).on('error', (err) => {
                 throw new Error(err.message);
             });
         });
+
+        core.info(`criando Diretório [${path}]`);
 
         await new Promise((result) => {
             ssh.exec(`mkdir -p ${path}`, (err, stream) => {
@@ -87,8 +87,6 @@ export async function sshMkdir(settings: sshSettings, path: string): Promise<voi
                 stream.on('close', (code, sginal) => {
                     ssh.end();
                     return result(true);
-                }).on('data', (data) => {
-                    core.info('STDOUT: ' + data);
                 }).stderr.on('data', (data) => {
                     core.info('STDERR: ' + data);
                 })
@@ -103,7 +101,13 @@ export async function sshMkdir(settings: sshSettings, path: string): Promise<voi
 export async function sshScp(settings: sshSettings, target, source) {
     try {
 
-        var client = await ClientScp(settings);
+        var client = await ClientScp({
+            host: settings.host,
+            port: settings.port,
+            username: settings.username,
+            password: settings.password,
+            privateKey: settings.key
+        });
         
         await client.uploadFile(target, source)
             .then(() => {

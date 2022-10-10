@@ -17,7 +17,7 @@ export interface Files {
     previous_filename?: string | undefined;
 }
 
-export async function Created(inputs: InputsPipeline, file: Files | undefined): Promise<void> {
+export function Created(inputs: InputsPipeline, file: Files | undefined): void {
     try {
         if (file == undefined) {
             throw new Error('paramêtro file indefinido')
@@ -37,9 +37,9 @@ export async function Created(inputs: InputsPipeline, file: Files | undefined): 
             throw new Error('falha na expressão regular');
         }
 
-        await ssh.sshMkdir(settings, arquivo.caminho);
+        ssh.sshMkdir(settings, arquivo.caminho);
 
-        await ssh.sshScp(settings, path.join('./', file.filename), file.filename);
+        ssh.sshScp(settings, path.join('./', file.filename), file.filename);
 
     }
     catch (error) {

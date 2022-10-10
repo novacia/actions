@@ -23,10 +23,7 @@ async function run(): Promise<void> {
             files?.forEach((file) => {
                 switch (file.status) {
                     case 'added':
-                        pipeline.Created(inputs, file)
-                            .catch((err) => {
-                                throw new Error(err);
-                            });
+                        pipeline.Created(inputs, file);
                         break;
                     case 'modified': case 'changed': case 'renamed':
                         pipeline.Edited(inputs, file)

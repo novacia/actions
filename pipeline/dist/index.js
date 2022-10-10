@@ -37232,7 +37232,7 @@ function Created(inputs, file) {
                 password: inputs.password,
                 key: inputs.key
             };
-            var arquivo = (_a = file.filename.match(/(?<caminho>.+)(?<arquivo>\/[a-z]+\.[a-z]+)/)) === null || _a === void 0 ? void 0 : _a.groups;
+            var arquivo = (_a = file.filename.match(/(?<caminho>.+)(?<arquivo>\/[a-z0-9]+\.[a-z]+)/)) === null || _a === void 0 ? void 0 : _a.groups;
             if (!arquivo.caminho) {
                 throw new Error('falha na expressão regular');
             }

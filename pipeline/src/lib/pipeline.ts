@@ -31,7 +31,7 @@ export async function Created(inputs: InputsPipeline, file: Files | undefined): 
             key: inputs.key
         }
 
-        var arquivo = file.filename.match(/(?<caminho>.+)(?<arquivo>\/[a-z]+\.[a-z]+)/)?.groups;
+        var arquivo = file.filename.match(/(?<caminho>.+)(?<arquivo>\/[a-z0-9]+\.[a-z]+)/)?.groups;
 
         if (!arquivo.caminho) {
             throw new Error('falha na expressão regular');

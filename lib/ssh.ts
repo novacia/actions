@@ -100,6 +100,41 @@ export async function sshMkdir(settings: sshSettings, path: string): Promise<voi
     }
 }
 
+export async function sshRmdir(settings: sshSettings, path: string): Promise<void> {
+    try {
+        var config: ConnectConfig = sshConfig(settings);
+
+        const ssh = new Client();
+
+        await new Promise((result) => {
+            ssh.connect(config).on('ready', () => {
+                return result(true);
+            }).on('error', (err) => {
+                throw new Error(err.message);
+            });
+        });
+
+        core.info(`removendo Diretório '${path}'`);
+
+        await new Promise((result) => {
+            ssh.exec(`rm -rfv ${path}`, (err, stream) => {
+                if (err) throw new Error(err.message)
+                stream.on('close', (code, sginal) => {
+                    ssh.end();
+                    return result(true);
+                }).on('data', (data) => {
+                    core.info('STDOUT: ' +  data);
+                }).stderr.on('data', (data) => {
+                    core.info('STDERR: ' + data);
+                })
+            });
+        });
+    }
+    catch (error) {
+        throw new Error('sshRmdir :: error: ' + error.message);
+    }
+}
+
 export async function sshScp(settings: sshSettings, target: string, source: string): Promise<void> {
     try {
         const client = new ClientSftp();

@@ -42312,12 +42312,7 @@ function Deleted(inputs, file) {
             password: inputs.password,
             key: inputs.key
         };
-        console.log(file);
-        // var arquivo = file.filename.match(/(?<caminho>.+)(?<arquivo>\/[a-z0-9]+\.[a-z]+)/)?.groups;
-        // if (!arquivo) {
-        //     throw new Error('falha na expressão regular');
-        // }
-        // ssh.sshRmdir(settings, arquivo.caminho);
+        ssh.sshRmdir(settings, file.filename);
     }
     catch (error) {
         if (error instanceof Error) {

@@ -1,5 +1,4 @@
 import * as core from '@actions/core';
-import { context } from '@actions/github';
 import { InputsPipeline } from '../../../lib/contexto';
 import * as ssh from '../../../lib/ssh';
 

@@ -1,11 +1,8 @@
 import * as core from '@actions/core';
-import * as exec from '@actions/exec';
 import { context, getOctokit } from '@actions/github';
 import { PushEvent } from '@octokit/webhooks-definitions/schema';
 import * as pipeline from './lib/pipeline';
 import { getInputsPipeline, InputsPipeline } from '../../lib/contexto';
-import { Http2ServerRequest, Http2ServerResponse } from 'http2';
-import { copyFile } from 'fs';
 
 async function run(): Promise<void> {
     try {

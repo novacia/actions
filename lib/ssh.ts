@@ -2,7 +2,6 @@ import * as core from '@actions/core';
 import { ConnectConfig, Client } from 'ssh2';
 import ClientSftp from 'ssh2-sftp-client';
 import { Client as ClientScp } from 'node-scp';
-import * as fs from 'fs';
 
 export interface sshSettings {
     host: string

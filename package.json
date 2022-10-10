@@ -1,15 +1,13 @@
 {
   "devDependencies": {
     "@types/node": "^18.7.18",
-    "@types/ssh2": "^1.11.5",
-    "@types/ssh2-sftp-client": "^7.1.0"
+    "@types/ssh2": "^1.11.5"
   },
   "dependencies": {
     "@actions/core": "^1.9.1",
     "@actions/exec": "^1.1.1",
     "node-scp": "^0.0.21",
     "node-ssh": "^13.0.0",
-    "ssh2": "^1.11.0",
-    "ssh2-sftp-client": "^9.0.4"
+    "ssh2": "^1.11.0"
   }
 }

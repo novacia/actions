@@ -1,6 +1,5 @@
 import * as core from '@actions/core';
 import { ConnectConfig, Client } from 'ssh2';
-import ClientSftp from 'ssh2-sftp-client';
 import { Client as ClientScp } from 'node-scp';
 
 export interface sshSettings {
@@ -67,32 +66,34 @@ export async function sshComando(settings:sshSettings, cmd: string): Promise<voi
     }
 }
 
-export async function sshMkdir(settings: sshSettings, path: string, recursive?: boolean): Promise<void> {
+export async function sshMkdir(settings: sshSettings, path: string): Promise<void> {
     try {
         var config: ConnectConfig = sshConfig(settings);
 
-        const ssh = new ClientSftp();
+        const ssh = new Client();
 
-        await ssh.connect(config);
-
-        core.info(`criado Diretório [${path}]`);
-
-        await ssh.mkdir(path, recursive);
-
-        await ssh.stat(path)
-            .then((stat) => {
-                if (stat.isDirectory) {
-                    core.info(`Diretório [ ${path} ] criado com sucesso`);
-                }
-            })
-            .catch((err) => {
-                if (err instanceof Error) {
-                    ssh.end();
-                    throw new Error(err.message);
-                }
+        await new Promise((result) => {
+            ssh.connect(config).on('ready', () => {
+                core.info('Conectado com sucesso');
+                return result(true);
+            }).on('error', (err) => {
+                throw new Error(err.message);
             });
+        });
 
-        await ssh.end();
+        await new Promise((result) => {
+            ssh.exec(`mkdir -p ${path}`, (err, stream) => {
+                if (err) throw new Error(err.message)
+                stream.on('close', (code, sginal) => {
+                    ssh.end();
+                    return result(true);
+                }).on('data', (data) => {
+                    core.info('STDOUT: ' + data);
+                }).stderr.on('data', (data) => {
+                    core.info('STDERR: ' + data);
+                })
+            });
+        });
     }
     catch (error) {
         throw new Error('sshMkdir :: error: ' + error.message);

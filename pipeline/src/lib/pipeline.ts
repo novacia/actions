@@ -36,7 +36,7 @@ export async function Created(inputs: InputsPipeline, file: Files | undefined): 
             throw new Error('falha na expressão regular');
         }
 
-        await ssh.sshMkdir(settings, arquivo.caminho, true);
+        await ssh.sshMkdir(settings, arquivo.caminho);
 
         await ssh.sshScp(settings, `./${file}`, file);
 

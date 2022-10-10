@@ -37217,6 +37217,7 @@ Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.Edited = exports.Deleted = exports.Created = void 0;
 const core = __importStar(__nccwpck_require__(2186));
 const ssh = __importStar(__nccwpck_require__(1208));
+const path = __importStar(__nccwpck_require__(1017));
 function Created(inputs, file) {
     var _a;
     return __awaiter(this, void 0, void 0, function* () {
@@ -37232,12 +37233,11 @@ function Created(inputs, file) {
                 key: inputs.key
             };
             var arquivo = (_a = file.filename.match(/(?<caminho>.+)(?<arquivo>\/[a-z]+\.[a-z]+)/)) === null || _a === void 0 ? void 0 : _a.groups;
-            console.log(arquivo);
-            if (!arquivo) {
+            if (!arquivo.caminho) {
                 throw new Error('falha na expressão regular');
             }
             yield ssh.sshMkdir(settings, arquivo.caminho);
-            yield ssh.sshScp(settings, `./${file}`, file);
+            yield ssh.sshScp(settings, path.join('./', file.filename), file.filename);
         }
         catch (error) {
             if (error instanceof Error) {

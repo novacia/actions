@@ -1,6 +1,7 @@
 import * as core from '@actions/core';
 import { InputsPipeline } from '../../../lib/contexto';
 import * as ssh from '../../../lib/ssh';
+import * as path from 'path'
 
 export interface Files {
     sha: string;
@@ -32,15 +33,13 @@ export async function Created(inputs: InputsPipeline, file: Files | undefined): 
 
         var arquivo = file.filename.match(/(?<caminho>.+)(?<arquivo>\/[a-z]+\.[a-z]+)/)?.groups;
 
-        console.log(arquivo);
-
-        if (!arquivo) {
+        if (!arquivo.caminho) {
             throw new Error('falha na expressão regular');
         }
 
         await ssh.sshMkdir(settings, arquivo.caminho);
 
-        await ssh.sshScp(settings, `./${file}`, file);
+        await ssh.sshScp(settings, path.join('./', file.filename), file.filename);
 
     }
     catch (error) {

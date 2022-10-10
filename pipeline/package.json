@@ -17,7 +17,7 @@
     "@octokit/webhooks": "^10.2.0",
     "@octokit/webhooks-definitions": "^3.67.3",
     "@vercel/ncc": "^0.34.0",
-    "node-scp": "^0.0.21",
+    "ssh2-sftp-client": "^8.1.0",
     "typescript": "^4.8.4"
   }
 }

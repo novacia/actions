@@ -42271,13 +42271,11 @@ var __importStar = (this && this.__importStar) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.Edited = exports.Deleted = exports.Created = void 0;
-const core = __importStar(__nccwpck_require__(2186));
 const ssh = __importStar(__nccwpck_require__(1208));
 const path = __importStar(__nccwpck_require__(1017));
 function Created(inputs, file) {
     var _a;
     try {
-        core.info('Iniciando criação de Pipeline');
         if (file == undefined) {
             throw new Error('paramêtro file indefinido');
         }
@@ -42304,7 +42302,6 @@ function Created(inputs, file) {
 exports.Created = Created;
 function Deleted(inputs, file) {
     try {
-        core.info('Iniciando remoção de Pipeline');
         var settings = {
             host: inputs.host,
             port: inputs.port,
@@ -42323,7 +42320,6 @@ function Deleted(inputs, file) {
 exports.Deleted = Deleted;
 function Edited(inputs, file) {
     try {
-        core.info('Iniciando edição de Pipeline');
         var settings = {
             host: inputs.host,
             port: inputs.port,

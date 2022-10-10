@@ -20,8 +20,6 @@ export interface Files {
 
 export function Created(inputs: InputsPipeline, file: Files | undefined): void {
     try {
-        core.info('Iniciando criação de Pipeline');
-
         if (file == undefined) {
             throw new Error('paramêtro file indefinido');
         }
@@ -54,8 +52,6 @@ export function Created(inputs: InputsPipeline, file: Files | undefined): void {
 
 export function Deleted(inputs: InputsPipeline, file: Files | undefined): void {
     try {
-        core.info('Iniciando remoção de Pipeline');
-
         var settings: ssh.sshSettings = {
             host: inputs.host,
             port: inputs.port,
@@ -76,8 +72,6 @@ export function Deleted(inputs: InputsPipeline, file: Files | undefined): void {
 
 export function Edited(inputs: InputsPipeline, file: Files | undefined): void {
     try {
-        core.info('Iniciando edição de Pipeline');
-
         var settings: ssh.sshSettings = {
             host: inputs.host,
             port: inputs.port,

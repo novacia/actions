@@ -100,7 +100,7 @@ export async function sshMkdir(settings: sshSettings, path: string): Promise<voi
     }
 }
 
-export async function sshScp(settings: sshSettings, target, source): Promise<void> {
+export async function sshScp(settings: sshSettings, target: string, source: string): Promise<void> {
     try {
         const client = new ClientSftp();
 

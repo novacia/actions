@@ -18,9 +18,12 @@ export async function build(csproj:string, config:string, versao_major:string, v
         })
         .then(res => {
             if (res.stderr.length > 0 && res.exitCode != 0) {
-                throw new Error(res.stderr.trim());
+                throw new Error('[build] - ' + res.stderr.trim());
             }
-            core.info(res.stdout);
+            else if (res.exitCode != 0) {
+                throw new Error('[build] - ' + res.stdout.trim());
+            }
+            core.info(res.stdout.trim());
         });
 }
 
@@ -41,9 +44,12 @@ export async function pack(csproj:string, config:string, versao_major:string, ve
         })
         .then(res => {
             if (res.stderr.length > 0 && res.exitCode != 0) {
-                throw new Error(res.stderr.trim());
+                throw new Error('[pack] - ' + res.stderr.trim());
             }
-            core.info(res.stdout);
+            else if (res.exitCode != 0) {
+                throw new Error('[pack] - ' + res.stdout.trim());
+            }
+            core.info(res.stdout.trim());
         });
 }
 
@@ -67,9 +73,12 @@ export async function nuget_add_source(username:string, token:string): Promise<v
         })
         .then(res => {
             if (res.stderr.length > 0 && res.exitCode != 0) {
-                throw new Error(res.stderr.trim());
+                throw new Error('[nuget_add_source] - ' + res.stderr.trim());
             }
-            core.info(res.stdout);
+            else if (res.exitCode != 0) {
+                throw new Error('[nuget_add_source] - ' + res.stdout.trim());
+            }
+            core.info(res.stdout.trim());
         });
 }
 
@@ -95,10 +104,10 @@ export async function nuget_push(nupkg:string, token:string, versao_major:string
         })
         .then(res => {
             if (res.stderr.length > 0 && res.exitCode != 0) {
-                throw new Error('[nuget_push] - STDERR: ' + res.stderr.trim());
+                throw new Error('[nuget_push] - ' + res.stderr.trim());
             }
             else if (res.exitCode != 0) {
-                throw new Error('[nuget_push] - STDOUT:' + res.stdout.trim());
+                throw new Error('[nuget_push] - ' + res.stdout.trim());
             }
             core.info(res.stdout.trim());
         });

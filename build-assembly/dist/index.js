@@ -6677,7 +6677,7 @@ function run() {
         }
         catch (error) {
             if (error instanceof Error) {
-                core.setFailed('build-assembly - error: ' + error.message);
+                core.setFailed('build-assembly - ' + error.message);
             }
         }
     });
@@ -6858,9 +6858,12 @@ function build(csproj, config, versao_major, versao_minor, versao_patch, versao_
         })
             .then(res => {
             if (res.stderr.length > 0 && res.exitCode != 0) {
-                throw new Error(res.stderr.trim());
+                throw new Error('[build] - ' + res.stderr.trim());
             }
-            core.info(res.stdout);
+            else if (res.exitCode != 0) {
+                throw new Error('[build] - ' + res.stdout.trim());
+            }
+            core.info(res.stdout.trim());
         });
     });
 }
@@ -6880,9 +6883,12 @@ function pack(csproj, config, versao_major, versao_minor, versao_patch, versao_p
         })
             .then(res => {
             if (res.stderr.length > 0 && res.exitCode != 0) {
-                throw new Error(res.stderr.trim());
+                throw new Error('[pack] - ' + res.stderr.trim());
             }
-            core.info(res.stdout);
+            else if (res.exitCode != 0) {
+                throw new Error('[pack] - ' + res.stdout.trim());
+            }
+            core.info(res.stdout.trim());
         });
     });
 }
@@ -6906,9 +6912,12 @@ function nuget_add_source(username, token) {
         })
             .then(res => {
             if (res.stderr.length > 0 && res.exitCode != 0) {
-                throw new Error(res.stderr.trim());
+                throw new Error('[nuget_add_source] - ' + res.stderr.trim());
             }
-            core.info(res.stdout);
+            else if (res.exitCode != 0) {
+                throw new Error('[nuget_add_source] - ' + res.stdout.trim());
+            }
+            core.info(res.stdout.trim());
         });
     });
 }
@@ -6931,10 +6940,10 @@ function nuget_push(nupkg, token, versao_major, versao_minor, versao_patch, vers
         })
             .then(res => {
             if (res.stderr.length > 0 && res.exitCode != 0) {
-                throw new Error('[nuget_push] - STDERR: ' + res.stderr.trim());
+                throw new Error('[nuget_push] - ' + res.stderr.trim());
             }
             else if (res.exitCode != 0) {
-                throw new Error('[nuget_push] - STDOUT:' + res.stdout.trim());
+                throw new Error('[nuget_push] - ' + res.stdout.trim());
             }
             core.info(res.stdout.trim());
         });

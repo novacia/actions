@@ -6660,8 +6660,6 @@ function run() {
             core.info('Build API - ' + inputs.projeto);
             yield docker.build(inputs.hub, inputs.projeto, inputs.config, inputs.versao_major, inputs.versao_minor, inputs.versao_patch, inputs.versao_patch_sufixo)
                 .catch((err) => {
-                console.info('deu erro....!!!!!');
-                console.error(err);
                 throw new Error(err);
             });
             if (inputs.latest) {
@@ -6694,7 +6692,7 @@ function run() {
         }
         catch (error) {
             if (error instanceof Error) {
-                core.setFailed(error.message);
+                core.setFailed('build-docker - ' + error.message);
             }
         }
     });
@@ -6733,7 +6731,7 @@ var __importStar = (this && this.__importStar) || function (mod) {
     return result;
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.getStack = exports.getVersao = exports.getInputsDeploy = exports.getInputsBuildDocker = exports.getInputsBuildAssembly = void 0;
+exports.getStack = exports.getVersao = exports.getInputsPipeline = exports.getInputsDeploy = exports.getInputsBuildDocker = exports.getInputsBuildAssembly = void 0;
 const core = __importStar(__nccwpck_require__(3820));
 function getInputsBuildAssembly() {
     return {
@@ -6772,6 +6770,7 @@ function getInputsDeploy() {
         password: core.getInput('password'),
         key: core.getInput('key'),
         stack: core.getInput('stack'),
+        config: core.getInput('config'),
         versao_major: core.getInput('versao-major'),
         versao_minor: core.getInput('versao-minor'),
         versao_patch: core.getInput('versao-patch'),
@@ -6780,6 +6779,17 @@ function getInputsDeploy() {
     };
 }
 exports.getInputsDeploy = getInputsDeploy;
+function getInputsPipeline() {
+    return {
+        host: core.getInput('host'),
+        port: Number(core.getInput('port')),
+        username: core.getInput('username'),
+        password: core.getInput('password'),
+        key: core.getInput('key'),
+        github_token: core.getInput('github_token')
+    };
+}
+exports.getInputsPipeline = getInputsPipeline;
 function getVersao(versao_major, versao_minor, versao_patch, versao_patch_sufixo) {
     core.info('gerando versão');
     if (!versao_major || !versao_minor || !versao_patch) {
@@ -6865,9 +6875,12 @@ function login(username, password) {
         })
             .then(res => {
             if (res.stderr.length > 0 && res.exitCode != 0) {
-                throw new Error(res.stderr.trim());
+                throw new Error('[login] - ' + res.stderr.trim());
             }
-            core.info('Login efetuado com Sucesso - STDOUT: ' + res.stdout);
+            else if (res.exitCode != 0) {
+                throw new Error('[login] - ' + res.stdout.trim());
+            }
+            core.info('Login efetuado com Sucesso - STDOUT: ' + res.stdout.trim());
         });
     });
 }
@@ -6890,9 +6903,12 @@ function build(hub, projeto, config, versao_major, versao_minor, versao_patch, v
         })
             .then(res => {
             if (res.stderr.length > 0 && res.exitCode != 0) {
-                throw new Error(res.stderr.trim());
+                throw new Error('[build] - ' + res.stderr.trim());
             }
-            core.info('STDOUT: ' + res.stdout);
+            else if (res.exitCode != 0) {
+                throw new Error('[build] - ' + res.stdout.trim());
+            }
+            core.info('STDOUT: ' + res.stdout.trim());
         });
     });
 }
@@ -6915,9 +6931,12 @@ function tag(hub, versao_major, versao_minor, versao_patch, versao_patch_sufixo)
         })
             .then(res => {
             if (res.stderr.length > 0 && res.exitCode != 0) {
-                throw new Error(res.stderr.trim());
+                throw new Error('[tag] - ' + res.stderr.trim());
             }
-            core.info('STDOUT: ' + res.stdout);
+            else if (res.exitCode != 0) {
+                throw new Error('[tag] - ' + res.stdout.trim());
+            }
+            core.info('STDOUT: ' + res.stdout.trim());
         });
     });
 }
@@ -6945,9 +6964,12 @@ function push(hub, latest, versao_major, versao_minor, versao_patch, versao_patc
         })
             .then(res => {
             if (res.stderr.length > 0 && res.exitCode != 0) {
-                throw new Error(res.stderr.trim());
+                throw new Error('[push] - ' + res.stderr.trim());
             }
-            core.info('STDOUT: ' + res.stdout);
+            else if (res.exitCode != 0) {
+                throw new Error('[push] - ' + res.stdout.trim());
+            }
+            core.info('STDOUT: ' + res.stdout.trim());
         });
     });
 }

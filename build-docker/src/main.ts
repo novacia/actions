@@ -46,7 +46,7 @@ async function run(): Promise<void> {
         core.info('Build API Finalizado');
     } catch (error) {
         if (error instanceof Error) {
-            core.setFailed(error.message);
+            core.setFailed('build-docker - ' + error.message);
         }
     }
 }

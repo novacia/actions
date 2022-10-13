@@ -6934,6 +6934,7 @@ function nuget_push(nupkg, token, versao_major, versao_minor, versao_patch, vers
                 throw new Error(res.stderr.trim());
             }
             core.info('exitCode: ' + res.exitCode);
+            core.info('stderr: ' + res.stderr);
             core.info(res.stdout);
         });
     });

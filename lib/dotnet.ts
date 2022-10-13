@@ -98,6 +98,7 @@ export async function nuget_push(nupkg:string, token:string, versao_major:string
                 throw new Error(res.stderr.trim());
             }
             core.info('exitCode: ' + res.exitCode);
+            core.info('stderr: ' + res.stderr);
             core.info(res.stdout);
         });
 }

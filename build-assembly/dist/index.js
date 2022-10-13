@@ -6931,11 +6931,12 @@ function nuget_push(nupkg, token, versao_major, versao_minor, versao_patch, vers
         })
             .then(res => {
             if (res.stderr.length > 0 && res.exitCode != 0) {
-                throw new Error(res.stderr.trim());
+                throw new Error('[nuget_push] - STDERR: ' + res.stderr.trim());
             }
-            core.info('exitCode: ' + res.exitCode);
-            core.info('stderr: ' + res.stderr);
-            core.info(res.stdout);
+            else if (res.exitCode != 0) {
+                throw new Error('[nuget_push] - STDOUT:' + res.stdout.trim());
+            }
+            core.info(res.stdout.trim());
         });
     });
 }

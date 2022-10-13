@@ -6669,12 +6669,15 @@ function run() {
             yield dotnet.build(inputs.csproj, inputs.config, inputs.versao_major, inputs.versao_minor, inputs.versao_patch, inputs.versao_patch_sufixo);
             yield dotnet.pack(inputs.csproj, inputs.config, inputs.versao_major, inputs.versao_minor, inputs.versao_patch, inputs.versao_patch_sufixo);
             yield dotnet.nuget_add_source(inputs.username, inputs.token);
-            yield dotnet.nuget_push(inputs.nupkg, inputs.token, inputs.versao_major, inputs.versao_minor, inputs.versao_patch, inputs.versao_patch_sufixo);
+            yield dotnet.nuget_push(inputs.nupkg, inputs.token, inputs.versao_major, inputs.versao_minor, inputs.versao_patch, inputs.versao_patch_sufixo)
+                .catch((err) => {
+                throw new Error('nuget_push ' + err);
+            });
             core.info('build - Assembly [Finalizado]');
         }
         catch (error) {
             if (error instanceof Error) {
-                core.setFailed(error.message);
+                core.setFailed('build-assembly - error: ' + error.message);
             }
         }
     });
@@ -6713,7 +6716,7 @@ var __importStar = (this && this.__importStar) || function (mod) {
     return result;
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.getStack = exports.getVersao = exports.getInputsDeploy = exports.getInputsBuildDocker = exports.getInputsBuildAssembly = void 0;
+exports.getStack = exports.getVersao = exports.getInputsPipeline = exports.getInputsDeploy = exports.getInputsBuildDocker = exports.getInputsBuildAssembly = void 0;
 const core = __importStar(__nccwpck_require__(3820));
 function getInputsBuildAssembly() {
     return {
@@ -6752,6 +6755,7 @@ function getInputsDeploy() {
         password: core.getInput('password'),
         key: core.getInput('key'),
         stack: core.getInput('stack'),
+        config: core.getInput('config'),
         versao_major: core.getInput('versao-major'),
         versao_minor: core.getInput('versao-minor'),
         versao_patch: core.getInput('versao-patch'),
@@ -6760,6 +6764,17 @@ function getInputsDeploy() {
     };
 }
 exports.getInputsDeploy = getInputsDeploy;
+function getInputsPipeline() {
+    return {
+        host: core.getInput('host'),
+        port: Number(core.getInput('port')),
+        username: core.getInput('username'),
+        password: core.getInput('password'),
+        key: core.getInput('key'),
+        github_token: core.getInput('github_token')
+    };
+}
+exports.getInputsPipeline = getInputsPipeline;
 function getVersao(versao_major, versao_minor, versao_patch, versao_patch_sufixo) {
     core.info('gerando versão');
     if (!versao_major || !versao_minor || !versao_patch) {

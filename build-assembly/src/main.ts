@@ -2,6 +2,7 @@ import * as core from '@actions/core';
 import * as dotnet from '../../lib/dotnet';
 import { InputsBuildAssembly, getInputsBuildAssembly } from '../../lib/contexto';
 import * as fs from 'fs';
+import { isThisTypeNode } from 'typescript';
 
 async function run(): Promise<void> {
     try {
@@ -20,13 +21,16 @@ async function run(): Promise<void> {
         await dotnet.build(inputs.csproj, inputs.config, inputs.versao_major, inputs.versao_minor, inputs.versao_patch, inputs.versao_patch_sufixo);
         await dotnet.pack(inputs.csproj, inputs.config, inputs.versao_major, inputs.versao_minor, inputs.versao_patch, inputs.versao_patch_sufixo);
         await dotnet.nuget_add_source(inputs.username, inputs.token);
-        await dotnet.nuget_push(inputs.nupkg, inputs.token, inputs.versao_major, inputs.versao_minor, inputs.versao_patch, inputs.versao_patch_sufixo);
+        await dotnet.nuget_push(inputs.nupkg, inputs.token, inputs.versao_major, inputs.versao_minor, inputs.versao_patch, inputs.versao_patch_sufixo)
+            .catch((err) => {
+                throw new Error('nuget_push ' + err);
+            });
 
         core.info('build - Assembly [Finalizado]');
 
     } catch (error) {
         if (error instanceof Error) {
-            core.setFailed(error.message);
+            core.setFailed('build-assembly - error: ' + error.message);
         }
     }
 }

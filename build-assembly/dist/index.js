@@ -6776,7 +6776,6 @@ function getInputsPipeline() {
 }
 exports.getInputsPipeline = getInputsPipeline;
 function getVersao(versao_major, versao_minor, versao_patch, versao_patch_sufixo) {
-    core.info('gerando versão');
     if (!versao_major || !versao_minor || !versao_patch) {
         throw new Error('parâmetros [versao_major, versao_minor, versao_patch] são obrigatórios');
     }

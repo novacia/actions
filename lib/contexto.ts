@@ -109,8 +109,6 @@ export function getInputsPipeline(): InputsPipeline {
 
 export function getVersao(versao_major:string, versao_minor: string, versao_patch: string, versao_patch_sufixo?: string): string {
 
-    core.info('gerando versão');
-
     if (!versao_major || !versao_minor || !versao_patch) {
         throw new Error('parâmetros [versao_major, versao_minor, versao_patch] são obrigatórios');
     }

@@ -88,7 +88,7 @@ export async function tag(hub: string, versao_major: string, versao_minor: strin
         });
 }
 
-export async function push(hub: string, latest?: boolean, versao_major?: string, versao_minor?: string, versao_patch?: string, versao_patch_sufixo?: string, ): Promise<void> {
+export async function push(hub: string, latest?: boolean, versao_major?: string, versao_minor?: string, versao_patch?: string, versao_patch_sufixo?: string): Promise<void> {
     
     if (!hub) {
         throw new Error('Parâmetro [ hub ] é obrigatório');

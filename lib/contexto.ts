@@ -134,3 +134,29 @@ export function getStack(stack: string): string {
     }
     return mStack;
 }
+
+export function getDayOfYear(data: Date): number {
+    var month: number = data.getMonth();
+    var year: number = data.getFullYear();
+    var days: number = data.getDate();
+    for (var i = 0; i < month; i++) {
+        days += new Date(year, i+1, 0).getDate();
+    }
+    return days;
+}
+
+export function getAnoSubstring(data: Date): string {
+    return data.getFullYear().toString().substring(3);
+}
+
+export function getHoras(data: Date): string {
+    var horas: number = data.getHours();
+
+    return horas <= 9 ? '0' + horas.toString() : horas.toString();
+}
+
+export function getMinutos(data: Date): string {
+    var minutos: number = data.getMinutes();
+
+    return minutos <= 9 ? '0' + minutos.toString() : minutos.toString();
+}

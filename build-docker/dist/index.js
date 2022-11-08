@@ -6731,7 +6731,7 @@ var __importStar = (this && this.__importStar) || function (mod) {
     return result;
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.getStack = exports.getVersao = exports.getInputsPipeline = exports.getInputsDeploy = exports.getInputsBuildDocker = exports.getInputsBuildAssembly = void 0;
+exports.getMinutos = exports.getHoras = exports.getAnoSubstring = exports.getDayOfYear = exports.getStack = exports.getVersao = exports.getInputsPipeline = exports.getInputsDeploy = exports.getInputsBuildDocker = exports.getInputsBuildAssembly = void 0;
 const core = __importStar(__nccwpck_require__(3820));
 function getInputsBuildAssembly() {
     return {
@@ -6797,6 +6797,9 @@ function getVersao(versao_major, versao_minor, versao_patch, versao_patch_sufixo
     if (versao_patch_sufixo && ['beta', 'rc'].indexOf(versao_patch_sufixo) == -1) {
         throw new Error("parêmetro [versao_patch_sufixo] inválido - inputs permitidos (beta, rc)");
     }
+    //var versao: string = `${versao_major}.${versao_minor}.${versao_patch}`;
+    var data = new Date();
+    versao_minor = getAnoSubstring(data) + getDayOfYear(data) + getHoras(data) + getMinutos(data);
     var versao = `${versao_major}.${versao_minor}.${versao_patch}`;
     if (versao_patch_sufixo) {
         versao = `${versao}-${versao_patch_sufixo}`;
@@ -6812,6 +6815,30 @@ function getStack(stack) {
     return mStack;
 }
 exports.getStack = getStack;
+function getDayOfYear(data) {
+    var month = data.getMonth();
+    var year = data.getFullYear();
+    var days = data.getDate();
+    for (var i = 0; i < month; i++) {
+        days += new Date(year, i + 1, 0).getDate();
+    }
+    return days;
+}
+exports.getDayOfYear = getDayOfYear;
+function getAnoSubstring(data) {
+    return data.getFullYear().toString().substring(3);
+}
+exports.getAnoSubstring = getAnoSubstring;
+function getHoras(data) {
+    var horas = data.getHours();
+    return horas <= 9 ? '0' + horas.toString() : horas.toString();
+}
+exports.getHoras = getHoras;
+function getMinutos(data) {
+    var minutos = data.getMinutes();
+    return minutos <= 9 ? '0' + minutos.toString() : minutos.toString();
+}
+exports.getMinutos = getMinutos;
 
 
 /***/ }),

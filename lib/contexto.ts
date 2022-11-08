@@ -120,7 +120,7 @@ export function getVersao(versao_major:string, versao_minor: string, versao_patc
     //var versao: string = `${versao_major}.${versao_minor}.${versao_patch}`;
     var data: Date = new Date();
     versao_minor = getAnoSubstring(data) + getDayOfYear(data) + getHoras(data) + getMinutos(data);
-    var versao: string = `${versao_major}.${versao_minor}.${versao_patch}`;
+    var versao: string = `${versao_major}.${versao_patch}.${versao_minor}`;
     if (versao_patch_sufixo) {
         versao = `${versao}-${versao_patch_sufixo}`;
     }

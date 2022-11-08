@@ -6797,10 +6797,7 @@ function getVersao(versao_major, versao_minor, versao_patch, versao_patch_sufixo
     if (versao_patch_sufixo && ['beta', 'rc'].indexOf(versao_patch_sufixo) == -1) {
         throw new Error("parêmetro [versao_patch_sufixo] inválido - inputs permitidos (beta, rc)");
     }
-    //var versao: string = `${versao_major}.${versao_minor}.${versao_patch}`;
-    var data = new Date();
-    versao_minor = getAnoSubstring(data) + getDayOfYear(data) + getHoras(data) + getMinutos(data);
-    var versao = `${versao_major}.${versao_patch}.${versao_minor}`;
+    var versao = `${versao_major}.${versao_minor}.${versao_patch}`;
     if (versao_patch_sufixo) {
         versao = `${versao}-${versao_patch_sufixo}`;
     }

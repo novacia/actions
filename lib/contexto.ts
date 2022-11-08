@@ -124,6 +124,7 @@ export function getVersao(versao_major:string, versao_minor: string, versao_patc
     if (versao_patch_sufixo) {
         versao = `${versao}-${versao_patch_sufixo}`;
     }
+    core.info(versao);
 
     return versao;
 }

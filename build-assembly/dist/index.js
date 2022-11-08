@@ -6789,6 +6789,7 @@ function getVersao(versao_major, versao_minor, versao_patch, versao_patch_sufixo
     if (versao_patch_sufixo) {
         versao = `${versao}-${versao_patch_sufixo}`;
     }
+    core.info(versao);
     return versao;
 }
 exports.getVersao = getVersao;

@@ -1,4 +1,4 @@
-import fetch from "node-fetch";
+import { HttpClient, HttpClientResponse } from '@actions/http-client';
 
 interface ConsultaVersionamento {
     id: string,
@@ -11,25 +11,26 @@ interface ResetVersionamento {
 }
 
 export async function consultaVersionamento(): Promise<ConsultaVersionamento | undefined> {
-    var params = new URLSearchParams();
-    params.append("code", "YZrDC-oQKmhgNxjiI-EtvryTPsrDJ4r7FLUXCmgBwI9NAzFu8-rA_A==");
-    params.append("namePackage", "GitFlow.Eleicoes");
+    var code: string = "code=YZrDC-oQKmhgNxjiI-EtvryTPsrDJ4r7FLUXCmgBwI9NAzFu8-rA_A=="
+    var namePackage: string = "GitFlow.Eleicoes";
 
-    const response = await fetch("https://tlv7-versionamento.azurewebsites.net/api/ConsultaVersionamento", {
-        headers: {
-            "accountEndpoint": "https://usernosql.documents.azure.com:443/",
-            "token": "sEpHfIs0BHC6wfE7swdbEGP4a4evFBud8k8m24VuvkIYV3b9eljtzMsbKvI9j2KyuFkHWjcktzHOACDbUr3O8w=="
-        }
+    var httpClient: HttpClient = new HttpClient();
+
+    var response: HttpClientResponse =  await httpClient.get("https://tlv7-versionamento.azurewebsites.net/api/ConsultaVersionamento&" + code + "&" + namePackage, {
+        "accountEndpoint": "https://usernosql.documents.azure.com:443/",
+        "token": "sEpHfIs0BHC6wfE7swdbEGP4a4evFBud8k8m24VuvkIYV3b9eljtzMsbKvI9j2KyuFkHWjcktzHOACDbUr3O8w=="
     });
-    if (response.status == 200) {
-        return await response.json() as ConsultaVersionamento;
+
+    if (response.message.statusCode == 200) {
+        var body: string = await response.readBody();
+        return JSON.parse(body) as ConsultaVersionamento;
     }
 
     return undefined;
 }
 
-export async function resetVersionamento(): Promise<void> {
-    
+export async function resetVersionamento(): Promise<ResetVersionamento | undefined> {
+    return undefined;
 }
 
 consultaVersionamento()

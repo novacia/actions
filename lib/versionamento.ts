@@ -1,42 +1,61 @@
 import { HttpClient, HttpClientResponse } from '@actions/http-client';
+import { resourceUsage } from 'process';
 
-interface ConsultaVersionamento {
+export interface RequestVersionamento {
+    code: string,
+    namePackage: string,
+    accountEndpoint: string,
+    token: string,
+    numeroVersao: number | undefined
+}
+
+interface ResponseConsultaVersionamento {
     id: string,
     numeroVersao: number,
     dataVersao: Date
 }
 
-interface ResetVersionamento {
-    numeroVersao: number
+interface ResponseResetVersionamento {
+    numeroVersao: number | undefined
 }
 
-export async function consultaVersionamento(): Promise<ConsultaVersionamento | undefined> {
-    var code: string = "code=YZrDC-oQKmhgNxjiI-EtvryTPsrDJ4r7FLUXCmgBwI9NAzFu8-rA_A=="
-    var namePackage: string = "GitFlow.Eleicoes";
+export async function consultaVersionamento(request: RequestVersionamento): Promise<ResponseConsultaVersionamento | undefined> {
+    var code: string = "code=" + request.code;
+    var namePackage: string = "namePackage=" + request.namePackage;
 
     var httpClient: HttpClient = new HttpClient();
 
-    var response: HttpClientResponse =  await httpClient.get("https://tlv7-versionamento.azurewebsites.net/api/ConsultaVersionamento&" + code + "&" + namePackage, {
-        "accountEndpoint": "https://usernosql.documents.azure.com:443/",
-        "token": "sEpHfIs0BHC6wfE7swdbEGP4a4evFBud8k8m24VuvkIYV3b9eljtzMsbKvI9j2KyuFkHWjcktzHOACDbUr3O8w=="
+    var response: HttpClientResponse =  await httpClient.get("https://tlv7-versionamento.azurewebsites.net/api/ConsultaVersionamento?" + code + "&" + namePackage, {
+        "accountEndpoint": request.accountEndpoint,
+        "token": request.token
     });
 
     if (response.message.statusCode == 200) {
         var body: string = await response.readBody();
-        return JSON.parse(body) as ConsultaVersionamento;
+        return JSON.parse(body) as ResponseConsultaVersionamento;
     }
 
     return undefined;
 }
 
-export async function resetVersionamento(): Promise<ResetVersionamento | undefined> {
+export async function resetVersionamento(request: RequestVersionamento): Promise<ResponseResetVersionamento | undefined> {
+    var code: string = "code=" + request.code;
+    var namePackage: string = "namePackage=" + request.namePackage;
+
+    var jsonReset: ResponseResetVersionamento = {
+        numeroVersao: request.numeroVersao
+    };
+
+    var httpClient: HttpClient = new HttpClient();
+
+    var response: HttpClientResponse = await httpClient.post("https://tlv7-versionamento.azurewebsites.net/api/ConsultaVersionamento?" + code + "&" + namePackage, null,{
+        "accountEndpoint": request.accountEndpoint,
+        "token": request.token
+    });
+
+    if (response.message.statusCode == 200) {
+        var body: string = await response.readBody();
+        return JSON.parse(body) as ResponseResetVersionamento;
+    }
     return undefined;
 }
-
-consultaVersionamento()
-    .then((res) => {
-        console.log(res);
-    })
-    .catch((err) => {
-        console.log("error: " + err);
-    });

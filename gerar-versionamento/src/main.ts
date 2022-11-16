@@ -11,7 +11,7 @@ async function run(): Promise<void> {
             if (res.responseStatus?.statusCode == 200) {
                 core.info("request realizado com sucesso!")
                 core.info("JSON: " + JSON.stringify(res));
-                core.setOutput("versao-minor", res.numeroVersao);
+                core.setOutput("versao_minor", res.numeroVersao);
             }
             else {
                 throw new Error(`Error: ${res.responseStatus}`);

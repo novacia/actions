@@ -9,17 +9,22 @@ export interface RequestVersionamento {
     numeroVersao: number | undefined
 }
 
-interface ResponseConsultaVersionamento {
+export interface ResponseError {
+    statusCode: number | undefined,
+    statusMessage: string | undefined
+}
+
+export interface ResponseConsultaVersionamento {
     id: string,
     numeroVersao: number,
     dataVersao: Date
 }
 
-interface ResponseResetVersionamento {
+export interface ResponseResetVersionamento {
     numeroVersao: number | undefined
 }
 
-export async function consultaVersionamento(request: RequestVersionamento): Promise<ResponseConsultaVersionamento | undefined> {
+export async function consultaVersionamento(request: RequestVersionamento): Promise<ResponseConsultaVersionamento | ResponseError> {
     var code: string = "code=" + request.code;
     var namePackage: string = "namePackage=" + request.namePackage;
 
@@ -35,10 +40,13 @@ export async function consultaVersionamento(request: RequestVersionamento): Prom
         return JSON.parse(body) as ResponseConsultaVersionamento;
     }
 
-    return undefined;
+    return {
+        statusCode: response.message.statusCode,
+        statusMessage: response.message.statusMessage
+    };
 }
 
-export async function resetVersionamento(request: RequestVersionamento): Promise<ResponseResetVersionamento | undefined> {
+export async function resetVersionamento(request: RequestVersionamento): Promise<ResponseResetVersionamento | ResponseError> {
     var code: string = "code=" + request.code;
     var namePackage: string = "namePackage=" + request.namePackage;
 
@@ -48,7 +56,7 @@ export async function resetVersionamento(request: RequestVersionamento): Promise
 
     var httpClient: HttpClient = new HttpClient();
 
-    var response: HttpClientResponse = await httpClient.post("https://tlv7-versionamento.azurewebsites.net/api/ConsultaVersionamento?" + code + "&" + namePackage, null,{
+    var response: HttpClientResponse = await httpClient.post("https://tlv7-versionamento.azurewebsites.net/api/ResetVersionamento?" + code + "&" + namePackage, JSON.stringify(jsonReset),{
         "accountEndpoint": request.accountEndpoint,
         "token": request.token
     });
@@ -57,5 +65,8 @@ export async function resetVersionamento(request: RequestVersionamento): Promise
         var body: string = await response.readBody();
         return JSON.parse(body) as ResponseResetVersionamento;
     }
-    return undefined;
+    return {
+        statusCode: response.message.statusCode,
+        statusMessage: response.message.statusMessage
+    };
 }

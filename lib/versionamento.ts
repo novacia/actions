@@ -2,29 +2,31 @@ import { HttpClient, HttpClientResponse } from '@actions/http-client';
 import { resourceUsage } from 'process';
 
 export interface RequestVersionamento {
-    code: string,
-    namePackage: string,
-    accountEndpoint: string,
-    token: string,
+    code: string
+    namePackage: string
+    accountEndpoint: string
+    token: string
     numeroVersao: number | undefined
 }
 
-export interface ResponseError {
-    statusCode: number | undefined,
+export interface ResponseStatus {
+    statusCode: number | undefined
     statusMessage: string | undefined
 }
 
 export interface ResponseConsultaVersionamento {
-    id: string,
-    numeroVersao: number,
-    dataVersao: Date
+    id: string | undefined
+    numeroVersao: number | undefined
+    dataVersao: Date | undefined
+    responseStatus: ResponseStatus | undefined
 }
 
 export interface ResponseResetVersionamento {
     numeroVersao: number | undefined
+    responseStatus: ResponseStatus | undefined
 }
 
-export async function consultaVersionamento(request: RequestVersionamento): Promise<ResponseConsultaVersionamento | ResponseError> {
+export async function consultaVersionamento(request: RequestVersionamento): Promise<ResponseConsultaVersionamento> {
     var code: string = "code=" + request.code;
     var namePackage: string = "namePackage=" + request.namePackage;
 
@@ -36,37 +38,51 @@ export async function consultaVersionamento(request: RequestVersionamento): Prom
     });
 
     if (response.message.statusCode == 200) {
-        var body: string = await response.readBody();
-        return JSON.parse(body) as ResponseConsultaVersionamento;
+        var version: ResponseConsultaVersionamento;
+        await response.readBody()
+            .then((res) => {
+                version = JSON.parse(res);
+                version.responseStatus.statusCode = response.message.statusCode;
+                version.responseStatus.statusMessage = response.message.statusMessage;
+            });
+        return version;
     }
 
     return {
-        statusCode: response.message.statusCode,
-        statusMessage: response.message.statusMessage
-    };
+        responseStatus: {
+            statusCode: response.message.statusCode,
+            statusMessage: response.message.statusMessage  
+        } 
+    } as ResponseConsultaVersionamento;
 }
 
-export async function resetVersionamento(request: RequestVersionamento): Promise<ResponseResetVersionamento | ResponseError> {
+export async function resetVersionamento(request: RequestVersionamento): Promise<ResponseResetVersionamento> {
     var code: string = "code=" + request.code;
     var namePackage: string = "namePackage=" + request.namePackage;
 
-    var jsonReset: ResponseResetVersionamento = {
-        numeroVersao: request.numeroVersao
-    };
-
     var httpClient: HttpClient = new HttpClient();
 
-    var response: HttpClientResponse = await httpClient.post("https://tlv7-versionamento.azurewebsites.net/api/ResetVersionamento?" + code + "&" + namePackage, JSON.stringify(jsonReset),{
+    var response: HttpClientResponse = await httpClient.post("https://tlv7-versionamento.azurewebsites.net/api/ResetVersionamento?" + code + "&" + namePackage, 
+        JSON.stringify({numeroVersao: request.numeroVersao}),{
         "accountEndpoint": request.accountEndpoint,
         "token": request.token
     });
 
     if (response.message.statusCode == 200) {
-        var body: string = await response.readBody();
-        return JSON.parse(body) as ResponseResetVersionamento;
+        var version: ResponseResetVersionamento;
+        await response.readBody()
+            .then((res) => {
+                version = JSON.parse(res);
+                version.responseStatus.statusCode = response.message.statusCode;
+                version.responseStatus.statusMessage = response.message.statusMessage;
+            });
+        return version;
     }
+
     return {
-        statusCode: response.message.statusCode,
-        statusMessage: response.message.statusMessage
-    };
+        responseStatus: {
+            statusCode: response.message.statusCode,
+            statusMessage: response.message.statusMessage  
+        } 
+    } as ResponseConsultaVersionamento;
 }

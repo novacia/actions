@@ -7,10 +7,10 @@ inputs:
     required: false
     type: string
     description: Quando fizer mudanças incompatíveis na API
-  versao-minor:
-    required: false
-    type: string
-    description: Quando adicionar funcionalidades mantendo compatibilidade
+  # versao-minor:
+  #   required: false
+  #   type: string
+  #   description: Quando adicionar funcionalidades mantendo compatibilidade
   versao-patch:
     required: false
     type: string
@@ -39,7 +39,23 @@ inputs:
     required: false
     type: string
     description: Token Nuget
-  
+  version-code:
+    required: false
+    type: string
+    description: código de autenticação do request no azure
+  version-token:
+    required: false
+    type: string
+    description: token de autenticação cosmoDb no Azure
+  version-endpoint:
+    required: false
+    type: string
+    description: endereço do cosmoDb Azure
+  name-package:
+    required: false
+    type: string
+    description: nome do pacote ou serviço para gerar versionamento
+
 runs:
   using: 'node16'
   main: 'dist/index.js'

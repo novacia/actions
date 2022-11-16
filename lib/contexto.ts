@@ -1,5 +1,5 @@
-import * as core from '@actions/core'
-import { consumers } from 'stream'
+import * as core from '@actions/core';
+import { RequestVersionamento } from '../lib/versionamento';
 
 export interface InputsBuildAssembly {
     versao_major: string
@@ -11,6 +11,7 @@ export interface InputsBuildAssembly {
     nupkg: string
     username: string
     token: string
+    requestVersionamento: RequestVersionamento
 }
 
 export function getInputsBuildAssembly(): InputsBuildAssembly {
@@ -23,7 +24,14 @@ export function getInputsBuildAssembly(): InputsBuildAssembly {
         csproj: core.getInput('csproj'),
         nupkg: core.getInput('nupkg'),
         username: core.getInput('username'),
-        token: core.getInput('token')
+        token: core.getInput('token'),
+        requestVersionamento: {
+            accountEndpoint: core.getInput(''),
+            code: core.getInput(''),
+            token: core.getInput(''),
+            namePackage: core.getInput(''),
+            numeroVersao: Number(core.getInput(''))
+        }
     }
 }
 

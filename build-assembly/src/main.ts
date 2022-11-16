@@ -2,7 +2,6 @@ import * as core from '@actions/core';
 import * as dotnet from '../../lib/dotnet';
 import { InputsBuildAssembly, getInputsBuildAssembly } from '../../lib/contexto';
 import * as fs from 'fs';
-import { consultaVersionamento, ResponseConsultaVersionamento } from '../../lib/versionamento';
 
 async function run(): Promise<void> {
     try {
@@ -17,16 +16,6 @@ async function run(): Promise<void> {
         if (!fs.existsSync(inputs.csproj)) {
             throw new Error(`Arquivo [${inputs.csproj}] não existe`);
         }
-
-        await consultaVersionamento(inputs.requestVersionamento)
-        .then((res) => {
-            if (res.responseStatus.statusCode == 200) {
-                inputs.versao_minor = res.numeroVersao.toString();
-            }
-            else {
-                throw new Error(`Error: ${res.responseStatus}`);
-            }
-        });
         
         await dotnet.build(inputs.csproj, inputs.config, inputs.versao_major, inputs.versao_minor, inputs.versao_patch, inputs.versao_patch_sufixo);
         await dotnet.pack(inputs.csproj, inputs.config, inputs.versao_major, inputs.versao_minor, inputs.versao_patch, inputs.versao_patch_sufixo);

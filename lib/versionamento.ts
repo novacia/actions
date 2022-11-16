@@ -10,8 +10,8 @@ export interface RequestVersionamento {
 }
 
 export interface ResponseStatus {
-    statusCode: number | undefined
-    statusMessage: string | undefined
+    statusCode?: number
+    statusMessage?: string
 }
 
 export interface ResponseConsultaVersionamento {
@@ -42,8 +42,10 @@ export async function gerarVersionamento(request: RequestVersionamento): Promise
         await response.readBody()
             .then((res) => {
                 version = JSON.parse(res);
-                version.responseStatus.statusCode = response.message.statusCode;
-                version.responseStatus.statusMessage = response.message.statusMessage;
+                version.responseStatus = {
+                    statusCode: response.message.statusCode,
+                    statusMessage: response.message.statusMessage
+                };
             });
         return version;
     }
@@ -73,8 +75,10 @@ export async function resetVersionamento(request: RequestVersionamento): Promise
         await response.readBody()
             .then((res) => {
                 version = JSON.parse(res);
-                version.responseStatus.statusCode = response.message.statusCode;
-                version.responseStatus.statusMessage = response.message.statusMessage;
+                version.responseStatus = {
+                    statusCode: response.message.statusCode,
+                    statusMessage: response.message.statusMessage
+                };
             });
         return version;
     }

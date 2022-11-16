@@ -5624,8 +5624,10 @@ function gerarVersionamento(request) {
             yield response.readBody()
                 .then((res) => {
                 version = JSON.parse(res);
-                version.responseStatus.statusCode = response.message.statusCode;
-                version.responseStatus.statusMessage = response.message.statusMessage;
+                version.responseStatus = {
+                    statusCode: response.message.statusCode,
+                    statusMessage: response.message.statusMessage
+                };
             });
             return version;
         }
@@ -5652,8 +5654,10 @@ function resetVersionamento(request) {
             yield response.readBody()
                 .then((res) => {
                 version = JSON.parse(res);
-                version.responseStatus.statusCode = response.message.statusCode;
-                version.responseStatus.statusMessage = response.message.statusMessage;
+                version.responseStatus = {
+                    statusCode: response.message.statusCode,
+                    statusMessage: response.message.statusMessage
+                };
             });
             return version;
         }

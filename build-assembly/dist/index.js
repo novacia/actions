@@ -6654,6 +6654,7 @@ const core = __importStar(__nccwpck_require__(2186));
 const dotnet = __importStar(__nccwpck_require__(2));
 const contexto_1 = __nccwpck_require__(5517);
 const fs = __importStar(__nccwpck_require__(7147));
+const versionamento_1 = __nccwpck_require__(7085);
 function run() {
     return __awaiter(this, void 0, void 0, function* () {
         try {
@@ -6666,6 +6667,15 @@ function run() {
             if (!fs.existsSync(inputs.csproj)) {
                 throw new Error(`Arquivo [${inputs.csproj}] não existe`);
             }
+            yield (0, versionamento_1.consultaVersionamento)(inputs.requestVersionamento)
+                .then((res) => {
+                if (res.responseStatus.statusCode == 200) {
+                    inputs.versao_minor = res.numeroVersao.toString();
+                }
+                else {
+                    throw new Error(`Error: ${res.responseStatus}`);
+                }
+            });
             yield dotnet.build(inputs.csproj, inputs.config, inputs.versao_major, inputs.versao_minor, inputs.versao_patch, inputs.versao_patch_sufixo);
             yield dotnet.pack(inputs.csproj, inputs.config, inputs.versao_major, inputs.versao_minor, inputs.versao_patch, inputs.versao_patch_sufixo);
             yield dotnet.nuget_add_source(inputs.username, inputs.token);
@@ -6728,7 +6738,14 @@ function getInputsBuildAssembly() {
         csproj: core.getInput('csproj'),
         nupkg: core.getInput('nupkg'),
         username: core.getInput('username'),
-        token: core.getInput('token')
+        token: core.getInput('token'),
+        requestVersionamento: {
+            accountEndpoint: core.getInput(''),
+            code: core.getInput(''),
+            token: core.getInput(''),
+            namePackage: core.getInput(''),
+            numeroVersao: Number(core.getInput(''))
+        }
     };
 }
 exports.getInputsBuildAssembly = getInputsBuildAssembly;
@@ -6974,6 +6991,83 @@ function nuget_push(nupkg, token, versao_major, versao_minor, versao_patch, vers
     });
 }
 exports.nuget_push = nuget_push;
+
+
+/***/ }),
+
+/***/ 7085:
+/***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
+
+"use strict";
+
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.resetVersionamento = exports.consultaVersionamento = void 0;
+const http_client_1 = __nccwpck_require__(4367);
+function consultaVersionamento(request) {
+    return __awaiter(this, void 0, void 0, function* () {
+        var code = "code=" + request.code;
+        var namePackage = "namePackage=" + request.namePackage;
+        var httpClient = new http_client_1.HttpClient();
+        var response = yield httpClient.get("https://tlv7-versionamento.azurewebsites.net/api/ConsultaVersionamento?" + code + "&" + namePackage, {
+            "accountEndpoint": request.accountEndpoint,
+            "token": request.token
+        });
+        if (response.message.statusCode == 200) {
+            var version;
+            yield response.readBody()
+                .then((res) => {
+                version = JSON.parse(res);
+                version.responseStatus.statusCode = response.message.statusCode;
+                version.responseStatus.statusMessage = response.message.statusMessage;
+            });
+            return version;
+        }
+        return {
+            responseStatus: {
+                statusCode: response.message.statusCode,
+                statusMessage: response.message.statusMessage
+            }
+        };
+    });
+}
+exports.consultaVersionamento = consultaVersionamento;
+function resetVersionamento(request) {
+    return __awaiter(this, void 0, void 0, function* () {
+        var code = "code=" + request.code;
+        var namePackage = "namePackage=" + request.namePackage;
+        var httpClient = new http_client_1.HttpClient();
+        var response = yield httpClient.post("https://tlv7-versionamento.azurewebsites.net/api/ResetVersionamento?" + code + "&" + namePackage, JSON.stringify({ numeroVersao: request.numeroVersao }), {
+            "accountEndpoint": request.accountEndpoint,
+            "token": request.token
+        });
+        if (response.message.statusCode == 200) {
+            var version;
+            yield response.readBody()
+                .then((res) => {
+                version = JSON.parse(res);
+                version.responseStatus.statusCode = response.message.statusCode;
+                version.responseStatus.statusMessage = response.message.statusMessage;
+            });
+            return version;
+        }
+        return {
+            responseStatus: {
+                statusCode: response.message.statusCode,
+                statusMessage: response.message.statusMessage
+            }
+        };
+    });
+}
+exports.resetVersionamento = resetVersionamento;
 
 
 /***/ }),

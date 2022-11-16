@@ -1,0 +1,17 @@
+{
+  "name": "gerar-versionamento",
+  "version": "1.0.0",
+  "description": "Action que gerar o versionamento Minor via API",
+  "main": "dist/index.js",
+  "scripts": {
+    "build": "ncc build src/main.ts -o dist",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Silask1",
+  "license": "ISC",
+  "dependencies": {
+    "@actions/core": "^1.10.0",
+    "@vercel/ncc": "^0.34.0",
+    "typescript": "^4.9.3"
+  }
+}

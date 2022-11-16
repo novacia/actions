@@ -26,7 +26,7 @@ export interface ResponseResetVersionamento {
     responseStatus: ResponseStatus | undefined
 }
 
-export async function consultaVersionamento(request: RequestVersionamento): Promise<ResponseConsultaVersionamento> {
+export async function gerarVersionamento(request: RequestVersionamento): Promise<ResponseConsultaVersionamento> {
     var code: string = "code=" + request.code;
     var namePackage: string = "namePackage=" + request.namePackage;
 

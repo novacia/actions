@@ -1,4 +1,5 @@
 import * as core from '@actions/core';
+import { countReset } from 'console';
 import { RequestVersionamento } from '../lib/versionamento';
 
 export interface InputsBuildAssembly {
@@ -11,7 +12,6 @@ export interface InputsBuildAssembly {
     nupkg: string
     username: string
     token: string
-    requestVersionamento: RequestVersionamento
 }
 
 export function getInputsBuildAssembly(): InputsBuildAssembly {
@@ -24,14 +24,7 @@ export function getInputsBuildAssembly(): InputsBuildAssembly {
         csproj: core.getInput('csproj'),
         nupkg: core.getInput('nupkg'),
         username: core.getInput('username'),
-        token: core.getInput('token'),
-        requestVersionamento: {
-            accountEndpoint: core.getInput(''),
-            code: core.getInput(''),
-            token: core.getInput(''),
-            namePackage: core.getInput(''),
-            numeroVersao: Number(core.getInput(''))
-        }
+        token: core.getInput('token')
     }
 }
 
@@ -112,6 +105,34 @@ export function getInputsPipeline(): InputsPipeline {
         password: core.getInput('password'),
         key: core.getInput('key'),
         github_token: core.getInput('github_token')
+    }
+}
+
+export interface InputsVersionamento {
+    requestVersionamento: RequestVersionamento
+}
+
+export function getInputsGerarVersionamento(): InputsVersionamento {
+    return {
+        requestVersionamento: {
+            accountEndpoint: core.getInput('endpoint'),
+            code: core.getInput('code'),
+            token: core.getInput('token'),
+            namePackage: core.getInput('name-package'),
+            numeroVersao: undefined
+        }
+    }
+}
+
+export function getInputsResetVersionamento(): InputsVersionamento {
+    return {
+        requestVersionamento: {
+            accountEndpoint: core.getInput('endpoint'),
+            code: core.getInput('code'),
+            token: core.getInput('token'),
+            namePackage: core.getInput('name-package'),
+            numeroVersao: Number(core.getInput('numero-versao'))
+        }
     }
 }
 

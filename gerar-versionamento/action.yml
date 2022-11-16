@@ -1,0 +1,29 @@
+name: gerar-versionamento
+description: Action que gerar o versionamento Minor via API
+author: Silask1
+
+inputs:
+  code:
+    required: false
+    type: string
+    description: código de autenticação do request no azure
+  token:
+    required: false
+    type: string
+    description: token de autenticação cosmoDb no Azure
+  endpoint:
+    required: false
+    type: string
+    description: endereço do cosmoDb Azure
+  name-package:
+    required: false
+    type: string
+    description: nome do pacote ou serviço para gerar versionamento
+
+outputs:
+  versao-minor:
+    description: Retorno do minor gerado via API
+
+runs:
+  using: 'node16'
+  main: 'dist/index.js'

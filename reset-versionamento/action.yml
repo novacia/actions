@@ -1,0 +1,25 @@
+name: reset-versionamento
+description: Action que faz o reset do versionamento Minor via API
+author: Silask1
+
+inputs:
+  code:
+    required: false
+    type: string
+    description: código de autenticação do request no azure
+  token:
+    required: false
+    type: string
+    description: token de autenticação cosmoDb no Azure
+  endpoint:
+    required: false
+    type: string
+    description: endereço do cosmoDb Azure
+  numero-versao:
+    required: false
+    type: string
+    description: informar número da versão que para realizar o reset
+
+runs:
+  using: 'node16'
+  main: 'dist/index.js'

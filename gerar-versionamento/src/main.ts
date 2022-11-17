@@ -9,8 +9,9 @@ async function run(): Promise<void> {
         await gerarVersionamento(inputs.requestVersionamento)
         .then((res) => {
             if (res.responseStatus?.statusCode == 200) {
-                core.info("request realizado com sucesso!")
+                core.info("Geração de Versionamento realizado com sucesso!")
                 core.info("JSON: " + JSON.stringify(res));
+                core.info("numeroVersao: " + res.numeroVersao);
                 core.setOutput("versao_minor", res.numeroVersao);
             }
             else {

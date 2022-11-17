@@ -2,7 +2,7 @@ import { HttpClient, HttpClientResponse } from '@actions/http-client';
 
 export interface RequestVersionamento {
     code: string
-    namePackage: string
+    namePackage: string | undefined
     accountEndpoint: string
     token: string
     numeroVersao: number | undefined

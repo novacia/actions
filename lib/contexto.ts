@@ -130,7 +130,7 @@ export function getInputsResetVersionamento(): InputsVersionamento {
             accountEndpoint: core.getInput('endpoint'),
             code: core.getInput('code'),
             token: core.getInput('token'),
-            namePackage: core.getInput('name-package'),
+            namePackage: undefined,
             numeroVersao: Number(core.getInput('numero-versao'))
         }
     }

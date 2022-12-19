@@ -6923,7 +6923,7 @@ function build(hub, projeto, config, versao_major, versao_minor, versao_patch, v
         yield exec
             .getExecOutput('docker build --no-cache', buildArray, {
             ignoreReturnCode: true,
-            silent: true
+            silent: false
         })
             .then(res => {
             if (res.stderr.length > 0 && res.exitCode != 0) {

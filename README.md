@@ -117,3 +117,27 @@ Github actions TLV7, concentra todas as actions responsaveis por realizar builds
 **Exemplo:**
 
 ![pipeline](https://i.ibb.co/nwpcT6S/pipeline.png)
+
+## gerar-versionamento
+
+#### Action gerar-versionamento faz o controle de incremento da versão minor para geração de build das aplicações Tlv7
+
+```Action
+   novacia/actions/gerar-versionamento@main
+```
+
+| Parâmetro   | Tipo       | Descrição                           | Obrigatório             |
+| :---------- | :--------- | :---------------------------------- | :---------------------- |
+| `code` | `string` | Host Server | Sim |
+| `token` | `string` | Port SSH - Valor default: 22 | Sim |
+| `endpoint` | `string` | Username SSH | Sim |
+| `name-package` | `string` | Password SSH | Sim |
+
+```Outputs
+   versao_minor
+```
+**Observação:** para utilizar a variavel de retorno em outro job, deve ser usando o parametro "need", informando o nome do job que está executando o versionamento
+
+**Exemplo:**
+
+![gerar-versionamento](https://i.ibb.co/nwpcT6S/pipeline.png)

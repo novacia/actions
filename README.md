@@ -133,9 +133,15 @@ Github actions TLV7, concentra todas as actions responsaveis por realizar builds
 | `endpoint` | `string` | Username SSH | Sim |
 | `name-package` | `string` | Password SSH | Sim |
 
+**Outputs**
 ```Outputs
    versao_minor
 ```
+
+**Exemplo:**
+
+![gerar-versionamento](https://i.ibb.co/TKrJ4KP/gerar-versionamento.png)
+
 **Observação:** para utilizar a variavel de retorno em outro job, deve ser usando o parametro "need", informando o nome do job que está executando o versionamento
 
 **Exemplo:**

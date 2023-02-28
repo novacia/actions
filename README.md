@@ -128,10 +128,10 @@ Github actions TLV7, concentra todas as actions responsaveis por realizar builds
 
 | Parâmetro   | Tipo       | Descrição                           | Obrigatório             |
 | :---------- | :--------- | :---------------------------------- | :---------------------- |
-| `code` | `string` | Host Server | Sim |
-| `token` | `string` | Port SSH - Valor default: 22 | Sim |
-| `endpoint` | `string` | Username SSH | Sim |
-| `name-package` | `string` | Password SSH | Sim |
+| `code` | `string` | código de autenticação do request no azure | Sim |
+| `token` | `string` | token de autenticação cosmoDb no Azure | Sim |
+| `endpoint` | `string` | endereço do cosmoDb Azure | Sim |
+| `name-package` | `string` | nome do pacote ou serviço para gerar versionamento | Sim |
 
 **Outputs**
 ```Outputs
@@ -146,4 +146,4 @@ Github actions TLV7, concentra todas as actions responsaveis por realizar builds
 
 **Exemplo:**
 
-![gerar-versionamento](https://i.ibb.co/nwpcT6S/pipeline.png)
+![utilizar-gerar-versionamento](https://i.ibb.co/3yphf5t/utilizar-gerar-versionamento.png)

@@ -6912,6 +6912,14 @@ exports.login = login;
 function build(hub, projeto, config, versao_major, versao_minor, versao_patch, versao_patch_sufixo) {
     return __awaiter(this, void 0, void 0, function* () {
         core.info('Build da imagem ' + projeto);
+        
+        core.info('Hub ' + hub);
+        core.info('Config ' + config);
+        core.info('versao_major ' + versao_major);
+        core.info('versao_minor ' + versao_minor)
+        core.info('versao_patch ' + versao_patch);
+        
+        
         if (!hub || !projeto || !config || !versao_major || !versao_minor || !versao_patch) {
             throw new Error('Parâmentros [hub, projeto, config, versao_major, versao_minor, versao_patch] são obrigatórios');
         }

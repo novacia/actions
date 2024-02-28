@@ -34563,8 +34563,8 @@ function run() {
             };
             var stack_name = (0, contexto_1.getStack)(inputs.stack);
             core.info('Deploy - Stack: ' + stack_name);
-            core.info('Removendo stack ' + stack_name);
-            yield ssh.sshComando(config, `sudo docker stack rm ${stack_name}`);
+            // core.info('Removendo stack ' + stack_name);
+            // await ssh.sshComando(config, `sudo docker stack rm ${stack_name}`);
             core.info('Subindo stack ' + stack_name);
             if (inputs.config) {
                 _config = `CONFIG=${inputs.config}`;
@@ -34619,7 +34619,7 @@ var __importStar = (this && this.__importStar) || function (mod) {
     return result;
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.getMinutos = exports.getHoras = exports.getAnoSubstring = exports.getDayOfYear = exports.getStack = exports.getVersao = exports.getInputsPipeline = exports.getInputsDeploy = exports.getInputsBuildDocker = exports.getInputsBuildAssembly = void 0;
+exports.getMinutos = exports.getHoras = exports.getAnoSubstring = exports.getDayOfYear = exports.getStack = exports.getVersao = exports.getInputsResetVersionamento = exports.getInputsGerarVersionamento = exports.getInputsPipeline = exports.getInputsDeploy = exports.getInputsBuildDocker = exports.getInputsBuildAssembly = void 0;
 const core = __importStar(__nccwpck_require__(3820));
 function getInputsBuildAssembly() {
     return {
@@ -34678,6 +34678,30 @@ function getInputsPipeline() {
     };
 }
 exports.getInputsPipeline = getInputsPipeline;
+function getInputsGerarVersionamento() {
+    return {
+        requestVersionamento: {
+            accountEndpoint: core.getInput('endpoint'),
+            code: core.getInput('code'),
+            token: core.getInput('token'),
+            namePackage: core.getInput('name-package'),
+            numeroVersao: undefined
+        }
+    };
+}
+exports.getInputsGerarVersionamento = getInputsGerarVersionamento;
+function getInputsResetVersionamento() {
+    return {
+        requestVersionamento: {
+            accountEndpoint: core.getInput('endpoint'),
+            code: core.getInput('code'),
+            token: core.getInput('token'),
+            namePackage: undefined,
+            numeroVersao: Number(core.getInput('numero-versao'))
+        }
+    };
+}
+exports.getInputsResetVersionamento = getInputsResetVersionamento;
 function getVersao(versao_major, versao_minor, versao_patch, versao_patch_sufixo) {
     if (!versao_major || !versao_minor || !versao_patch) {
         throw new Error('parâmetros [versao_major, versao_minor, versao_patch] são obrigatórios');

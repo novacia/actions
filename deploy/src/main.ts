@@ -20,8 +20,8 @@ async function run(): Promise<void> {
         var stack_name: string = getStack(inputs.stack);
         core.info('Deploy - Stack: ' + stack_name);
 
-        core.info('Removendo stack ' + stack_name);
-        await ssh.sshComando(config, `sudo docker stack rm ${stack_name}`);
+        // core.info('Removendo stack ' + stack_name);
+        // await ssh.sshComando(config, `sudo docker stack rm ${stack_name}`);
 
         core.info('Subindo stack ' + stack_name);
         

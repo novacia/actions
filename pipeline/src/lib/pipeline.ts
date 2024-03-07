@@ -36,6 +36,8 @@ export function Created(inputs: InputsPipeline, file: Files | undefined): void {
 
         var arquivo = file.filename.match(/(?<caminho>.+)(?<arquivo>\/.+\.[a-z]+)/)?.groups;
 
+        core.info(`caminho -> ${arquivo.caminho}`);
+
         if (!arquivo) {
             throw new Error('falha na expressão regular');
         }

@@ -42338,6 +42338,7 @@ function Created(inputs, file) {
             key: inputs.key
         };
         var arquivo = (_a = file.filename.match(/(?<caminho>.+)(?<arquivo>\/.+\.[a-z]+)/)) === null || _a === void 0 ? void 0 : _a.groups;
+        core.info(`caminho -> ${arquivo.caminho}`);
         if (!arquivo) {
             throw new Error('falha na expressão regular');
         }

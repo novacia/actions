@@ -42320,6 +42320,7 @@ var __importStar = (this && this.__importStar) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.Edited = exports.Deleted = exports.Created = void 0;
+const core = __importStar(__nccwpck_require__(2186));
 const ssh = __importStar(__nccwpck_require__(1208));
 const path = __importStar(__nccwpck_require__(1017));
 function Created(inputs, file) {
@@ -42340,6 +42341,7 @@ function Created(inputs, file) {
             throw new Error('falha na expressão regular');
         }
         ssh.sshMkdir(settings, arquivo.caminho);
+        core.info(`path '${inputs.path}'`);
         ssh.sshScp(settings, path.join(inputs.path ? inputs.path : './', file.filename), file.filename);
     }
     catch (error) {

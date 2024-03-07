@@ -42,9 +42,9 @@ export function Created(inputs: InputsPipeline, file: Files | undefined): void {
             throw new Error('falha na expressão regular');
         }
 
-        ssh.sshMkdir(settings, arquivo.caminho);
+        ssh.sshMkdir(settings, inputs.path == '' ? arquivo.caminho : path.join(inputs.path, arquivo.caminho));
 
-        ssh.sshScp(settings, path.join('./', file.filename), path.join(inputs.path, file.filename));
+        ssh.sshScp(settings, path.join('./', file.filename), inputs.path == '' ? file.filename : path.join(inputs.path, file.filename));
 
     }
     catch (error) {
@@ -64,7 +64,7 @@ export function Deleted(inputs: InputsPipeline, file: Files | undefined): void {
             key: inputs.key
         };
 
-        ssh.sshRmdir(settings, file.filename);
+        ssh.sshRmdir(settings, inputs.path == '' ? file.filename : path.join(inputs.path, file.filename));
 
     }
     catch (error) {
@@ -76,7 +76,6 @@ export function Deleted(inputs: InputsPipeline, file: Files | undefined): void {
 
 export function Edited(inputs: InputsPipeline, file: Files | undefined): void {
     try {
-        core.info(`path -> ${inputs.path == '' ? 'string em branco' : 'string não é branco'}`);
 
         var settings: ssh.sshSettings = {
             host: inputs.host,
@@ -86,7 +85,7 @@ export function Edited(inputs: InputsPipeline, file: Files | undefined): void {
             key: inputs.key
         };
 
-        ssh.sshScp(settings, path.join('./', file.filename),  path.join(inputs.path, file.filename));
+        ssh.sshScp(settings, path.join('./', file.filename), inputs.path == '' ? file.filename : path.join(inputs.path, file.filename));
     }
     catch (error) {
         if (error instanceof Error) {

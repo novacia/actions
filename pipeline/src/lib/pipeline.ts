@@ -20,6 +20,8 @@ export interface Files {
 
 export function Created(inputs: InputsPipeline, file: Files | undefined): void {
     try {
+        core.info(`path -> ${inputs.path}`);
+
         if (file == undefined) {
             throw new Error('paramêtro file indefinido');
         }
@@ -38,11 +40,9 @@ export function Created(inputs: InputsPipeline, file: Files | undefined): void {
             throw new Error('falha na expressão regular');
         }
 
-        core.info(`path '${inputs.path} -> ${path.join(inputs.path, file.filename)}'`);
+        ssh.sshMkdir(settings, arquivo.caminho);
 
-        ssh.sshMkdir(settings, path.join(inputs.path != null ? inputs.path : '', arquivo.caminho));
-
-        ssh.sshScp(settings, path.join(inputs.path != null ? inputs.path : './', file.filename), file.filename);
+        ssh.sshScp(settings, path.join('./', file.filename), path.join(inputs.path, file.filename));
 
     }
     catch (error) {

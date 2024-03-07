@@ -42326,6 +42326,7 @@ const path = __importStar(__nccwpck_require__(1017));
 function Created(inputs, file) {
     var _a;
     try {
+        core.info(`path -> ${inputs.path}`);
         if (file == undefined) {
             throw new Error('paramêtro file indefinido');
         }
@@ -42340,9 +42341,8 @@ function Created(inputs, file) {
         if (!arquivo) {
             throw new Error('falha na expressão regular');
         }
-        core.info(`path '${inputs.path} -> ${path.join(inputs.path, file.filename)}'`);
-        ssh.sshMkdir(settings, path.join(inputs.path != null ? inputs.path : '', arquivo.caminho));
-        ssh.sshScp(settings, path.join(inputs.path != null ? inputs.path : './', file.filename), file.filename);
+        ssh.sshMkdir(settings, arquivo.caminho);
+        ssh.sshScp(settings, path.join('./', file.filename), path.join(inputs.path, file.filename));
     }
     catch (error) {
         if (error instanceof Error) {

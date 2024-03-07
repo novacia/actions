@@ -76,7 +76,7 @@ export function Deleted(inputs: InputsPipeline, file: Files | undefined): void {
 
 export function Edited(inputs: InputsPipeline, file: Files | undefined): void {
     try {
-        core.info(`path -> ${inputs.path == null ? 'valor null' : 'valor não é null'}`);
+        core.info(`path -> ${inputs.path == '' ? 'string em branco' : 'string não é branco'}`);
 
         var settings: ssh.sshSettings = {
             host: inputs.host,

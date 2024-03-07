@@ -41961,7 +41961,7 @@ var __importStar = (this && this.__importStar) || function (mod) {
     return result;
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.getStack = exports.getVersao = exports.getInputsPipeline = exports.getInputsDeploy = exports.getInputsBuildDocker = exports.getInputsBuildAssembly = void 0;
+exports.getMinutos = exports.getHoras = exports.getAnoSubstring = exports.getDayOfYear = exports.getStack = exports.getVersao = exports.getInputsResetVersionamento = exports.getInputsGerarVersionamento = exports.getInputsPipeline = exports.getInputsDeploy = exports.getInputsBuildDocker = exports.getInputsBuildAssembly = void 0;
 const core = __importStar(__nccwpck_require__(3820));
 function getInputsBuildAssembly() {
     return {
@@ -42016,12 +42016,36 @@ function getInputsPipeline() {
         username: core.getInput('username'),
         password: core.getInput('password'),
         key: core.getInput('key'),
-        github_token: core.getInput('github_token')
+        github_token: core.getInput('github_token'),
+        path: core.getInput('path')
     };
 }
 exports.getInputsPipeline = getInputsPipeline;
+function getInputsGerarVersionamento() {
+    return {
+        requestVersionamento: {
+            accountEndpoint: core.getInput('endpoint'),
+            code: core.getInput('code'),
+            token: core.getInput('token'),
+            namePackage: core.getInput('name-package'),
+            numeroVersao: undefined
+        }
+    };
+}
+exports.getInputsGerarVersionamento = getInputsGerarVersionamento;
+function getInputsResetVersionamento() {
+    return {
+        requestVersionamento: {
+            accountEndpoint: core.getInput('endpoint'),
+            code: core.getInput('code'),
+            token: core.getInput('token'),
+            namePackage: undefined,
+            numeroVersao: Number(core.getInput('numero-versao'))
+        }
+    };
+}
+exports.getInputsResetVersionamento = getInputsResetVersionamento;
 function getVersao(versao_major, versao_minor, versao_patch, versao_patch_sufixo) {
-    core.info('gerando versão');
     if (!versao_major || !versao_minor || !versao_patch) {
         throw new Error('parâmetros [versao_major, versao_minor, versao_patch] são obrigatórios');
     }
@@ -42032,6 +42056,7 @@ function getVersao(versao_major, versao_minor, versao_patch, versao_patch_sufixo
     if (versao_patch_sufixo) {
         versao = `${versao}-${versao_patch_sufixo}`;
     }
+    core.info(versao);
     return versao;
 }
 exports.getVersao = getVersao;
@@ -42043,6 +42068,30 @@ function getStack(stack) {
     return mStack;
 }
 exports.getStack = getStack;
+function getDayOfYear(data) {
+    var month = data.getMonth();
+    var year = data.getFullYear();
+    var days = data.getDate();
+    for (var i = 0; i < month; i++) {
+        days += new Date(year, i + 1, 0).getDate();
+    }
+    return days;
+}
+exports.getDayOfYear = getDayOfYear;
+function getAnoSubstring(data) {
+    return data.getFullYear().toString().substring(3);
+}
+exports.getAnoSubstring = getAnoSubstring;
+function getHoras(data) {
+    var horas = data.getHours();
+    return horas <= 9 ? '0' + horas.toString() : horas.toString();
+}
+exports.getHoras = getHoras;
+function getMinutos(data) {
+    var minutos = data.getMinutes();
+    return minutos <= 9 ? '0' + minutos.toString() : minutos.toString();
+}
+exports.getMinutos = getMinutos;
 
 
 /***/ }),
@@ -42291,7 +42340,7 @@ function Created(inputs, file) {
             throw new Error('falha na expressão regular');
         }
         ssh.sshMkdir(settings, arquivo.caminho);
-        ssh.sshScp(settings, path.join('./', file.filename), file.filename);
+        ssh.sshScp(settings, path.join(inputs.path ? inputs.path : './', file.filename), file.filename);
     }
     catch (error) {
         if (error instanceof Error) {

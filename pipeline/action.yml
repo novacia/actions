@@ -26,6 +26,9 @@ inputs:
   github_token:
     required: false
     type: string
+  path:
+    required: false
+    type: string
 
 runs:
   using: 'node20'

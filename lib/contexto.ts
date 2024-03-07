@@ -94,7 +94,8 @@ export interface InputsPipeline {
     username: string
     password: string
     key: string,
-    github_token: string
+    github_token: string,
+    path: string
 }
 
 export function getInputsPipeline(): InputsPipeline {
@@ -104,7 +105,8 @@ export function getInputsPipeline(): InputsPipeline {
         username: core.getInput('username'),
         password: core.getInput('password'),
         key: core.getInput('key'),
-        github_token: core.getInput('github_token')
+        github_token: core.getInput('github_token'),
+        path: core.getInput('path')
     }
 }
 

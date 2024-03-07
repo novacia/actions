@@ -42372,6 +42372,7 @@ function Deleted(inputs, file) {
 exports.Deleted = Deleted;
 function Edited(inputs, file) {
     try {
+        core.info(`path -> ${inputs.path}`);
         var settings = {
             host: inputs.host,
             port: inputs.port,
@@ -42379,7 +42380,7 @@ function Edited(inputs, file) {
             password: inputs.password,
             key: inputs.key
         };
-        ssh.sshScp(settings, path.join('./', file.filename), file.filename);
+        ssh.sshScp(settings, path.join('./', file.filename), path.join(inputs.path, file.filename));
     }
     catch (error) {
         if (error instanceof Error) {

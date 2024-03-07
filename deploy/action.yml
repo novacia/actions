@@ -52,6 +52,9 @@ inputs:
     type: boolean
     description: Informa se a versão a ser gerada é latest (Produção)
     default: false
+  path:
+    required: false
+    type: string
 
 runs:
   using: 'node20'

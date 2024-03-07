@@ -34563,18 +34563,19 @@ function run() {
             };
             var stack_name = (0, contexto_1.getStack)(inputs.stack);
             core.info('Deploy - Stack: ' + stack_name);
-            // core.info('Removendo stack ' + stack_name);
-            // await ssh.sshComando(config, `sudo docker stack rm ${stack_name}`);
             core.info('Subindo stack ' + stack_name);
             if (inputs.config) {
                 _config = `CONFIG=${inputs.config}`;
             }
+            let _caminhoDeploy = inputs.path == '' ? `./${inputs.stack}/docker-compose.yml` : `${inputs.path}/${inputs.stack}/docker-compose.yml`;
             if (inputs.latest) {
-                yield ssh.sshComando(config, `sudo env ${_config} docker stack deploy -c ./${inputs.stack}/docker-compose.yml ${stack_name}`);
+                // await ssh.sshComando(config, `sudo env ${_config} docker stack deploy -c ./${inputs.stack}/docker-compose.yml ${stack_name}`);
+                yield ssh.sshComando(config, `sudo env ${_config} docker stack deploy -c ${_caminhoDeploy} ${stack_name}`);
             }
             else {
                 var _versao = (0, contexto_1.getVersao)(inputs.versao_major, inputs.versao_minor, inputs.versao_patch, inputs.versao_patch_sufixo);
-                yield ssh.sshComando(config, `sudo env ${_config} VERSAO=${_versao} docker stack deploy -c ./${inputs.stack}/docker-compose.yml ${stack_name}`);
+                // await ssh.sshComando(config, `sudo env ${_config} VERSAO=${_versao} docker stack deploy -c ./${inputs.stack}/docker-compose.yml ${stack_name}`);
+                yield ssh.sshComando(config, `sudo env ${_config} VERSAO=${_versao} docker stack deploy -c ${_caminhoDeploy} ${stack_name}`);
             }
             core.info('Finalizando Deploy');
         }
@@ -34663,7 +34664,8 @@ function getInputsDeploy() {
         versao_minor: core.getInput('versao-minor'),
         versao_patch: core.getInput('versao-patch'),
         versao_patch_sufixo: core.getInput('versao-patch-sufixo'),
-        latest: core.getBooleanInput('latest')
+        latest: core.getBooleanInput('latest'),
+        path: core.getInput('path')
     };
 }
 exports.getInputsDeploy = getInputsDeploy;
@@ -34674,7 +34676,8 @@ function getInputsPipeline() {
         username: core.getInput('username'),
         password: core.getInput('password'),
         key: core.getInput('key'),
-        github_token: core.getInput('github_token')
+        github_token: core.getInput('github_token'),
+        path: core.getInput('path')
     };
 }
 exports.getInputsPipeline = getInputsPipeline;

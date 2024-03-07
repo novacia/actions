@@ -20,21 +20,22 @@ async function run(): Promise<void> {
         var stack_name: string = getStack(inputs.stack);
         core.info('Deploy - Stack: ' + stack_name);
 
-        // core.info('Removendo stack ' + stack_name);
-        // await ssh.sshComando(config, `sudo docker stack rm ${stack_name}`);
-
         core.info('Subindo stack ' + stack_name);
         
         if (inputs.config) {
             _config= `CONFIG=${inputs.config}`;
         }
+
+        let _caminhoDeploy: string = inputs.path == '' ? `./${inputs.stack}/docker-compose.yml` : `${inputs.path}/${inputs.stack}/docker-compose.yml`;
          
         if (inputs.latest) {
-            await ssh.sshComando(config, `sudo env ${_config} docker stack deploy -c ./${inputs.stack}/docker-compose.yml ${stack_name}`);
+            // await ssh.sshComando(config, `sudo env ${_config} docker stack deploy -c ./${inputs.stack}/docker-compose.yml ${stack_name}`);
+            await ssh.sshComando(config, `sudo env ${_config} docker stack deploy -c ${_caminhoDeploy} ${stack_name}`);
         }
         else {
             var _versao = getVersao(inputs.versao_major, inputs.versao_minor, inputs.versao_patch, inputs.versao_patch_sufixo);
-            await ssh.sshComando(config, `sudo env ${_config} VERSAO=${_versao} docker stack deploy -c ./${inputs.stack}/docker-compose.yml ${stack_name}`);
+            // await ssh.sshComando(config, `sudo env ${_config} VERSAO=${_versao} docker stack deploy -c ./${inputs.stack}/docker-compose.yml ${stack_name}`);
+            await ssh.sshComando(config, `sudo env ${_config} VERSAO=${_versao} docker stack deploy -c ${_caminhoDeploy} ${stack_name}`);
         }
         
         core.info('Finalizando Deploy');

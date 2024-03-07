@@ -69,6 +69,7 @@ export interface InputsDeploy {
     versao_patch: string
     versao_patch_sufixo: string
     latest: boolean
+    path: string
 }
 
 export function getInputsDeploy(): InputsDeploy {
@@ -84,7 +85,8 @@ export function getInputsDeploy(): InputsDeploy {
         versao_minor: core.getInput('versao-minor'),
         versao_patch: core.getInput('versao-patch'),
         versao_patch_sufixo: core.getInput('versao-patch-sufixo'),
-        latest: core.getBooleanInput('latest')
+        latest: core.getBooleanInput('latest'),
+        path: core.getInput('path')
     }
 }
 

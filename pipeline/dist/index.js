@@ -42372,7 +42372,7 @@ function Deleted(inputs, file) {
 exports.Deleted = Deleted;
 function Edited(inputs, file) {
     try {
-        core.info(`path -> ${inputs.path}`);
+        core.info(`path -> ${inputs.path == null ? 'valor null' : 'valor não é null'}`);
         var settings = {
             host: inputs.host,
             port: inputs.port,

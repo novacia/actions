@@ -76,7 +76,7 @@ export function Deleted(inputs: InputsPipeline, file: Files | undefined): void {
 
 export function Edited(inputs: InputsPipeline, file: Files | undefined): void {
     try {
-        core.info(`path -> ${inputs.path}`);
+        core.info(`path -> ${inputs.path == null ? 'valor null' : 'valor não é null'}`);
 
         var settings: ssh.sshSettings = {
             host: inputs.host,
@@ -86,7 +86,7 @@ export function Edited(inputs: InputsPipeline, file: Files | undefined): void {
             key: inputs.key
         };
 
-        ssh.sshScp(settings, path.join('./', file.filename), path.join(inputs.path, file.filename));
+        ssh.sshScp(settings, path.join('./', file.filename),  path.join(inputs.path, file.filename));
     }
     catch (error) {
         if (error instanceof Error) {

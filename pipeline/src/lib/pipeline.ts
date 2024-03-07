@@ -40,9 +40,9 @@ export function Created(inputs: InputsPipeline, file: Files | undefined): void {
 
         ssh.sshMkdir(settings, arquivo.caminho);
 
-        core.info(`path '${inputs.path}'`);
+        core.info(`path '${inputs.path} -> ${path.join(inputs.path, file.filename)}'`);
 
-        ssh.sshScp(settings, path.join(inputs.path ? inputs.path : './', file.filename), file.filename);
+        ssh.sshScp(settings, path.join(inputs.path != null ? inputs.path : './', file.filename), file.filename);
 
     }
     catch (error) {

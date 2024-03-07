@@ -42341,8 +42341,8 @@ function Created(inputs, file) {
             throw new Error('falha na expressão regular');
         }
         ssh.sshMkdir(settings, arquivo.caminho);
-        core.info(`path '${inputs.path}'`);
-        ssh.sshScp(settings, path.join(inputs.path ? inputs.path : './', file.filename), file.filename);
+        core.info(`path '${inputs.path} -> ${path.join(inputs.path, file.filename)}'`);
+        ssh.sshScp(settings, path.join(inputs.path != null ? inputs.path : './', file.filename), file.filename);
     }
     catch (error) {
         if (error instanceof Error) {

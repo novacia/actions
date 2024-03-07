@@ -38,9 +38,9 @@ export function Created(inputs: InputsPipeline, file: Files | undefined): void {
             throw new Error('falha na expressão regular');
         }
 
-        ssh.sshMkdir(settings, arquivo.caminho);
-
         core.info(`path '${inputs.path} -> ${path.join(inputs.path, file.filename)}'`);
+
+        ssh.sshMkdir(settings, path.join(inputs.path != null ? inputs.path : '', arquivo.caminho));
 
         ssh.sshScp(settings, path.join(inputs.path != null ? inputs.path : './', file.filename), file.filename);
 

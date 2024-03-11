@@ -70,6 +70,7 @@ export interface InputsDeploy {
     versao_patch_sufixo: string
     latest: boolean
     path: string
+    omitir_sudo: boolean
 }
 
 export function getInputsDeploy(): InputsDeploy {
@@ -86,7 +87,8 @@ export function getInputsDeploy(): InputsDeploy {
         versao_patch: core.getInput('versao-patch'),
         versao_patch_sufixo: core.getInput('versao-patch-sufixo'),
         latest: core.getBooleanInput('latest'),
-        path: core.getInput('path')
+        path: core.getInput('path'),
+        omitir_sudo: core.getBooleanInput('omitir-sudo')
     }
 }
 

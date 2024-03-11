@@ -34569,13 +34569,11 @@ function run() {
             }
             let _caminhoDeploy = inputs.path == '' ? `./${inputs.stack}/docker-compose.yml` : `${inputs.path}/${inputs.stack}/docker-compose.yml`;
             if (inputs.latest) {
-                // await ssh.sshComando(config, `sudo env ${_config} docker stack deploy -c ./${inputs.stack}/docker-compose.yml ${stack_name}`);
-                yield ssh.sshComando(config, `sudo env ${_config} docker stack deploy -c ${_caminhoDeploy} ${stack_name}`);
+                yield ssh.sshComando(config, `${!inputs.omitir_sudo ? 'sudo' : ''} env ${_config} docker stack deploy -c ${_caminhoDeploy} ${stack_name}`);
             }
             else {
                 var _versao = (0, contexto_1.getVersao)(inputs.versao_major, inputs.versao_minor, inputs.versao_patch, inputs.versao_patch_sufixo);
-                // await ssh.sshComando(config, `sudo env ${_config} VERSAO=${_versao} docker stack deploy -c ./${inputs.stack}/docker-compose.yml ${stack_name}`);
-                yield ssh.sshComando(config, `sudo env ${_config} VERSAO=${_versao} docker stack deploy -c ${_caminhoDeploy} ${stack_name}`);
+                yield ssh.sshComando(config, `${!inputs.omitir_sudo ? 'sudo' : ''} env ${_config} VERSAO=${_versao} docker stack deploy -c ${_caminhoDeploy} ${stack_name}`);
             }
             core.info('Finalizando Deploy');
         }
@@ -34665,7 +34663,8 @@ function getInputsDeploy() {
         versao_patch: core.getInput('versao-patch'),
         versao_patch_sufixo: core.getInput('versao-patch-sufixo'),
         latest: core.getBooleanInput('latest'),
-        path: core.getInput('path')
+        path: core.getInput('path'),
+        omitir_sudo: core.getBooleanInput('omitir-sudo')
     };
 }
 exports.getInputsDeploy = getInputsDeploy;

@@ -55,6 +55,11 @@ inputs:
   path:
     required: false
     type: string
+  omitir-sudo:
+    required: false
+    type: boolean
+    description: Informa se no comando do deploy deve ser omitido a implementação sudo
+    default: false
 
 runs:
   using: 'node20'

@@ -30,12 +30,12 @@ async function run(): Promise<void> {
          
         if (inputs.latest) {
             // await ssh.sshComando(config, `${!inputs.omitir_sudo ? 'sudo' : ''} env ${_config} docker stack deploy -c ${_caminhoDeploy} ${stack_name}`);
-            await ssh.sshComando(config, `${!inputs.omitir_sudo ? 'sudo' : ''} deploy.sh ${stack_name} ${_caminhoDeploy} ${inputs.docker_username} ${inputs.docker_token} ${_config}`);
+            await ssh.sshComando(config, `${!inputs.omitir_sudo ? 'sudo' : ''} env ${_config} deploy.sh ${stack_name} ${_caminhoDeploy} ${inputs.docker_username} ${inputs.docker_token}`);
         }
         else {
             var _versao = getVersao(inputs.versao_major, inputs.versao_minor, inputs.versao_patch, inputs.versao_patch_sufixo);
             // await ssh.sshComando(config, `${!inputs.omitir_sudo ? 'sudo' : ''} env ${_config} VERSAO=${_versao} docker stack deploy -c ${_caminhoDeploy} ${stack_name}`);
-            await ssh.sshComando(config, `${!inputs.omitir_sudo ? 'sudo' : ''} deploy.sh ${stack_name} ${_caminhoDeploy} ${inputs.docker_username} ${inputs.docker_token} ${_config} ${_versao}`);
+            await ssh.sshComando(config, `${!inputs.omitir_sudo ? 'sudo' : ''} env ${_config} VERSAO=${_versao} deploy.sh ${stack_name} ${_caminhoDeploy} ${inputs.docker_username} ${inputs.docker_token}`);
         }
         
         core.info('Finalizando Deploy');

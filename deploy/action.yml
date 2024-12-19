@@ -60,6 +60,14 @@ inputs:
     type: boolean
     description: Informa se no comando do deploy deve ser omitido a implementação sudo
     default: false
+  docker-username:
+    required: false
+    type: string
+    description: Usuário para autenticação do Docker Hub
+  docker-token:
+    required: false
+    type: string
+    description: Token para autenticação do Docker Hub
 
 runs:
   using: 'node20'

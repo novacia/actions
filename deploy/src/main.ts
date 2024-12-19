@@ -21,8 +21,6 @@ async function run(): Promise<void> {
         core.info('Deploy - Stack: ' + stack_name);
 
         core.info('Subindo stack ' + stack_name);
-        core.info('DOCKERHUB_DOCKERID: ' + inputs.docker_username);
-        core.info('DOCKERHUB_PASSWORD: ' + inputs.docker_token);
         
         if (inputs.config) {
             _config= `CONFIG=${inputs.config}`;

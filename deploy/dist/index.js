@@ -2673,261 +2673,6 @@ exports["default"] = _default;
 
 /***/ }),
 
-/***/ 2123:
-/***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
-
-"use strict";
-
-var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
-    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
-    return new (P || (P = Promise))(function (resolve, reject) {
-        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
-        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
-        step((generator = generator.apply(thisArg, _arguments || [])).next());
-    });
-};
-var __generator = (this && this.__generator) || function (thisArg, body) {
-    var _ = { label: 0, sent: function() { if (t[0] & 1) throw t[1]; return t[1]; }, trys: [], ops: [] }, f, y, t, g;
-    return g = { next: verb(0), "throw": verb(1), "return": verb(2) }, typeof Symbol === "function" && (g[Symbol.iterator] = function() { return this; }), g;
-    function verb(n) { return function (v) { return step([n, v]); }; }
-    function step(op) {
-        if (f) throw new TypeError("Generator is already executing.");
-        while (_) try {
-            if (f = 1, y && (t = op[0] & 2 ? y["return"] : op[0] ? y["throw"] || ((t = y["return"]) && t.call(y), 0) : y.next) && !(t = t.call(y, op[1])).done) return t;
-            if (y = 0, t) op = [op[0] & 2, t.value];
-            switch (op[0]) {
-                case 0: case 1: t = op; break;
-                case 4: _.label++; return { value: op[1], done: false };
-                case 5: _.label++; y = op[1]; op = [0]; continue;
-                case 7: op = _.ops.pop(); _.trys.pop(); continue;
-                default:
-                    if (!(t = _.trys, t = t.length > 0 && t[t.length - 1]) && (op[0] === 6 || op[0] === 2)) { _ = 0; continue; }
-                    if (op[0] === 3 && (!t || (op[1] > t[0] && op[1] < t[3]))) { _.label = op[1]; break; }
-                    if (op[0] === 6 && _.label < t[1]) { _.label = t[1]; t = op; break; }
-                    if (t && _.label < t[2]) { _.label = t[2]; _.ops.push(op); break; }
-                    if (t[2]) _.ops.pop();
-                    _.trys.pop(); continue;
-            }
-            op = body.call(thisArg, _);
-        } catch (e) { op = [6, e]; y = 0; } finally { f = t = 0; }
-        if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
-    }
-};
-exports.__esModule = true;
-exports.sshScp = exports.sshRmdir = exports.sshMkdir = exports.sshComando = exports.sshConfig = void 0;
-var core = __nccwpck_require__(3820);
-var ssh2_1 = __nccwpck_require__(3353);
-var ClientSftp = __nccwpck_require__(7873);
-function sshConfig(settings) {
-    if (!settings.password) {
-        return {
-            host: settings.host,
-            port: settings.port,
-            username: settings.username,
-            privateKey: settings.key
-        };
-    }
-    else if (!settings.key) {
-        return {
-            host: settings.host,
-            port: settings.port,
-            username: settings.username,
-            password: settings.password
-        };
-    }
-    return {};
-}
-exports.sshConfig = sshConfig;
-function sshComando(settings, cmd) {
-    return __awaiter(this, void 0, void 0, function () {
-        var config, ssh_1, error_1;
-        return __generator(this, function (_a) {
-            switch (_a.label) {
-                case 0:
-                    _a.trys.push([0, 3, , 4]);
-                    config = sshConfig(settings);
-                    ssh_1 = new ssh2_1.Client();
-                    return [4 /*yield*/, new Promise(function (result) {
-                            ssh_1.connect(config).on('ready', function () {
-                                return result(true);
-                            }).on('error', function (err) {
-                                core.info(err.level);
-                                core.info(err.description);
-                                core.info(err.message);
-                                core.info(err.name);
-                                core.info(err.stack);
-                                throw new Error(err.message);
-                            });
-                        })];
-                case 1:
-                    _a.sent();
-                    return [4 /*yield*/, new Promise(function (result) {
-                            ssh_1.exec(cmd, function (err, stream) {
-                                if (err)
-                                    throw new Error(err.message);
-                                stream.on('close', function (code, sginal) {
-                                    ssh_1.end();
-                                    return result(true);
-                                }).on('data', function (data) {
-                                    core.info('STDOUT: ' + data);
-                                }).stderr.on('data', function (data) {
-                                    core.info('STDERR: ' + data);
-                                });
-                            });
-                        })];
-                case 2:
-                    _a.sent();
-                    return [3 /*break*/, 4];
-                case 3:
-                    error_1 = _a.sent();
-                    throw new Error('sshComando :: error: ' + error_1.message);
-                case 4: return [2 /*return*/];
-            }
-        });
-    });
-}
-exports.sshComando = sshComando;
-function sshMkdir(settings, path) {
-    return __awaiter(this, void 0, void 0, function () {
-        var config, ssh_2, error_2;
-        return __generator(this, function (_a) {
-            switch (_a.label) {
-                case 0:
-                    _a.trys.push([0, 3, , 4]);
-                    config = sshConfig(settings);
-                    ssh_2 = new ssh2_1.Client();
-                    return [4 /*yield*/, new Promise(function (result) {
-                            ssh_2.connect(config).on('ready', function () {
-                                return result(true);
-                            }).on('error', function (err) {
-                                throw new Error(err.message);
-                            });
-                        })];
-                case 1:
-                    _a.sent();
-                    core.info("criando Diret\u00F3rio '".concat(path, "'"));
-                    return [4 /*yield*/, new Promise(function (result) {
-                            ssh_2.exec("mkdir -pv ".concat(path), function (err, stream) {
-                                if (err)
-                                    throw new Error(err.message);
-                                stream.on('close', function (code, sginal) {
-                                    ssh_2.end();
-                                    return result(true);
-                                }).on('data', function (data) {
-                                    core.info('STDOUT: ' + data);
-                                }).stderr.on('data', function (data) {
-                                    core.info('STDERR: ' + data);
-                                });
-                            });
-                        })];
-                case 2:
-                    _a.sent();
-                    return [3 /*break*/, 4];
-                case 3:
-                    error_2 = _a.sent();
-                    throw new Error('sshMkdir :: error: ' + error_2.message);
-                case 4: return [2 /*return*/];
-            }
-        });
-    });
-}
-exports.sshMkdir = sshMkdir;
-function sshRmdir(settings, path) {
-    return __awaiter(this, void 0, void 0, function () {
-        var config, ssh_3, error_3;
-        return __generator(this, function (_a) {
-            switch (_a.label) {
-                case 0:
-                    _a.trys.push([0, 3, , 4]);
-                    config = sshConfig(settings);
-                    ssh_3 = new ssh2_1.Client();
-                    return [4 /*yield*/, new Promise(function (result) {
-                            ssh_3.connect(config).on('ready', function () {
-                                return result(true);
-                            }).on('error', function (err) {
-                                throw new Error(err.message);
-                            });
-                        })];
-                case 1:
-                    _a.sent();
-                    core.info("removendo arquivo '".concat(path, "'"));
-                    return [4 /*yield*/, new Promise(function (result) {
-                            ssh_3.exec("rm -rfv ".concat(path), function (err, stream) {
-                                if (err)
-                                    throw new Error(err.message);
-                                stream.on('close', function (code, sginal) {
-                                    ssh_3.end();
-                                    return result(true);
-                                }).on('data', function (data) {
-                                    core.info('STDOUT: ' + data);
-                                }).stderr.on('data', function (data) {
-                                    core.info('STDERR: ' + data);
-                                });
-                            });
-                        })];
-                case 2:
-                    _a.sent();
-                    return [3 /*break*/, 4];
-                case 3:
-                    error_3 = _a.sent();
-                    throw new Error('sshRmdir :: error: ' + error_3.message);
-                case 4: return [2 /*return*/];
-            }
-        });
-    });
-}
-exports.sshRmdir = sshRmdir;
-function sshScp(settings, target, source) {
-    return __awaiter(this, void 0, void 0, function () {
-        var client, error_4;
-        return __generator(this, function (_a) {
-            switch (_a.label) {
-                case 0:
-                    _a.trys.push([0, 4, , 5]);
-                    client = new ClientSftp();
-                    return [4 /*yield*/, client.connect({
-                            host: settings.host,
-                            port: settings.port,
-                            username: settings.username,
-                            password: settings.password,
-                            privateKey: settings.key
-                        }).then(function () { return null; })];
-                case 1:
-                    _a.sent();
-                    core.info("copiando arquivo '".concat(target, "'"));
-                    return [4 /*yield*/, client.put(target, source)
-                            .then(function (data) {
-                            core.info('STDOUT: ' + data.trimEnd());
-                        })["catch"](function (err) {
-                            throw new Error(err);
-                        })];
-                case 2:
-                    _a.sent();
-                    return [4 /*yield*/, client.end()];
-                case 3:
-                    _a.sent();
-                    return [3 /*break*/, 5];
-                case 4:
-                    error_4 = _a.sent();
-                    throw new Error('sshScp :: error: ' + error_4.message);
-                case 5: return [2 /*return*/];
-            }
-        });
-    });
-}
-exports.sshScp = sshScp;
-sshComando({
-    host: '177.131.141.205',
-    port: 22,
-    username: 'usernode',
-    password: '@.-inteliaxnode00',
-    key: null
-}, 'ls -l /');
-
-
-/***/ }),
-
 /***/ 2674:
 /***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
 
@@ -34803,7 +34548,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 const core = __importStar(__nccwpck_require__(2186));
 const contexto_1 = __nccwpck_require__(5517);
-const ssh = __importStar(__nccwpck_require__(2123));
+const ssh = __importStar(__nccwpck_require__(1208));
 function run() {
     return __awaiter(this, void 0, void 0, function* () {
         var _config = '';
@@ -34824,13 +34569,11 @@ function run() {
             }
             let _caminhoDeploy = inputs.path == '' ? `./${inputs.stack}/docker-compose.yml` : `${inputs.path}/${inputs.stack}/docker-compose.yml`;
             if (inputs.latest) {
-                // await ssh.sshComando(config, `${!inputs.omitir_sudo ? 'sudo' : ''} env ${_config} docker stack deploy -c ${_caminhoDeploy} ${stack_name}`);
-                yield ssh.sshComando(config, `${!inputs.omitir_sudo ? 'sudo' : ''} env ${_config} deploy.sh ${stack_name} ${_caminhoDeploy} ${inputs.docker_username} ${inputs.docker_token}`);
+                yield ssh.sshComando(config, `${!inputs.omitir_sudo ? 'sudo' : ''} env ${_config} docker stack deploy -c ${_caminhoDeploy} ${stack_name}`);
             }
             else {
                 var _versao = (0, contexto_1.getVersao)(inputs.versao_major, inputs.versao_minor, inputs.versao_patch, inputs.versao_patch_sufixo);
-                // await ssh.sshComando(config, `${!inputs.omitir_sudo ? 'sudo' : ''} env ${_config} VERSAO=${_versao} docker stack deploy -c ${_caminhoDeploy} ${stack_name}`);
-                yield ssh.sshComando(config, `${!inputs.omitir_sudo ? 'sudo' : ''} env ${_config} VERSAO=${_versao} deploy.sh ${stack_name} ${_caminhoDeploy} ${inputs.docker_username} ${inputs.docker_token}`);
+                yield ssh.sshComando(config, `${!inputs.omitir_sudo ? 'sudo' : ''} env ${_config} VERSAO=${_versao} docker stack deploy -c ${_caminhoDeploy} ${stack_name}`);
             }
             core.info('Finalizando Deploy');
         }
@@ -34921,9 +34664,7 @@ function getInputsDeploy() {
         versao_patch_sufixo: core.getInput('versao-patch-sufixo'),
         latest: core.getBooleanInput('latest'),
         path: core.getInput('path'),
-        omitir_sudo: core.getBooleanInput('omitir-sudo'),
-        docker_username: core.getInput('docker-username'),
-        docker_token: core.getInput('docker-token')
+        omitir_sudo: core.getBooleanInput('omitir-sudo')
     };
 }
 exports.getInputsDeploy = getInputsDeploy;
@@ -35010,6 +34751,200 @@ function getMinutos(data) {
     return minutos <= 9 ? '0' + minutos.toString() : minutos.toString();
 }
 exports.getMinutos = getMinutos;
+
+
+/***/ }),
+
+/***/ 1208:
+/***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
+
+"use strict";
+
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    var desc = Object.getOwnPropertyDescriptor(m, k);
+    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
+      desc = { enumerable: true, get: function() { return m[k]; } };
+    }
+    Object.defineProperty(o, k2, desc);
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
+    Object.defineProperty(o, "default", { enumerable: true, value: v });
+}) : function(o, v) {
+    o["default"] = v;
+});
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+    __setModuleDefault(result, mod);
+    return result;
+};
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.sshScp = exports.sshRmdir = exports.sshMkdir = exports.sshComando = exports.sshConfig = void 0;
+const core = __importStar(__nccwpck_require__(3820));
+const ssh2_1 = __nccwpck_require__(3353);
+const ClientSftp = __nccwpck_require__(7873);
+function sshConfig(settings) {
+    if (!settings.password) {
+        return {
+            host: settings.host,
+            port: settings.port,
+            username: settings.username,
+            privateKey: settings.key
+        };
+    }
+    else if (!settings.key) {
+        return {
+            host: settings.host,
+            port: settings.port,
+            username: settings.username,
+            password: settings.password
+        };
+    }
+    return {};
+}
+exports.sshConfig = sshConfig;
+function sshComando(settings, cmd) {
+    return __awaiter(this, void 0, void 0, function* () {
+        try {
+            var config = sshConfig(settings);
+            const ssh = new ssh2_1.Client();
+            yield new Promise((result) => {
+                ssh.connect(config).on('ready', () => {
+                    return result(true);
+                }).on('error', (err) => {
+                    throw new Error(err.message);
+                });
+            });
+            yield new Promise((result) => {
+                ssh.exec(cmd, (err, stream) => {
+                    if (err)
+                        throw new Error(err.message);
+                    stream.on('close', (code, sginal) => {
+                        ssh.end();
+                        return result(true);
+                    }).on('data', (data) => {
+                        core.info('STDOUT: ' + data);
+                    }).stderr.on('data', (data) => {
+                        core.info('STDERR: ' + data);
+                    });
+                });
+            });
+        }
+        catch (error) {
+            throw new Error('sshComando :: error: ' + error.message);
+        }
+    });
+}
+exports.sshComando = sshComando;
+function sshMkdir(settings, path) {
+    return __awaiter(this, void 0, void 0, function* () {
+        try {
+            var config = sshConfig(settings);
+            const ssh = new ssh2_1.Client();
+            yield new Promise((result) => {
+                ssh.connect(config).on('ready', () => {
+                    return result(true);
+                }).on('error', (err) => {
+                    throw new Error(err.message);
+                });
+            });
+            core.info(`criando Diretório '${path}'`);
+            yield new Promise((result) => {
+                ssh.exec(`mkdir -pv ${path}`, (err, stream) => {
+                    if (err)
+                        throw new Error(err.message);
+                    stream.on('close', (code, sginal) => {
+                        ssh.end();
+                        return result(true);
+                    }).on('data', (data) => {
+                        core.info('STDOUT: ' + data);
+                    }).stderr.on('data', (data) => {
+                        core.info('STDERR: ' + data);
+                    });
+                });
+            });
+        }
+        catch (error) {
+            throw new Error('sshMkdir :: error: ' + error.message);
+        }
+    });
+}
+exports.sshMkdir = sshMkdir;
+function sshRmdir(settings, path) {
+    return __awaiter(this, void 0, void 0, function* () {
+        try {
+            var config = sshConfig(settings);
+            const ssh = new ssh2_1.Client();
+            yield new Promise((result) => {
+                ssh.connect(config).on('ready', () => {
+                    return result(true);
+                }).on('error', (err) => {
+                    throw new Error(err.message);
+                });
+            });
+            core.info(`removendo arquivo '${path}'`);
+            yield new Promise((result) => {
+                ssh.exec(`rm -rfv ${path}`, (err, stream) => {
+                    if (err)
+                        throw new Error(err.message);
+                    stream.on('close', (code, sginal) => {
+                        ssh.end();
+                        return result(true);
+                    }).on('data', (data) => {
+                        core.info('STDOUT: ' + data);
+                    }).stderr.on('data', (data) => {
+                        core.info('STDERR: ' + data);
+                    });
+                });
+            });
+        }
+        catch (error) {
+            throw new Error('sshRmdir :: error: ' + error.message);
+        }
+    });
+}
+exports.sshRmdir = sshRmdir;
+function sshScp(settings, target, source) {
+    return __awaiter(this, void 0, void 0, function* () {
+        try {
+            const client = new ClientSftp();
+            yield client.connect({
+                host: settings.host,
+                port: settings.port,
+                username: settings.username,
+                password: settings.password,
+                privateKey: settings.key
+            }).then(() => null);
+            core.info(`copiando arquivo '${target}'`);
+            yield client.put(target, source)
+                .then((data) => {
+                core.info('STDOUT: ' + data.trimEnd());
+            })
+                .catch((err) => {
+                throw new Error(err);
+            });
+            yield client.end();
+        }
+        catch (error) {
+            throw new Error('sshScp :: error: ' + error.message);
+        }
+    });
+}
+exports.sshScp = sshScp;
 
 
 /***/ }),

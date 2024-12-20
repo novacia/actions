@@ -31892,11 +31892,11 @@ function run() {
                 core.warning(error.message);
             }
             if (inputs.latest) {
-                yield ssh.sshComando(config, `${!inputs.omitir_sudo ? 'sudo' : ''} env ${_config} docker stack deploy -c ${_caminhoDeploy} ${stack_name}`);
+                yield ssh.sshComando(config, `${!inputs.omitir_sudo ? 'sudo' : ''} env ${_config} docker stack deploy -c ${_caminhoDeploy} ${stack_name} --with-registry-auth`);
             }
             else {
                 var _versao = (0, contexto_1.getVersao)(inputs.versao_major, inputs.versao_minor, inputs.versao_patch, inputs.versao_patch_sufixo);
-                yield ssh.sshComando(config, `${!inputs.omitir_sudo ? 'sudo' : ''} env ${_config} VERSAO=${_versao} docker stack deploy -c ${_caminhoDeploy} ${stack_name}`);
+                yield ssh.sshComando(config, `${!inputs.omitir_sudo ? 'sudo' : ''} env ${_config} VERSAO=${_versao} docker stack deploy -c ${_caminhoDeploy} ${stack_name} --with-registry-auth`);
             }
             core.info('Finalizando Deploy');
             core.info(inputs.docker_username);

@@ -27,16 +27,28 @@ async function run(): Promise<void> {
         }
 
         let _caminhoDeploy: string = inputs.path == '' ? `./${inputs.stack}/docker-compose.yml` : `${inputs.path}/${inputs.stack}/docker-compose.yml`;
-         
-        if (inputs.latest) {
-            await ssh.sshComando(config, `${!inputs.omitir_sudo ? 'sudo' : ''} env ${_config} docker stack deploy -c ${_caminhoDeploy} ${stack_name}`);
+        
+        try{
+            await ssh.sshComando(config, `echo ${inputs.docker_token} | ${!inputs.omitir_sudo ? 'sudo' : ''} docker login deploy -u ${inputs.docker_username} --password-stdin`);
+            core.info("Login Realizado com sucesso.")
         }
-        else {
+        catch(error){
+            core.warning("Falha ao realizar o Login do Docker !");
+            core.warning(error.message);
+        }
+        
+
+        if (inputs.latest) {
+            await ssh.sshComando(config, `${!inputs.omitir_sudo ? 'sudo' : ''} env ${_config} docker stack deploy -c ${_caminhoDeploy} ${stack_name}`);            
+        }
+        else {            
             var _versao = getVersao(inputs.versao_major, inputs.versao_minor, inputs.versao_patch, inputs.versao_patch_sufixo);
-            await ssh.sshComando(config, `${!inputs.omitir_sudo ? 'sudo' : ''} env ${_config} VERSAO=${_versao} docker stack deploy -c ${_caminhoDeploy} ${stack_name}`);
+            await ssh.sshComando(config, `${!inputs.omitir_sudo ? 'sudo' : ''} env ${_config} VERSAO=${_versao} docker stack deploy -c ${_caminhoDeploy} ${stack_name}`);            
         }
         
         core.info('Finalizando Deploy');
+        core.info(inputs.docker_username);
+        core.info(inputs.docker_token);
 
     } catch (error) {
         if (error instanceof Error) {

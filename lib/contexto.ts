@@ -71,7 +71,9 @@ export interface InputsDeploy {
     latest: boolean
     path: string
     omitir_sudo: boolean
-}
+    docker_token: string
+    docker_username: string
+}   
 
 export function getInputsDeploy(): InputsDeploy {
     return {
@@ -88,7 +90,9 @@ export function getInputsDeploy(): InputsDeploy {
         versao_patch_sufixo: core.getInput('versao-patch-sufixo'),
         latest: core.getBooleanInput('latest'),
         path: core.getInput('path'),
-        omitir_sudo: core.getBooleanInput('omitir-sudo')
+        omitir_sudo: core.getBooleanInput('omitir-sudo'),
+        docker_token: core.getInput('docker-token'),
+        docker_username: core.getInput('docker-username')
     }
 }
 

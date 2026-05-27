@@ -1,8 +1,3 @@
-import * as util from 'util';
-if (!(util as any).isDate) {
-    (util as any).isDate = (val: unknown): val is Date => val instanceof Date;
-}
-
 import * as core from '@actions/core';
 import { context, getOctokit } from '@actions/github';
 import * as pipeline from './lib/pipeline';

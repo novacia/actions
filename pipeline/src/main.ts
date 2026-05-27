@@ -17,7 +17,7 @@ async function run(): Promise<void> {
             repo: push.repository.name,
             ref: push.after
         });
-        if (result.status = 200) {
+        if (result.status == 200) {
             var files: Array<pipeline.Files> | undefined = result.data.files;
 
             files?.forEach((file) => {
@@ -36,6 +36,9 @@ async function run(): Promise<void> {
                         break;
                 }
             });
+        }
+        else{
+            core.setFailed(`Erro ao obter os arquivos do commit: ${result.status}`);
         }
 
         

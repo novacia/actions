@@ -1,13 +1,6 @@
 /******/ (() => { // webpackBootstrap
 /******/ 	var __webpack_modules__ = ({
 
-/***/ 9448:
-/***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
-
-module.exports = require(__nccwpck_require__.ab + "lib/protocol/crypto/build/Release/sshcrypto.node")
-
-/***/ }),
-
 /***/ 2674:
 /***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
 
@@ -3261,19 +3254,6 @@ function u8Concat (parts) {
   }
   return u8
 }
-
-
-/***/ }),
-
-/***/ 3567:
-/***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
-
-"use strict";
-
-
-const binding = __nccwpck_require__(5653);
-
-module.exports = binding.getCPUInfo;
 
 
 /***/ }),
@@ -18516,7 +18496,7 @@ const crypto = __nccwpck_require__(6113);
 
 let cpuInfo;
 try {
-  cpuInfo = __nccwpck_require__(3567)();
+  cpuInfo = __nccwpck_require__(7295)();
 } catch {}
 
 const { bindingAvailable, CIPHER_INFO, MAC_INFO } = __nccwpck_require__(1190);
@@ -18900,7 +18880,7 @@ let AESGCMDecipher;
 let ChaChaPolyDecipher;
 let GenericDecipher;
 try {
-  binding = __nccwpck_require__(9448);
+  binding = __nccwpck_require__(9623);
   ({ AESGCMCipher, ChaChaPolyCipher, GenericCipher,
      AESGCMDecipher, ChaChaPolyDecipher, GenericDecipher } = binding);
 } catch {}
@@ -42005,7 +41985,11 @@ function getInputsDeploy() {
         versao_minor: core.getInput('versao-minor'),
         versao_patch: core.getInput('versao-patch'),
         versao_patch_sufixo: core.getInput('versao-patch-sufixo'),
-        latest: core.getBooleanInput('latest')
+        latest: core.getBooleanInput('latest'),
+        path: core.getInput('path'),
+        omitir_sudo: core.getBooleanInput('omitir-sudo'),
+        docker_token: core.getInput('docker-token'),
+        docker_username: core.getInput('docker-username')
     };
 }
 exports.getInputsDeploy = getInputsDeploy;
@@ -42445,7 +42429,7 @@ function run() {
                 repo: push.repository.name,
                 ref: push.after
             });
-            if (result.status = 200) {
+            if (result.status == 200) {
                 var files = result.data.files;
                 files === null || files === void 0 ? void 0 : files.forEach((file) => {
                     switch (file.status) {
@@ -42466,6 +42450,9 @@ function run() {
                     }
                 });
             }
+            else {
+                core.setFailed(`Erro ao obter os arquivos do commit: ${result.status}`);
+            }
         }
         catch (error) {
             if (error instanceof Error) {
@@ -42479,10 +42466,18 @@ run();
 
 /***/ }),
 
-/***/ 5653:
+/***/ 9623:
 /***/ ((module) => {
 
-module.exports = eval("require")("../build/Release/cpufeatures.node");
+module.exports = eval("require")("./crypto/build/Release/sshcrypto.node");
+
+
+/***/ }),
+
+/***/ 7295:
+/***/ ((module) => {
+
+module.exports = eval("require")("cpu-features");
 
 
 /***/ }),

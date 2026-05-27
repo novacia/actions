@@ -1,6 +1,10 @@
+import * as util from 'util';
+if (!(util as any).isDate) {
+    (util as any).isDate = (val: unknown): val is Date => val instanceof Date;
+}
+
 import * as core from '@actions/core';
 import { context, getOctokit } from '@actions/github';
-import { PushEvent } from '@octokit/webhooks-definitions/schema';
 import * as pipeline from './lib/pipeline';
 import { getInputsPipeline, InputsPipeline } from '../../lib/contexto';
 
@@ -8,7 +12,7 @@ async function run(): Promise<void> {
     try {
         var inputs: InputsPipeline = getInputsPipeline();
 
-        var push: PushEvent = context.payload as PushEvent;
+        var push: any = context.payload as any;
 
         var octokit = getOctokit(inputs.github_token);
 

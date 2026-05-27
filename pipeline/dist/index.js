@@ -42414,6 +42414,10 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
+const util = __importStar(__nccwpck_require__(3837));
+if (!util.isDate) {
+    util.isDate = (val) => val instanceof Date;
+}
 const core = __importStar(__nccwpck_require__(2186));
 const github_1 = __nccwpck_require__(5438);
 const pipeline = __importStar(__nccwpck_require__(5173));

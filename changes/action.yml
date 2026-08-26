@@ -1,0 +1,21 @@
+name: changes
+description: Action que identifica as pastas alteradas no commit
+author: Silask1
+
+inputs:
+  github_token:
+    required: false
+    type: string
+    description: Token para consultar os arquivos do commit
+  filters:
+    required: false
+    type: string
+    description: Pastas monitoradas no formato nome=pasta (uma por linha)
+
+outputs:
+  changed:
+    description: Nomes alterados, separados por espaço
+
+runs:
+  using: 'node24'
+  main: 'dist/index.js'

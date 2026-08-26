@@ -73,7 +73,9 @@ export interface InputsDeploy {
     omitir_sudo: boolean
     docker_token: string
     docker_username: string
-}   
+    services: string
+    built_services: string
+}
 
 export function getInputsDeploy(): InputsDeploy {
     return {
@@ -92,7 +94,9 @@ export function getInputsDeploy(): InputsDeploy {
         path: core.getInput('path'),
         omitir_sudo: core.getBooleanInput('omitir-sudo'),
         docker_token: core.getInput('docker-token'),
-        docker_username: core.getInput('docker-username')
+        docker_username: core.getInput('docker-username'),
+        services: core.getInput('services'),
+        built_services: core.getInput('built-services')
     }
 }
 

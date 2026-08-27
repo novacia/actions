@@ -52,6 +52,14 @@ inputs:
     type: boolean
     description: Informa se a versão a ser gerada é latest (Produção)
     default: false
+  services:
+    required: false
+    type: string
+    description: Serviços da stack no formato nome=serviço, separados por espaço
+  built-services:
+    required: false
+    type: string
+    description: Serviços que tiveram build, separados por espaço
   path:
     required: false
     type: string

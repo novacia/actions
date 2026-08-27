@@ -2,6 +2,28 @@ import * as core from '@actions/core';
 import { InputsDeploy, getInputsDeploy, getStack, getVersao } from '../../lib/contexto';
 import * as ssh from '../../lib/ssh';
 
+const VERSAO_EM_EXECUCAO: string = `docker service inspect --format '{{index .Spec.Labels "com.docker.stack.image"}}'`;
+
+function getVariaveisVersao(inputs: InputsDeploy, sudo: string, stack: string, versao: string): string {
+    const buildados: Array<string> = inputs.built_services.split(/\s+/).filter(nome => nome);
+    const variaveis: Array<string> = [];
+
+    for (const par of inputs.services.split(/\s+/).filter(par => par.includes('='))) {
+        const [nome, servico] = par.split('=');
+        const variavel: string = `VERSAO_${nome.toUpperCase()}`;
+
+        if (buildados.includes(nome)) {
+            variaveis.push(`${variavel}=${versao}`);
+            continue;
+        }
+
+        variaveis.push(`${variavel}=$(${sudo} ${VERSAO_EM_EXECUCAO} ${stack}_${servico} | cut -d: -f2)`);
+    }
+
+    core.info(variaveis.join(' '));
+    return variaveis.join(' ');
+}
+
 async function run(): Promise<void> {
 
     var _config: string = '';
@@ -43,7 +65,14 @@ async function run(): Promise<void> {
         }
         else {            
             var _versao = getVersao(inputs.versao_major, inputs.versao_minor, inputs.versao_patch, inputs.versao_patch_sufixo);
-            await ssh.sshComando(config, `${!inputs.omitir_sudo ? 'sudo' : ''} env ${_config} VERSAO=${_versao} docker stack deploy -c ${_caminhoDeploy} ${stack_name} --with-registry-auth`);            
+            var _sudo: string = !inputs.omitir_sudo ? 'sudo' : '';
+            var _versoes: string = `VERSAO=${_versao}`;
+
+            if (inputs.services) {
+                _versoes = getVariaveisVersao(inputs, _sudo, stack_name, _versao);
+            }
+
+            await ssh.sshComando(config, `${_sudo} env ${_config} ${_versoes} docker stack deploy -c ${_caminhoDeploy} ${stack_name} --with-registry-auth`);            
         }
         
         core.info('Finalizando Deploy');

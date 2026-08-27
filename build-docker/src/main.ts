@@ -14,9 +14,15 @@ async function run(): Promise<void> {
                 throw new Error(err);
             });
 
-        
+
+        var _environment: string = inputs.versao_patch_sufixo;
+
         if (inputs.latest) {
-            await docker.tag(inputs.hub, inputs.versao_major, inputs.versao_minor, inputs.versao_patch, inputs.versao_patch_sufixo)
+            _environment = 'latest';
+        }
+
+        if (_environment) {
+            await docker.tag(inputs.hub, _environment, inputs.versao_major, inputs.versao_minor, inputs.versao_patch, inputs.versao_patch_sufixo)
                 .catch((err) => {
                     throw new Error(err);
                 });
@@ -27,17 +33,13 @@ async function run(): Promise<void> {
                 throw new Error(err);
             });
 
-        if (inputs.latest) {
-            await docker.push(inputs.hub, false, inputs.versao_major, inputs.versao_minor, inputs.versao_patch, inputs.versao_patch_sufixo)
-                .catch((err) => {
-                    throw new Error(err);
-                });
-            await docker.push(inputs.hub, true)
-                .catch((err) => {
-                    throw new Error(err);
-                });
-        } else {
-            await docker.push(inputs.hub, false, inputs.versao_major, inputs.versao_minor, inputs.versao_patch, inputs.versao_patch_sufixo)
+        await docker.push(inputs.hub, '', inputs.versao_major, inputs.versao_minor, inputs.versao_patch, inputs.versao_patch_sufixo)
+            .catch((err) => {
+                throw new Error(err);
+            });
+
+        if (_environment) {
+            await docker.push(inputs.hub, _environment)
                 .catch((err) => {
                     throw new Error(err);
                 });

@@ -6662,8 +6662,12 @@ function run() {
                 .catch((err) => {
                 throw new Error(err);
             });
+            var _environment = inputs.versao_patch_sufixo;
             if (inputs.latest) {
-                yield docker.tag(inputs.hub, inputs.versao_major, inputs.versao_minor, inputs.versao_patch, inputs.versao_patch_sufixo)
+                _environment = 'latest';
+            }
+            if (_environment) {
+                yield docker.tag(inputs.hub, _environment, inputs.versao_major, inputs.versao_minor, inputs.versao_patch, inputs.versao_patch_sufixo)
                     .catch((err) => {
                     throw new Error(err);
                 });
@@ -6672,18 +6676,12 @@ function run() {
                 .catch((err) => {
                 throw new Error(err);
             });
-            if (inputs.latest) {
-                yield docker.push(inputs.hub, false, inputs.versao_major, inputs.versao_minor, inputs.versao_patch, inputs.versao_patch_sufixo)
-                    .catch((err) => {
-                    throw new Error(err);
-                });
-                yield docker.push(inputs.hub, true)
-                    .catch((err) => {
-                    throw new Error(err);
-                });
-            }
-            else {
-                yield docker.push(inputs.hub, false, inputs.versao_major, inputs.versao_minor, inputs.versao_patch, inputs.versao_patch_sufixo)
+            yield docker.push(inputs.hub, '', inputs.versao_major, inputs.versao_minor, inputs.versao_patch, inputs.versao_patch_sufixo)
+                .catch((err) => {
+                throw new Error(err);
+            });
+            if (_environment) {
+                yield docker.push(inputs.hub, _environment)
                     .catch((err) => {
                     throw new Error(err);
                 });
@@ -6731,7 +6729,7 @@ var __importStar = (this && this.__importStar) || function (mod) {
     return result;
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.getMinutos = exports.getHoras = exports.getAnoSubstring = exports.getDayOfYear = exports.getStack = exports.getVersao = exports.getInputsPipeline = exports.getInputsDeploy = exports.getInputsBuildDocker = exports.getInputsBuildAssembly = void 0;
+exports.getMinutos = exports.getHoras = exports.getAnoSubstring = exports.getDayOfYear = exports.getStack = exports.getVersao = exports.getInputsResetVersionamento = exports.getInputsGerarVersionamento = exports.getInputsPipeline = exports.getInputsDeploy = exports.getInputsBuildDocker = exports.getInputsBuildAssembly = void 0;
 const core = __importStar(__nccwpck_require__(3820));
 function getInputsBuildAssembly() {
     return {
@@ -6775,7 +6773,13 @@ function getInputsDeploy() {
         versao_minor: core.getInput('versao-minor'),
         versao_patch: core.getInput('versao-patch'),
         versao_patch_sufixo: core.getInput('versao-patch-sufixo'),
-        latest: core.getBooleanInput('latest')
+        latest: core.getBooleanInput('latest'),
+        path: core.getInput('path'),
+        omitir_sudo: core.getBooleanInput('omitir-sudo'),
+        docker_token: core.getInput('docker-token'),
+        docker_username: core.getInput('docker-username'),
+        services: core.getInput('services'),
+        built_services: core.getInput('built-services')
     };
 }
 exports.getInputsDeploy = getInputsDeploy;
@@ -6786,10 +6790,35 @@ function getInputsPipeline() {
         username: core.getInput('username'),
         password: core.getInput('password'),
         key: core.getInput('key'),
-        github_token: core.getInput('github_token')
+        github_token: core.getInput('github_token'),
+        path: core.getInput('path')
     };
 }
 exports.getInputsPipeline = getInputsPipeline;
+function getInputsGerarVersionamento() {
+    return {
+        requestVersionamento: {
+            accountEndpoint: core.getInput('endpoint'),
+            code: core.getInput('code'),
+            token: core.getInput('token'),
+            namePackage: core.getInput('name-package'),
+            numeroVersao: undefined
+        }
+    };
+}
+exports.getInputsGerarVersionamento = getInputsGerarVersionamento;
+function getInputsResetVersionamento() {
+    return {
+        requestVersionamento: {
+            accountEndpoint: core.getInput('endpoint'),
+            code: core.getInput('code'),
+            token: core.getInput('token'),
+            namePackage: undefined,
+            numeroVersao: Number(core.getInput('numero-versao'))
+        }
+    };
+}
+exports.getInputsResetVersionamento = getInputsResetVersionamento;
 function getVersao(versao_major, versao_minor, versao_patch, versao_patch_sufixo) {
     if (!versao_major || !versao_minor || !versao_patch) {
         throw new Error('parâmetros [versao_major, versao_minor, versao_patch] são obrigatórios');
@@ -6912,14 +6941,6 @@ exports.login = login;
 function build(hub, projeto, config, versao_major, versao_minor, versao_patch, versao_patch_sufixo) {
     return __awaiter(this, void 0, void 0, function* () {
         core.info('Build da imagem ' + projeto);
-        
-        core.info('Hub ' + hub);
-        core.info('Config ' + config);
-        core.info('versao_major ' + versao_major);
-        core.info('versao_minor ' + versao_minor)
-        core.info('versao_patch ' + versao_patch);
-        
-        
         if (!hub || !projeto || !config || !versao_major || !versao_minor || !versao_patch) {
             throw new Error('Parâmentros [hub, projeto, config, versao_major, versao_minor, versao_patch] são obrigatórios');
         }
@@ -6931,7 +6952,7 @@ function build(hub, projeto, config, versao_major, versao_minor, versao_patch, v
         yield exec
             .getExecOutput('docker build --no-cache', buildArray, {
             ignoreReturnCode: true,
-            silent: false
+            silent: true
         })
             .then(res => {
             if (res.stderr.length > 0 && res.exitCode != 0) {
@@ -6945,7 +6966,7 @@ function build(hub, projeto, config, versao_major, versao_minor, versao_patch, v
     });
 }
 exports.build = build;
-function tag(hub, versao_major, versao_minor, versao_patch, versao_patch_sufixo) {
+function tag(hub, environment, versao_major, versao_minor, versao_patch, versao_patch_sufixo) {
     return __awaiter(this, void 0, void 0, function* () {
         core.info('Criando tag');
         if (!hub && !versao_major || !versao_minor || !versao_patch) {
@@ -6955,9 +6976,9 @@ function tag(hub, versao_major, versao_minor, versao_patch, versao_patch_sufixo)
         if (versao_patch_sufixo) {
             tag = `${tag}-${versao_patch_sufixo}`;
         }
-        var tag_latest = `${hub}:latest`;
+        var tag_environment = `${hub}:${environment}`;
         yield exec
-            .getExecOutput('docker tag', [tag, tag_latest], {
+            .getExecOutput('docker tag', [tag, tag_environment], {
             ignoreReturnCode: true,
             silent: true
         })
@@ -6973,14 +6994,14 @@ function tag(hub, versao_major, versao_minor, versao_patch, versao_patch_sufixo)
     });
 }
 exports.tag = tag;
-function push(hub, latest, versao_major, versao_minor, versao_patch, versao_patch_sufixo) {
+function push(hub, environment, versao_major, versao_minor, versao_patch, versao_patch_sufixo) {
     return __awaiter(this, void 0, void 0, function* () {
         if (!hub) {
             throw new Error('Parâmetro [ hub ] é obrigatório');
         }
         var tag;
-        if (latest) {
-            tag = `${hub}:latest`;
+        if (environment) {
+            tag = `${hub}:${environment}`;
         }
         else {
             tag = `${hub}:${versao_major}.${versao_minor}.${versao_patch}`;

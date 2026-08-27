@@ -33187,13 +33187,14 @@ function getArquivosAlterados() {
     return __awaiter(this, void 0, void 0, function* () {
         const push = github_1.context.payload;
         const octokit = (0, github_1.getOctokit)(core.getInput('github_token'));
-        const result = yield octokit.request("GET /repos/{owner}/{repo}/commits/{ref}", {
+        const result = yield octokit.request("GET /repos/{owner}/{repo}/compare/{base}...{head}", {
             owner: push.repository.full_name.split('/')[0],
             repo: push.repository.name,
-            ref: push.after
+            base: push.before,
+            head: push.after
         });
         if (result.status != 200) {
-            throw new Error(`Erro ao obter os arquivos do commit: ${result.status}`);
+            throw new Error(`Erro ao obter os arquivos do push: ${result.status}`);
         }
         return (_b = (_a = result.data.files) === null || _a === void 0 ? void 0 : _a.map(file => file.filename)) !== null && _b !== void 0 ? _b : [];
     });

@@ -20,14 +20,15 @@ async function getArquivosAlterados(): Promise<Array<string>> {
     const push: any = context.payload as any;
     const octokit = getOctokit(core.getInput('github_token'));
 
-    const result = await octokit.request("GET /repos/{owner}/{repo}/commits/{ref}", {
+    const result = await octokit.request("GET /repos/{owner}/{repo}/compare/{base}...{head}", {
         owner: push.repository.full_name.split('/')[0],
         repo: push.repository.name,
-        ref: push.after
+        base: push.before,
+        head: push.after
     });
 
     if (result.status != 200) {
-        throw new Error(`Erro ao obter os arquivos do commit: ${result.status}`);
+        throw new Error(`Erro ao obter os arquivos do push: ${result.status}`);
     }
 
     return result.data.files?.map(file => file.filename) ?? [];

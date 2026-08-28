@@ -59,7 +59,7 @@ export async function build(hub: string, projeto: string, config: string, versao
         });
 }
 
-export async function tag(hub: string, versao_major: string, versao_minor: string, versao_patch: string, versao_patch_sufixo: string): Promise<void> {
+export async function tag(hub: string, environment: string, versao_major: string, versao_minor: string, versao_patch: string, versao_patch_sufixo: string): Promise<void> {
     core.info('Criando tag');
 
     if (!hub && !versao_major || !versao_minor || !versao_patch) {
@@ -70,10 +70,10 @@ export async function tag(hub: string, versao_major: string, versao_minor: strin
     if (versao_patch_sufixo) {
         tag = `${tag}-${versao_patch_sufixo}`;
     }
-    var tag_latest: string = `${hub}:latest`;
+    var tag_environment: string = `${hub}:${environment}`;
 
     await exec
-        .getExecOutput('docker tag', [ tag, tag_latest ], {
+        .getExecOutput('docker tag', [ tag, tag_environment ], {
             ignoreReturnCode: true,
             silent: true
         })
@@ -88,15 +88,15 @@ export async function tag(hub: string, versao_major: string, versao_minor: strin
         });
 }
 
-export async function push(hub: string, latest?: boolean, versao_major?: string, versao_minor?: string, versao_patch?: string, versao_patch_sufixo?: string): Promise<void> {
+export async function push(hub: string, environment?: string, versao_major?: string, versao_minor?: string, versao_patch?: string, versao_patch_sufixo?: string): Promise<void> {
     
     if (!hub) {
         throw new Error('Parâmetro [ hub ] é obrigatório');
     }
 
     var tag: string;
-    if (latest) {
-        tag = `${hub}:latest`;
+    if (environment) {
+        tag = `${hub}:${environment}`;
     } else {
         tag = `${hub}:${versao_major}.${versao_minor}.${versao_patch}`;
         if (versao_patch_sufixo) {

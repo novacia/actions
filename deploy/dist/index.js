@@ -34552,6 +34552,15 @@ function getVariaveisVersao(inputs, sudo, stack, versao) {
     core.info(variaveis.join(' '));
     return variaveis.join(' ');
 }
+const LIMITE_DEPLOY = 600;
+function deploy(config, comando) {
+    return __awaiter(this, void 0, void 0, function* () {
+        const code = yield ssh.sshComando(config, `timeout ${LIMITE_DEPLOY} ${comando}`);
+        if (code != 0) {
+            throw new Error(`deploy falhou (${code})`);
+        }
+    });
+}
 function run() {
     return __awaiter(this, void 0, void 0, function* () {
         var _config = '';
@@ -34580,7 +34589,7 @@ function run() {
                 core.warning(error.message);
             }
             if (inputs.latest) {
-                yield ssh.sshComando(config, `${!inputs.omitir_sudo ? 'sudo' : ''} env ${_config} docker stack deploy -c ${_caminhoDeploy} ${stack_name} --with-registry-auth`);
+                yield deploy(config, `${!inputs.omitir_sudo ? 'sudo' : ''} env ${_config} docker stack deploy --detach=false -c ${_caminhoDeploy} ${stack_name} --with-registry-auth`);
             }
             else {
                 var _versao = (0, contexto_1.getVersao)(inputs.versao_major, inputs.versao_minor, inputs.versao_patch, inputs.versao_patch_sufixo);
@@ -34589,7 +34598,7 @@ function run() {
                 if (inputs.services) {
                     _versoes = getVariaveisVersao(inputs, _sudo, stack_name, _versao);
                 }
-                yield ssh.sshComando(config, `${_sudo} env ${_config} ${_versoes} docker stack deploy -c ${_caminhoDeploy} ${stack_name} --with-registry-auth`);
+                yield deploy(config, `${_sudo} env ${_config} ${_versoes} docker stack deploy --detach=false -c ${_caminhoDeploy} ${stack_name} --with-registry-auth`);
             }
             core.info('Finalizando Deploy');
             core.info(inputs.docker_username);
@@ -34851,13 +34860,13 @@ function sshComando(settings, cmd) {
                     throw new Error(err.message);
                 });
             });
-            yield new Promise((result) => {
+            return yield new Promise((result) => {
                 ssh.exec(cmd, (err, stream) => {
                     if (err)
                         throw new Error(err.message);
                     stream.on('close', (code, sginal) => {
                         ssh.end();
-                        return result(true);
+                        return result(code);
                     }).on('data', (data) => {
                         core.info('STDOUT: ' + data);
                     }).stderr.on('data', (data) => {

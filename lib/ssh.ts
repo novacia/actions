@@ -31,7 +31,7 @@ export function sshConfig(settings: sshSettings): ConnectConfig {
     return {};
 }
 
-export async function sshComando(settings:sshSettings, cmd: string): Promise<void> {
+export async function sshComando(settings:sshSettings, cmd: string): Promise<number> {
     
     try {
         var config: ConnectConfig = sshConfig(settings);
@@ -46,12 +46,12 @@ export async function sshComando(settings:sshSettings, cmd: string): Promise<voi
             });
         });
 
-        await new Promise((result) => {
+        return await new Promise<number>((result) => {
             ssh.exec(cmd, (err, stream) => {
                 if (err) throw new Error(err.message)
                 stream.on('close', (code, sginal) => {
                     ssh.end();
-                    return result(true);
+                    return result(code);
                 }).on('data', (data) => {
                     core.info('STDOUT: ' + data);
                 }).stderr.on('data', (data) => {

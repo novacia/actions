@@ -24,6 +24,16 @@ function getVariaveisVersao(inputs: InputsDeploy, sudo: string, stack: string, v
     return variaveis.join(' ');
 }
 
+const LIMITE_DEPLOY: number = 600;
+
+async function deploy(config: ssh.sshSettings, comando: string): Promise<void> {
+    const code: number = await ssh.sshComando(config, `timeout ${LIMITE_DEPLOY} ${comando}`);
+
+    if (code != 0) {
+        throw new Error(`deploy falhou (${code})`);
+    }
+}
+
 async function run(): Promise<void> {
 
     var _config: string = '';
@@ -61,7 +71,7 @@ async function run(): Promise<void> {
         
 
         if (inputs.latest) {
-            await ssh.sshComando(config, `${!inputs.omitir_sudo ? 'sudo' : ''} env ${_config} docker stack deploy -c ${_caminhoDeploy} ${stack_name} --with-registry-auth`);            
+            await deploy(config, `${!inputs.omitir_sudo ? 'sudo' : ''} env ${_config} docker stack deploy --detach=false -c ${_caminhoDeploy} ${stack_name} --with-registry-auth`);
         }
         else {            
             var _versao = getVersao(inputs.versao_major, inputs.versao_minor, inputs.versao_patch, inputs.versao_patch_sufixo);
@@ -72,7 +82,7 @@ async function run(): Promise<void> {
                 _versoes = getVariaveisVersao(inputs, _sudo, stack_name, _versao);
             }
 
-            await ssh.sshComando(config, `${_sudo} env ${_config} ${_versoes} docker stack deploy -c ${_caminhoDeploy} ${stack_name} --with-registry-auth`);            
+            await deploy(config, `${_sudo} env ${_config} ${_versoes} docker stack deploy --detach=false -c ${_caminhoDeploy} ${stack_name} --with-registry-auth`);
         }
         
         core.info('Finalizando Deploy');

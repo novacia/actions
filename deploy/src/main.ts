@@ -24,10 +24,8 @@ function getVariaveisVersao(inputs: InputsDeploy, sudo: string, stack: string, v
     return variaveis.join(' ');
 }
 
-const LIMITE_DEPLOY: number = 600;
-
 async function deploy(config: ssh.sshSettings, comando: string): Promise<void> {
-    const code: number = await ssh.sshComando(config, `timeout ${LIMITE_DEPLOY} ${comando}`);
+    const code: number = await ssh.sshComando(config, comando);
 
     if (code != 0) {
         throw new Error(`deploy falhou (${code})`);

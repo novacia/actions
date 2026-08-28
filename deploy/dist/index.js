@@ -34552,10 +34552,9 @@ function getVariaveisVersao(inputs, sudo, stack, versao) {
     core.info(variaveis.join(' '));
     return variaveis.join(' ');
 }
-const LIMITE_DEPLOY = 600;
 function deploy(config, comando) {
     return __awaiter(this, void 0, void 0, function* () {
-        const code = yield ssh.sshComando(config, `timeout ${LIMITE_DEPLOY} ${comando}`);
+        const code = yield ssh.sshComando(config, comando);
         if (code != 0) {
             throw new Error(`deploy falhou (${code})`);
         }

@@ -1,6 +1,7 @@
 import * as exec from '@actions/exec';
 import * as core from '@actions/core';
 import * as contexto from '../lib/contexto';
+import { linhasDeErro } from '../lib/log';
 
 export async function login(username: string, password: string): Promise<void> {
     core.info('Autenticando no Docker Hub');
@@ -20,10 +21,10 @@ export async function login(username: string, password: string): Promise<void> {
         })
         .then(res => {
             if (res.stderr.length > 0 && res.exitCode != 0) {
-                throw new Error('[login] - ' + res.stderr.trim());
+                throw new Error('[login] - ' + linhasDeErro(res.stderr));
             }
             else if (res.exitCode != 0) {
-                throw new Error('[login] - ' + res.stdout.trim());
+                throw new Error('[login] - ' + linhasDeErro(res.stdout));
             }
             core.info('Login efetuado com Sucesso - STDOUT: ' + res.stdout.trim());
         });
@@ -50,10 +51,10 @@ export async function build(hub: string, projeto: string, config: string, versao
         })
         .then(res => {
             if (res.stderr.length > 0 && res.exitCode != 0) {
-                throw new Error('[build] - ' + res.stderr.trim());
+                throw new Error('[build] - ' + linhasDeErro(res.stderr));
             }
             else if (res.exitCode != 0) {
-                throw new Error('[build] - ' + res.stdout.trim());
+                throw new Error('[build] - ' + linhasDeErro(res.stdout));
             }
             core.info('STDOUT: ' + res.stdout.trim());
         });
@@ -79,10 +80,10 @@ export async function tag(hub: string, environment: string, versao_major: string
         })
         .then(res => {
             if (res.stderr.length > 0 &&  res.exitCode != 0) {
-                throw new Error('[tag] - ' + res.stderr.trim());
+                throw new Error('[tag] - ' + linhasDeErro(res.stderr));
             }
             else if (res.exitCode != 0) {
-                throw new Error('[tag] - ' + res.stdout.trim());
+                throw new Error('[tag] - ' + linhasDeErro(res.stdout));
             }
             core.info('STDOUT: ' + res.stdout.trim());
         });
@@ -113,10 +114,10 @@ export async function push(hub: string, environment?: string, versao_major?: str
         })
         .then(res => {
             if (res.stderr.length > 0 &&  res.exitCode != 0) {
-                throw new Error('[push] - ' + res.stderr.trim());
+                throw new Error('[push] - ' + linhasDeErro(res.stderr));
             }
             else if (res.exitCode != 0) {
-                throw new Error('[push] - ' + res.stdout.trim());
+                throw new Error('[push] - ' + linhasDeErro(res.stdout));
             }
             core.info('STDOUT: ' + res.stdout.trim());
         });

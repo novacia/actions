@@ -7018,8 +7018,13 @@ exports.nuget_push = nuget_push;
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.linhasDeErro = void 0;
 function linhasDeErro(output) {
-    const linhas = output.split('\n').map(linha => linha.trim()).filter(linha => linha);
-    const erros = linhas.filter(linha => /\berror\b/i.test(linha) && !/\bwarning\b/i.test(linha));
+    const linhas = output
+        .replace(/\x1b\[[0-9;]*m/g, '')
+        .split('\n')
+        .map(linha => linha.trim())
+        .filter(linha => linha && !/\bwarning\b/i.test(linha));
+    const isErro = (linha) => /\berror\b/i.test(linha !== null && linha !== void 0 ? linha : '');
+    const erros = linhas.filter((linha, i) => isErro(linha) || isErro(linhas[i - 1]));
     return [...new Set(erros.length > 0 ? erros : linhas.slice(-15))].join('\n').substring(0, 3000);
 }
 exports.linhasDeErro = linhasDeErro;

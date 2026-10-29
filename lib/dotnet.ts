@@ -1,6 +1,7 @@
 import * as exec from '@actions/exec';
 import * as core from '@actions/core';
 import * as contexto from '../lib/contexto';
+import { linhasDeErro } from '../lib/log';
 
 export async function build(csproj:string, config:string, versao_major:string, versao_minor: string, versao_patch: string, versao_patch_sufixo: string): Promise<void> {
     core.info(`Build do projeto ${csproj} em versão ${config}`);
@@ -18,10 +19,10 @@ export async function build(csproj:string, config:string, versao_major:string, v
         })
         .then(res => {
             if (res.stderr.length > 0 && res.exitCode != 0) {
-                throw new Error('[build] - ' + res.stderr.trim());
+                throw new Error('[build] - ' + linhasDeErro(res.stderr));
             }
             else if (res.exitCode != 0) {
-                throw new Error('[build] - ' + res.stdout.trim());
+                throw new Error('[build] - ' + linhasDeErro(res.stdout));
             }
             core.info(res.stdout.trim());
         });
@@ -44,10 +45,10 @@ export async function pack(csproj:string, config:string, versao_major:string, ve
         })
         .then(res => {
             if (res.stderr.length > 0 && res.exitCode != 0) {
-                throw new Error('[pack] - ' + res.stderr.trim());
+                throw new Error('[pack] - ' + linhasDeErro(res.stderr));
             }
             else if (res.exitCode != 0) {
-                throw new Error('[pack] - ' + res.stdout.trim());
+                throw new Error('[pack] - ' + linhasDeErro(res.stdout));
             }
             core.info(res.stdout.trim());
         });
@@ -73,10 +74,10 @@ export async function nuget_add_source(username:string, token:string): Promise<v
         })
         .then(res => {
             if (res.stderr.length > 0 && res.exitCode != 0) {
-                throw new Error('[nuget_add_source] - ' + res.stderr.trim());
+                throw new Error('[nuget_add_source] - ' + linhasDeErro(res.stderr));
             }
             else if (res.exitCode != 0) {
-                throw new Error('[nuget_add_source] - ' + res.stdout.trim());
+                throw new Error('[nuget_add_source] - ' + linhasDeErro(res.stdout));
             }
             core.info(res.stdout.trim());
         });
@@ -104,10 +105,10 @@ export async function nuget_push(nupkg:string, token:string, versao_major:string
         })
         .then(res => {
             if (res.stderr.length > 0 && res.exitCode != 0) {
-                throw new Error('[nuget_push] - ' + res.stderr.trim());
+                throw new Error('[nuget_push] - ' + linhasDeErro(res.stderr));
             }
             else if (res.exitCode != 0) {
-                throw new Error('[nuget_push] - ' + res.stdout.trim());
+                throw new Error('[nuget_push] - ' + linhasDeErro(res.stdout));
             }
             core.info(res.stdout.trim());
         });

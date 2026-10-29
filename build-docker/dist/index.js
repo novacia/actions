@@ -6912,6 +6912,7 @@ exports.push = exports.tag = exports.build = exports.login = void 0;
 const exec = __importStar(__nccwpck_require__(9343));
 const core = __importStar(__nccwpck_require__(3820));
 const contexto = __importStar(__nccwpck_require__(5517));
+const log_1 = __nccwpck_require__(8552);
 function login(username, password) {
     return __awaiter(this, void 0, void 0, function* () {
         core.info('Autenticando no Docker Hub');
@@ -6928,10 +6929,10 @@ function login(username, password) {
         })
             .then(res => {
             if (res.stderr.length > 0 && res.exitCode != 0) {
-                throw new Error('[login] - ' + res.stderr.trim());
+                throw new Error('[login] - ' + (0, log_1.linhasDeErro)(res.stderr));
             }
             else if (res.exitCode != 0) {
-                throw new Error('[login] - ' + res.stdout.trim());
+                throw new Error('[login] - ' + (0, log_1.linhasDeErro)(res.stdout));
             }
             core.info('Login efetuado com Sucesso - STDOUT: ' + res.stdout.trim());
         });
@@ -6956,10 +6957,10 @@ function build(hub, projeto, config, versao_major, versao_minor, versao_patch, v
         })
             .then(res => {
             if (res.stderr.length > 0 && res.exitCode != 0) {
-                throw new Error('[build] - ' + res.stderr.trim());
+                throw new Error('[build] - ' + (0, log_1.linhasDeErro)(res.stderr));
             }
             else if (res.exitCode != 0) {
-                throw new Error('[build] - ' + res.stdout.trim());
+                throw new Error('[build] - ' + (0, log_1.linhasDeErro)(res.stdout));
             }
             core.info('STDOUT: ' + res.stdout.trim());
         });
@@ -6984,10 +6985,10 @@ function tag(hub, environment, versao_major, versao_minor, versao_patch, versao_
         })
             .then(res => {
             if (res.stderr.length > 0 && res.exitCode != 0) {
-                throw new Error('[tag] - ' + res.stderr.trim());
+                throw new Error('[tag] - ' + (0, log_1.linhasDeErro)(res.stderr));
             }
             else if (res.exitCode != 0) {
-                throw new Error('[tag] - ' + res.stdout.trim());
+                throw new Error('[tag] - ' + (0, log_1.linhasDeErro)(res.stdout));
             }
             core.info('STDOUT: ' + res.stdout.trim());
         });
@@ -7017,16 +7018,38 @@ function push(hub, environment, versao_major, versao_minor, versao_patch, versao
         })
             .then(res => {
             if (res.stderr.length > 0 && res.exitCode != 0) {
-                throw new Error('[push] - ' + res.stderr.trim());
+                throw new Error('[push] - ' + (0, log_1.linhasDeErro)(res.stderr));
             }
             else if (res.exitCode != 0) {
-                throw new Error('[push] - ' + res.stdout.trim());
+                throw new Error('[push] - ' + (0, log_1.linhasDeErro)(res.stdout));
             }
             core.info('STDOUT: ' + res.stdout.trim());
         });
     });
 }
 exports.push = push;
+
+
+/***/ }),
+
+/***/ 8552:
+/***/ ((__unused_webpack_module, exports) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.linhasDeErro = void 0;
+function linhasDeErro(output) {
+    const linhas = output
+        .replace(/\x1b\[[0-9;]*m/g, '')
+        .split('\n')
+        .map(linha => linha.trim())
+        .filter(linha => linha && !/\bwarning\b/i.test(linha));
+    const isErro = (linha) => /\berror\b/i.test(linha !== null && linha !== void 0 ? linha : '');
+    const erros = linhas.filter((linha, i) => isErro(linha) || isErro(linhas[i - 1]));
+    return [...new Set(erros.length > 0 ? erros : linhas.slice(-15))].join('\n').substring(0, 3000);
+}
+exports.linhasDeErro = linhasDeErro;
 
 
 /***/ }),

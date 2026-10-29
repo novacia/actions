@@ -6760,7 +6760,13 @@ function getInputsDeploy() {
         versao_minor: core.getInput('versao-minor'),
         versao_patch: core.getInput('versao-patch'),
         versao_patch_sufixo: core.getInput('versao-patch-sufixo'),
-        latest: core.getBooleanInput('latest')
+        latest: core.getBooleanInput('latest'),
+        path: core.getInput('path'),
+        omitir_sudo: core.getBooleanInput('omitir-sudo'),
+        docker_token: core.getInput('docker-token'),
+        docker_username: core.getInput('docker-username'),
+        services: core.getInput('services'),
+        built_services: core.getInput('built-services')
     };
 }
 exports.getInputsDeploy = getInputsDeploy;
@@ -6771,7 +6777,8 @@ function getInputsPipeline() {
         username: core.getInput('username'),
         password: core.getInput('password'),
         key: core.getInput('key'),
-        github_token: core.getInput('github_token')
+        github_token: core.getInput('github_token'),
+        path: core.getInput('path')
     };
 }
 exports.getInputsPipeline = getInputsPipeline;
@@ -6793,7 +6800,7 @@ function getInputsResetVersionamento() {
             accountEndpoint: core.getInput('endpoint'),
             code: core.getInput('code'),
             token: core.getInput('token'),
-            namePackage: core.getInput('name-package'),
+            namePackage: undefined,
             numeroVersao: Number(core.getInput('numero-versao'))
         }
     };
@@ -6892,6 +6899,7 @@ exports.nuget_push = exports.nuget_add_source = exports.pack = exports.build = v
 const exec = __importStar(__nccwpck_require__(9343));
 const core = __importStar(__nccwpck_require__(3820));
 const contexto = __importStar(__nccwpck_require__(5517));
+const log_1 = __nccwpck_require__(8552);
 function build(csproj, config, versao_major, versao_minor, versao_patch, versao_patch_sufixo) {
     return __awaiter(this, void 0, void 0, function* () {
         core.info(`Build do projeto ${csproj} em versão ${config}`);
@@ -6906,10 +6914,10 @@ function build(csproj, config, versao_major, versao_minor, versao_patch, versao_
         })
             .then(res => {
             if (res.stderr.length > 0 && res.exitCode != 0) {
-                throw new Error('[build] - ' + res.stderr.trim());
+                throw new Error('[build] - ' + (0, log_1.linhasDeErro)(res.stderr));
             }
             else if (res.exitCode != 0) {
-                throw new Error('[build] - ' + res.stdout.trim());
+                throw new Error('[build] - ' + (0, log_1.linhasDeErro)(res.stdout));
             }
             core.info(res.stdout.trim());
         });
@@ -6931,10 +6939,10 @@ function pack(csproj, config, versao_major, versao_minor, versao_patch, versao_p
         })
             .then(res => {
             if (res.stderr.length > 0 && res.exitCode != 0) {
-                throw new Error('[pack] - ' + res.stderr.trim());
+                throw new Error('[pack] - ' + (0, log_1.linhasDeErro)(res.stderr));
             }
             else if (res.exitCode != 0) {
-                throw new Error('[pack] - ' + res.stdout.trim());
+                throw new Error('[pack] - ' + (0, log_1.linhasDeErro)(res.stdout));
             }
             core.info(res.stdout.trim());
         });
@@ -6960,10 +6968,10 @@ function nuget_add_source(username, token) {
         })
             .then(res => {
             if (res.stderr.length > 0 && res.exitCode != 0) {
-                throw new Error('[nuget_add_source] - ' + res.stderr.trim());
+                throw new Error('[nuget_add_source] - ' + (0, log_1.linhasDeErro)(res.stderr));
             }
             else if (res.exitCode != 0) {
-                throw new Error('[nuget_add_source] - ' + res.stdout.trim());
+                throw new Error('[nuget_add_source] - ' + (0, log_1.linhasDeErro)(res.stdout));
             }
             core.info(res.stdout.trim());
         });
@@ -6988,16 +6996,38 @@ function nuget_push(nupkg, token, versao_major, versao_minor, versao_patch, vers
         })
             .then(res => {
             if (res.stderr.length > 0 && res.exitCode != 0) {
-                throw new Error('[nuget_push] - ' + res.stderr.trim());
+                throw new Error('[nuget_push] - ' + (0, log_1.linhasDeErro)(res.stderr));
             }
             else if (res.exitCode != 0) {
-                throw new Error('[nuget_push] - ' + res.stdout.trim());
+                throw new Error('[nuget_push] - ' + (0, log_1.linhasDeErro)(res.stdout));
             }
             core.info(res.stdout.trim());
         });
     });
 }
 exports.nuget_push = nuget_push;
+
+
+/***/ }),
+
+/***/ 8552:
+/***/ ((__unused_webpack_module, exports) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.linhasDeErro = void 0;
+function linhasDeErro(output) {
+    const linhas = output
+        .replace(/\x1b\[[0-9;]*m/g, '')
+        .split('\n')
+        .map(linha => linha.trim())
+        .filter(linha => linha && !/\bwarning\b/i.test(linha));
+    const isErro = (linha) => /\berror\b/i.test(linha !== null && linha !== void 0 ? linha : '');
+    const erros = linhas.filter((linha, i) => isErro(linha) || isErro(linhas[i - 1]));
+    return [...new Set(erros.length > 0 ? erros : linhas.slice(-15))].join('\n').substring(0, 3000);
+}
+exports.linhasDeErro = linhasDeErro;
 
 
 /***/ }),
